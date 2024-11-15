@@ -14,7 +14,7 @@ export const SimoLayout = ({children}) => {
 
         <Box
             component='main'
-            sx={{flexGrow:1, p:3}}
+            sx={{flexGrow:1, pt:3}}
         >
             <Toolbar/>
             {children}

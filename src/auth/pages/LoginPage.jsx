@@ -1,12 +1,30 @@
-  import React from 'react'
+  import React, { useEffect } from 'react'
   import { NavbarLogin } from '../components'
   import { Button, Container, Grid, TextField, Typography } from '@mui/material' // Cambiado a Grid
   import FondoImplan from '../../assets/imagenes/imagenLogin.png'
   import styled from '@emotion/styled'
   import { AuthLayout } from '../layout/AuthLayout'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from '../../../hooks/useForm'
+import { useAuthStore } from '../../../hooks'
+import Swal from 'sweetalert2'
+
+  const loginFormFields={
+      loginEmail:'',
+      loginPassword:''
+  }
 
   export const LoginPage = () => {
+
+    const {startLogin,errorMessage}=useAuthStore()
+    const {loginEmail,loginPassword,onInputChange:onLoginInputChange}= useForm(loginFormFields)
+    
+    const loginSubmit=(event)=>{
+      event.preventDefault();
+      navigate('/')
+      startLogin({correo: loginEmail, contraseña: loginPassword})
+    }
+
     const Img = styled("img")({
       width: 600,
       height: 400,
@@ -16,10 +34,13 @@ import { useNavigate } from 'react-router-dom'
 
     const navigate=useNavigate()
 
-    const login=()=>{
-      navigate('/')
-      
-    }
+    useEffect(() => {
+      if(errorMessage !==undefined){
+         Swal.fire('Error en la autentificacion', errorMessage,'error')
+      }
+  
+    }, [errorMessage])
+    
 
     return (
         
@@ -60,7 +81,7 @@ import { useNavigate } from 'react-router-dom'
       }}
     >
       <Typography variant='h4' sx={{ mb: 1 }}>Iniciar Sesión</Typography>
-      <form style={{ width: '100%' }}> {/* Asegura que el formulario ocupe todo el ancho */}
+      <form onSubmit={loginSubmit} style={{ width: '100%' }}> {/* Asegura que el formulario ocupe todo el ancho */}
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant='h5' sx={{ mb: 1 }}>Correo</Typography>
@@ -70,6 +91,9 @@ import { useNavigate } from 'react-router-dom'
               placeholder='correo@example.com'
               autoComplete="username"
               fullWidth
+              name='loginEmail'
+              value={loginEmail}
+              onChange={onLoginInputChange}
             />
           </Grid>
             
@@ -81,11 +105,14 @@ import { useNavigate } from 'react-router-dom'
               placeholder='contraseña'
               autoComplete="current-password"
               fullWidth
+              name='loginPassword'
+              value={loginPassword}
+              onChange={onLoginInputChange}
             />
           </Grid>
           <Grid container justifyContent="center" sx={{margin:5}}>
             <Grid item >
-            <Button  onClick={login} variant='contained' sx={{backgroundColor:'secondary.main', color: '#FFFFFF'}} >
+            <Button type='submit' variant='contained' sx={{backgroundColor:'secondary.main', color: '#FFFFFF'}} >
             Ingresar
           </Button>
             </Grid>

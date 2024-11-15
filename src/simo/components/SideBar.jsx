@@ -54,7 +54,7 @@ export const SideBar = () => {
       />
       <IconButtonWithLabel
         Icon={PriceChangeIcon}
-        label="Modificar Presupuesto"
+        label="Editar Presupuesto"
       />
     </Grid>
 

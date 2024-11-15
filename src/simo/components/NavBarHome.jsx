@@ -3,7 +3,9 @@ import React from 'react'
 import logoImplan from '../../assets/imagenes/logoImplan.png'
 import styled from '@emotion/styled'
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuthStore } from '../../../hooks';
 export const NavBarHome = () => {
+    const {startLogout,user}=useAuthStore()
     const Img=styled("img")({
         width:100,
         height:100,
@@ -22,7 +24,7 @@ export const NavBarHome = () => {
          >
 
         <Grid item>
-           <Typography variant='h4' sx={{ml:2}} >Usuario</Typography>
+           <Typography variant='h4' sx={{ml:2}} >{user.name}</Typography>
         </Grid>    
 
     <Grid 
@@ -44,6 +46,7 @@ export const NavBarHome = () => {
             fontSize: '5rem', // Ajusta el tamaño del botón y el ícono
             mr:2
             }}
+            onClick={startLogout}
         >
             <LogoutIcon sx={{ fontSize: '5rem' }} /> {/* Ajusta el tamaño del ícono */}
         </IconButton>

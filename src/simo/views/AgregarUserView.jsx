@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Grid, TextField, Select, MenuItem, Button, InputLabel, FormControl, IconButton } from '@mui/material';
 import { useForm } from '../../../hooks/useForm';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../../../hooks';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const registerFormFields = {
   nombrecompleto: '',
@@ -15,63 +17,57 @@ const registerFormFields = {
   rol: ''  // Valor inicial adecuado para el Select
 };
 
-const activo=true;
+const activo = true;
 export const AgregarUserView = () => {
-   const {startRegister,errorMessage}= useAuthStore()
-  // Asegúrate de que el hook useForm esté recibiendo los valores iniciales correctamente
+  const { startRegister, errorMessage, ingresoExito } = useAuthStore();
   const { nombrecompleto, nombreUsuario, contraseña, correo, constreña2, celular, rol, onInputChange } = useForm(registerFormFields);
 
-  const registerSubmit=(event)=>{
-    event.preventDefault();
-    if(contraseña !==constreña2){
-      Swal.fire('Error en registro', 'Contraseñas no son iguales', 'error')
-    }
-    else{
-      try {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-        startRegister({nombre:nombrecompleto,username:nombreUsuario,contraseña:contraseña,correo:correo,rol:rol,activo:activo,celular:celular })
-        Swal.fire({
-          title: '¡Operación exitosa!',
-          text: 'Se logro Agregar un usuario correctamente',
-          icon: 'success',
-          confirmButtonText: 'Aceptar',
-        });
-        
-      } catch (error) {
-        
-      }
-    
+  const registerSubmit = (event) => {
+    event.preventDefault();
+    if (contraseña !== constreña2) {
+      Swal.fire('Error en registro', 'Contraseñas no son iguales', 'error');
+    } else {
+      startRegister({ nombre: nombrecompleto, username: nombreUsuario, contraseña: contraseña, correo: correo, rol: rol, activo: activo, celular: celular });
     }
-  }
+  };
 
   useEffect(() => {
-    if(errorMessage !==undefined){
-       Swal.fire('Error en la autentificacion', errorMessage,'error')
+    if (errorMessage !== undefined) {
+      Swal.fire('Error en la autentificación', errorMessage, 'error');
     }
+  }, [errorMessage]);
 
-  }, [errorMessage])
+  useEffect(() => {
+    if (ingresoExito) {
+      Swal.fire({
+        title: '¡Operación exitosa!',
+        text: 'Se logró agregar un usuario correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  }, [ingresoExito]);
+
   return (
-    <Grid
-      container
-      spacing={2}
-      sx={{ padding: 2, justifyContent: 'center' }} // Centrado del Grid contenedor
-    >
-      <Grid item xs={12} md={8} lg={6}> {/* Contenedor más pequeño dentro del grid */}
+    <Grid container spacing={2} sx={{ padding: 2, justifyContent: 'center' }}>
+      <Grid item xs={12} md={8} lg={6}>
         <Box
           sx={{
             backgroundColor: 'white',
             padding: 3,
-            borderRadius: 3, // Bordes más redondeados
-            boxShadow: 5, // Sombra más profunda
-            minHeight: '400px', // Un rectángulo más grande
+            borderRadius: 3,
+            boxShadow: 5,
+            minHeight: '400px',
             display: 'flex',
             flexDirection: 'column',
-            gap: 3, // Espacio entre los campos
+            gap: 3,
           }}
         >
           <form onSubmit={registerSubmit}>
             <Grid container spacing={2}>
-              {/* Nombre Completo */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -82,7 +78,6 @@ export const AgregarUserView = () => {
                   onChange={onInputChange}
                 />
               </Grid>
-              {/* Nombre de Usuario */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -100,14 +95,23 @@ export const AgregarUserView = () => {
                   fullWidth
                   label="Contraseña"
                   variant="outlined"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="contraseña"
                   value={contraseña}
                   onChange={onInputChange}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    ),
+                  }}
                 />
               </Grid>
 
-              {/* Correo */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -126,14 +130,23 @@ export const AgregarUserView = () => {
                   fullWidth
                   label="Repita Contraseña"
                   variant="outlined"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   name="constreña2"
                   value={constreña2}
                   onChange={onInputChange}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                      </IconButton>
+                    ),
+                  }}
                 />
               </Grid>
 
-              {/* Número de Celular */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -146,27 +159,25 @@ export const AgregarUserView = () => {
                 />
               </Grid>
 
-              {/* Rol */}
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth variant="outlined">
                   <InputLabel>Rol</InputLabel>
                   <Select
                     label="Rol"
                     name="rol"
-                    value={rol || ''}  // Asegura que nunca sea undefined
+                    value={rol || ''}
                     onChange={onInputChange}
                   >
                     <MenuItem value="admin">Administrador</MenuItem>
-                    <MenuItem value="user">Usuario</MenuItem>
-                    <MenuItem value="guest">Invitado</MenuItem>
+                    <MenuItem value="editor">Usuario</MenuItem>
+                    <MenuItem value="viewer">Invitado</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
             </Grid>
 
-            {/* Botón Agregar */}
             <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
-              <IconButton type='submit'>
+              <IconButton type="submit">
                 <AddCircleIcon sx={{ fontSize: '3.7rem', color: 'primary.main' }} />
               </IconButton>
             </Grid>
@@ -175,4 +186,4 @@ export const AgregarUserView = () => {
       </Grid>
     </Grid>
   );
-}
+};

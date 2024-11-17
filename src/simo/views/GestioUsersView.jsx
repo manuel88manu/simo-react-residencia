@@ -1,7 +1,20 @@
 import { Box, Button, Grid, Toolbar, Typography } from '@mui/material'
 import React from 'react'
+import { useViewStore } from '../../../hooks'
 
 export const GestioUsersView = ({children}) => {
+   const {selectViewUser} =useViewStore()
+
+   const selecEstadoAgregar=()=>{
+    selectViewUser("agregarUsuario")
+
+   }
+
+   const selecEstadoEditar=()=>{
+    selectViewUser("EditarUsuario")
+
+   }
+
   return (
     <Grid 
     container
@@ -39,6 +52,7 @@ export const GestioUsersView = ({children}) => {
   >
     <Button 
       variant="contained" 
+      onClick={selecEstadoAgregar}
       sx={{
         padding: '12px 24px', // Tamaño más grande
         fontSize: '1rem',     // Tamaño de texto más grande
@@ -52,6 +66,7 @@ export const GestioUsersView = ({children}) => {
     </Button>
     <Button 
       variant="contained" 
+      onClick={selecEstadoEditar}
       sx={{
         padding: '12px 24px', // Tamaño más grande
         fontSize: '1rem',     // Tamaño de texto más grande

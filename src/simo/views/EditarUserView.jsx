@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { useAuthStore } from '../../../hooks';
 
 export const EditarUserView = () => {
-  // Datos de ejemplo
-  const [users, setUsers] = useState([
-    { id: 12345, username: 'manue888', email: 'manuel45@exemple.com', role: 'admin', status: 'activo' },
-    { id: 67890, username: 'juan676', email: 'eljuan@exemple.com', role: 'moderador', status: 'activo' },
-    { id: 111333, username: 'Oscar777', email: 'oscarFlores@exemple.com', role: 'visitante', status: 'activo' },
-  ]);
+  const { starUsuarios, usuarios } = useAuthStore();
 
-  // Estado para la fila seleccionada y mensaje
+  useEffect(() => {
+    starUsuarios();
+  }, [starUsuarios]);
+
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');
 
-  // Función para manejar la selección de una fila
   const handleRowClick = (user) => {
     setSelectedUser(user);
   };
 
-  // Función para manejar el clic en el botón de edición
-  const handleEditClick = () => {
-    if (selectedUser) {
-      setMessage(`Usuario seleccionado: ID ${selectedUser.id}, Nombre: ${selectedUser.username}, Correo: ${selectedUser.email}, Rol: ${selectedUser.role}, Estado: ${selectedUser.status}`);
-    }
+  const handleEditClick = (event, user) => {
+    event.stopPropagation();
+    setMessage(`Usuario seleccionado: ID ${user.idusuario}, Nombre: ${user.username}, Correo: ${user.correo}, Rol: ${user.rol === 1 ? 'Activo' : 'Inactivo'}, Estado: ${user.activo}`);
   };
 
   return (
     <div>
-      <TableContainer  component={Paper}  >
-        <Table>
+      <TableContainer component={Paper} style={{ maxHeight: '400px', overflow: 'auto' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>ID Usuario</TableCell>
@@ -39,25 +35,27 @@ export const EditarUserView = () => {
               <TableCell>Correo Electrónico</TableCell>
               <TableCell>Rol</TableCell>
               <TableCell>Estado</TableCell>
-              <TableCell></TableCell> {/* Columna para el botón de edición */}
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {usuarios.map((user) => (
               <TableRow
-                key={user.id}
+                key={user.idusuario}
                 onClick={() => handleRowClick(user)}
-                selected={selectedUser && selectedUser.id === user.id}
                 style={{ cursor: 'pointer' }}
               >
-                <TableCell>{user.id}</TableCell>
+                <TableCell>{user.idusuario}</TableCell>
                 <TableCell>{user.username}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.status}</TableCell>
+                <TableCell>{user.correo}</TableCell>
+                <TableCell>{user.rol}</TableCell>
+                <TableCell>{user.activo === 1 ? 'Activo' : 'Inactivo'}</TableCell>
                 <TableCell>
-                  {selectedUser && selectedUser.id === user.id && (
-                    <IconButton color="primary" onClick={handleEditClick}>
+                  {selectedUser && selectedUser.idusuario === user.idusuario && (
+                    <IconButton
+                      color="primary"
+                      onClick={(event) => handleEditClick(event, user)}
+                    >
                       <EditIcon />
                     </IconButton>
                   )}
@@ -68,7 +66,6 @@ export const EditarUserView = () => {
         </Table>
       </TableContainer>
 
-      {/* Mensaje que muestra la información del usuario seleccionado */}
       {message && (
         <Typography variant="h6" style={{ marginTop: '20px', color: 'blue' }}>
           {message}

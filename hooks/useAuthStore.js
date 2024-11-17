@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
-import { clearErrorMessage, onChecking, onLogin, onLogout, setMessageError } from "../store/auth/authSlice"
+import { clearErrorMessage, onChecking, onLogin, onLogout, setMessageError, setUserExito, setUsuarios } from "../store/auth/authSlice"
 
 export const useAuthStore=()=>{
-    const {status,user,errorMessage}=useSelector(state=>state.auth)
+    const {status,user,errorMessage,usuarios,ingresoExito}=useSelector(state=>state.auth)
     const dispatch= useDispatch()
 
     const startLogin=async({correo,contraseña})=>{
@@ -15,7 +15,7 @@ export const useAuthStore=()=>{
             dispatch(onLogin({name:data.name, uid:data.uid}))
 
         } catch (error) {
-            dispatch(onLogout('Credenciales incorectas'))
+            dispatch(onLogout(error.response.data?.msg || ''))
             setTimeout(() => {
                 dispatch(clearErrorMessage())
             }, 10);
@@ -29,9 +29,15 @@ export const useAuthStore=()=>{
             //localStorage.setItem('token',data.token)
             //localStorage.setItem('token-init-date', new Date().getTime())
             //dispatch(onLogin({name:data.name, uid:data.uid}))
+            dispatch(setUserExito(true))
+            setTimeout(() => {
+                dispatch(setUserExito(false))
+            }, 20);
 
         } catch (error) {
+            console.log(error)
             dispatch(setMessageError(error.response.data?.msg || ''))
+            dispatch(setUserExito(false))
             setTimeout(() => {
                 dispatch(clearErrorMessage())
             }, 10);
@@ -59,17 +65,27 @@ export const useAuthStore=()=>{
         dispatch(onLogout())
     }
 
+    const starUsuarios=async()=>{
+     const {data}=await simoApi.get('/auth/users');
+     dispatch(setUsuarios(data.usuariosArr))
+
+    }
+
+
   
     return{
         //Propiedades
             status,
             user,
             errorMessage,
+            usuarios,
+            ingresoExito,
         //metodos
             startLogin,
             startRegister,
             checkAuthToken,
-            startLogout
+            startLogout,
+            starUsuarios,
 
     }
 }

@@ -21,7 +21,6 @@ import Swal from 'sweetalert2'
     
     const loginSubmit=(event)=>{
       event.preventDefault();
-      navigate('/')
       startLogin({correo: loginEmail, contraseña: loginPassword})
     }
 
@@ -31,8 +30,6 @@ import Swal from 'sweetalert2'
       objectFit: 'cover',
       objectPosition: "center"
     });
-
-    const navigate=useNavigate()
 
     useEffect(() => {
       if(errorMessage !==undefined){

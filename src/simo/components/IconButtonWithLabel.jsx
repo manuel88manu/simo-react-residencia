@@ -1,11 +1,12 @@
 import React from 'react';
 import { IconButton, Box, Typography } from '@mui/material';
 
-const IconButtonWithLabel = ({ Icon, label }) => {
-    const iconSize = '3.6rem'; // Tamaño uniforme para todos los íconos
-    const iconColor = 'white'; // Color uniforme para todos los íconos y textos
+const IconButtonWithLabel = ({ Icon, label, onClick }) => {
+  const iconSize = '3.6rem'; // Tamaño uniforme para todos los íconos
+  const iconColor = 'white'; // Color uniforme para todos los íconos y textos
+
   return (
-    <IconButton>
+    <IconButton onClick={onClick}>
       <Box
         sx={{
           display: 'flex',

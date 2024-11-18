@@ -34,7 +34,6 @@ export const EditarUserView = () => {
         rol: user.rol
     });
     selectModalUser(true);
-    setMessage(`Usuario seleccionado: ID ${user.idusuario}, Nombre: ${user.username}, Correo: ${user.correo}, Rol: ${user.rol}, Estado: ${user.activo}`);
 };
 
 

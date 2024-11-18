@@ -9,11 +9,11 @@ export const authSlice = createSlice({
         errorMessage:undefined,
         ingresoExito:false,
         usuarioEditable:{
-            idusuario:undefined,
+            idusuario:'',
             nombre:'',
             correo:'',
             username:'',
-            activo:undefined,
+            activo:'',
             celular:'',
             rol:''
         }

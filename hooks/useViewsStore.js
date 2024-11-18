@@ -5,15 +5,15 @@ export const useViewStore = () => {
   const { stateViewSimo, stateViewUser,stateModalUser } = useSelector((state) => state.views);
   const dispatch = useDispatch();
 
-  const selectViewSimo = (estado) => {
+  const selectViewSimo = async(estado) => {
     dispatch(onStateSimo(estado)); // Ahora simplemente pasamos el estado como una cadena
   };
 
-  const selectViewUser = (estado) => {
+  const selectViewUser = async(estado) => {
     dispatch(onStateUser(estado)); // Ahora simplemente pasamos el estado como una cadena
   };
 
-  const selectModalUser=(payload)=>{
+  const selectModalUser=async(payload)=>{
     dispatch(onModalUser(payload))
   }
 

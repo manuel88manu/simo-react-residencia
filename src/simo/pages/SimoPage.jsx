@@ -12,8 +12,6 @@ export const SimoPage = () => {
 
   // Añadido para depuración
   useEffect(() => {
-    console.log('stateViewSimo:', stateViewSimo)
-    console.log('stateViewUser (simulado):', stateViewUser)
   }, [stateViewSimo,stateViewUser])
 
   return (

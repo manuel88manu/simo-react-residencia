@@ -7,7 +7,16 @@ export const authSlice = createSlice({
         user:{},
         usuarios:[],
         errorMessage:undefined,
-        ingresoExito:false
+        ingresoExito:false,
+        usuarioEditable:{
+            idusuario:undefined,
+            nombre:'',
+            correo:'',
+            username:'',
+            activo:undefined,
+            celular:'',
+            rol:''
+        }
     },
     reducers: {
         onChecking:(state)=>{
@@ -36,6 +45,15 @@ export const authSlice = createSlice({
         },
         setUserExito:(state,{payload})=>{
             state.ingresoExito=payload
+        },
+        setUserEdit:(state,{payload})=>{
+            state.usuarioEditable.nombre=payload.nombre;
+            state.usuarioEditable.correo=payload.correo;
+            state.usuarioEditable.username=payload.username;
+            state.usuarioEditable.activo=payload.activo;
+            state.usuarioEditable.celular=payload.celular;
+            state.usuarioEditable.rol=payload.rol;
+            state.usuarioEditable.idusuario=payload.idusuario;
         }
     }
 });
@@ -50,6 +68,7 @@ export const {
     clearErrorMessage,
     setMessageError,
     setUsuarios,
-    setUserExito 
+    setUserExito,
+    setUserEdit 
 
 } = authSlice.actions;

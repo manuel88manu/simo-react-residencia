@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { onStateSimo, onStateUser } from "../store/views/viewSlice";
+import { onModalUser, onStateSimo, onStateUser } from "../store/views/viewSlice";
 
 export const useViewStore = () => {
-  const { stateViewSimo, stateViewUser } = useSelector((state) => state.views);
+  const { stateViewSimo, stateViewUser,stateModalUser } = useSelector((state) => state.views);
   const dispatch = useDispatch();
 
   const selectViewSimo = (estado) => {
@@ -13,12 +13,18 @@ export const useViewStore = () => {
     dispatch(onStateUser(estado)); // Ahora simplemente pasamos el estado como una cadena
   };
 
+  const selectModalUser=(payload)=>{
+    dispatch(onModalUser(payload))
+  }
+
   return {
     // Propiedades
     stateViewSimo,
     stateViewUser,
+    stateModalUser,
     // Métodos
     selectViewSimo,
-    selectViewUser
+    selectViewUser,
+    selectModalUser
   };
 };

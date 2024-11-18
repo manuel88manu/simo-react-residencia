@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
-import { clearErrorMessage, onChecking, onLogin, onLogout, setMessageError, setUserExito, setUsuarios } from "../store/auth/authSlice"
+import { clearErrorMessage, onChecking, onLogin, onLogout, setMessageError, setUserEdit, setUserExito, setUsuarios } from "../store/auth/authSlice"
 
 export const useAuthStore=()=>{
-    const {status,user,errorMessage,usuarios,ingresoExito}=useSelector(state=>state.auth)
+    const {status,user,errorMessage,usuarios,ingresoExito,usuarioEditable}=useSelector(state=>state.auth)
     const dispatch= useDispatch()
 
     const startLogin=async({correo,contraseña})=>{
@@ -70,6 +70,9 @@ export const useAuthStore=()=>{
      dispatch(setUsuarios(data.usuariosArr))
 
     }
+    const startUsuarioEdit = async (user) => {
+        dispatch(setUserEdit(user));
+    };
 
 
   
@@ -80,12 +83,14 @@ export const useAuthStore=()=>{
             errorMessage,
             usuarios,
             ingresoExito,
+            usuarioEditable,
         //metodos
             startLogin,
             startRegister,
             checkAuthToken,
             startLogout,
             starUsuarios,
+            startUsuarioEdit
 
     }
 }

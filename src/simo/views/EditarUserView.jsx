@@ -3,10 +3,12 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useAuthStore } from '../../../hooks';
+import { useAuthStore, useViewStore } from '../../../hooks';
+import { EditarUserModal } from '../../auth/components';
 
 export const EditarUserView = () => {
-  const { starUsuarios, usuarios } = useAuthStore();
+  const { starUsuarios, usuarios,startUsuarioEdit } = useAuthStore();
+  const {selectModalUser}=useViewStore()
 
   useEffect(() => {
     starUsuarios();
@@ -21,10 +23,23 @@ export const EditarUserView = () => {
 
   const handleEditClick = (event, user) => {
     event.stopPropagation();
-    setMessage(`Usuario seleccionado: ID ${user.idusuario}, Nombre: ${user.username}, Correo: ${user.correo}, Rol: ${user.rol === 1 ? 'Activo' : 'Inactivo'}, Estado: ${user.activo}`);
-  };
+
+    startUsuarioEdit({
+        idusuario: user.idusuario,
+        username: user.username,
+        correo: user.correo,
+        nombre: user.nombre,
+        activo: user.activo,
+        celular: user.celular,
+        rol: user.rol
+    });
+    selectModalUser(true);
+    setMessage(`Usuario seleccionado: ID ${user.idusuario}, Nombre: ${user.username}, Correo: ${user.correo}, Rol: ${user.rol}, Estado: ${user.activo}`);
+};
+
 
   return (
+    <>
     <div>
       <TableContainer component={Paper} style={{ maxHeight: '400px', overflow: 'auto' }}>
         <Table stickyHeader>
@@ -72,5 +87,7 @@ export const EditarUserView = () => {
         </Typography>
       )}
     </div>
+    <EditarUserModal/>
+    </>
   );
 };

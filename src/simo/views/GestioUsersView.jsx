@@ -3,15 +3,15 @@ import React from 'react'
 import { useViewStore } from '../../../hooks'
 
 export const GestioUsersView = ({children}) => {
-   const {selectViewUser} =useViewStore()
+   const {selectViewUser,stateViewUser} =useViewStore()
 
    const selecEstadoAgregar=()=>{
     selectViewUser("agregarUsuario")
-
+    
    }
 
    const selecEstadoEditar=()=>{
-    selectViewUser("EditarUsuario")
+    selectViewUser("editarUsuario")
 
    }
 
@@ -54,6 +54,7 @@ export const GestioUsersView = ({children}) => {
       variant="contained" 
       onClick={selecEstadoAgregar}
       sx={{
+        background:(stateViewUser==='agregarUsuario')? 'primary.main':'gray',
         padding: '12px 24px', // Tamaño más grande
         fontSize: '1rem',     // Tamaño de texto más grande
         borderRadius: '20px', // Bordes redondeados
@@ -68,6 +69,7 @@ export const GestioUsersView = ({children}) => {
       variant="contained" 
       onClick={selecEstadoEditar}
       sx={{
+        background:(stateViewUser==='editarUsuario')? 'primary.main':'gray',
         padding: '12px 24px', // Tamaño más grande
         fontSize: '1rem',     // Tamaño de texto más grande
         borderRadius: '20px', // Bordes redondeados

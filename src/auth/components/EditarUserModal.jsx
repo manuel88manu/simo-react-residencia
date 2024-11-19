@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactModal from "react-modal";
+import Swal from "sweetalert2";
 import { Box, TextField, Select, MenuItem, Button, Grid, InputLabel, FormControl } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import { useAuthStore, useForm, useViewStore } from "../../../hooks";
 
@@ -19,20 +19,68 @@ const customStyles = {
 ReactModal.setAppElement("#root");
 
 export const EditarUserModal = () => {
-  const { usuarioEditable } = useAuthStore();
+  const { usuarioEditable, startActulizarUsuario,errorMessage} = useAuthStore();
   const { nombre, username, correo, celular, rol, activo, onInputChange } = useForm(usuarioEditable);
-
   const { stateModalUser, selectModalUser } = useViewStore();
 
   const oncloseModal = () => {
-    console.log("Cerrando Modal");
     selectModalUser(false); // Cerramos el modal
   };
+  const startActualizar = async () => {
+    const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Deseas editar este usuario?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, editar",
+        cancelButtonText: "No, cancelar",
+    });
+    
+    if (result.isConfirmed) {
+        try {
+            await startActulizarUsuario({
+                nombre,
+                correo,
+                username,
+                activo,
+                celular,
+                rol,
+                idusuario: usuarioEditable.idusuario,
+            });
 
+            Swal.fire({
+                title: "¡Operación exitosa!",
+                text: "El usuario se editó correctamente.",
+                icon: "success",
+                confirmButtonText: "Aceptar",
+            }).then(() => {
+                oncloseModal(); // Cierra el modal después de la operación exitosa
+            });
+        } catch (error) {
+            console.log(error); // Agrega un log aquí para ver el error que se lanza
+            Swal.fire({
+                title: "Error",
+                text: error.message || "Hubo un problema al actualizar el usuario.",
+                icon: "error",
+                confirmButtonText: "Aceptar",
+            });
+        }
+    } else {
+        await Swal.fire({
+            title: "Operación cancelada",
+            text: "No se realizó ningún cambio.",
+            icon: "info",
+            confirmButtonText: "Aceptar",
+        });
+        return false;
+    }
+};
+
+  
   return (
     <ReactModal
-      isOpen={stateModalUser}  // Controlamos si el modal está abierto
-      onRequestClose={oncloseModal}  // Cerramos el modal al hacer clic fuera
+      isOpen={stateModalUser} // Controlamos si el modal está abierto
+      onRequestClose={oncloseModal} // Cerramos el modal al hacer clic fuera
       style={customStyles}
       className="modal"
       overlayClassName="modal-fondo"
@@ -74,12 +122,7 @@ export const EditarUserModal = () => {
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Rol</InputLabel>
-              <Select
-                label="Rol"
-                name="rol"
-                value={rol || ''}
-                onChange={onInputChange}
-              >
+              <Select label="Rol" name="rol" value={rol || ""} onChange={onInputChange}>
                 <MenuItem value="admin">Administrador</MenuItem>
                 <MenuItem value="editor">Usuario</MenuItem>
                 <MenuItem value="viewer">Invitado</MenuItem>
@@ -99,12 +142,7 @@ export const EditarUserModal = () => {
           <Grid item xs={6}>
             <FormControl fullWidth>
               <InputLabel>Estado</InputLabel>
-              <Select
-                label="Estado"
-                name="activo"
-                value={activo}
-                onChange={onInputChange}
-              >
+              <Select label="Estado" name="activo" value={activo} onChange={onInputChange}>
                 <MenuItem value={1}>ACTIVO</MenuItem>
                 <MenuItem value={0}>INACTIVO</MenuItem>
               </Select>
@@ -113,12 +151,7 @@ export const EditarUserModal = () => {
         </Grid>
 
         <Box display="flex" justifyContent="space-between" marginTop="20px" paddingX="10px">
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            onClick={() => console.log("Guardar usuario")}
-          >
+          <Button variant="contained" color="primary" startIcon={<SaveIcon />} onClick={startActualizar}>
             Guardar
           </Button>
         </Box>

@@ -66,16 +66,32 @@ export const useAuthStore=()=>{
     }
 
     const starUsuarios=async()=>{
-     const {data}=await simoApi.get('/auth/users');
-     dispatch(setUsuarios(data.usuariosArr))
-
+    try {
+        const {data}=await simoApi.get('/auth/users');
+        dispatch(setUsuarios(data.usuariosArr))
+    } catch (error) {
+        console.log(error)
     }
+    }
+
     const startUsuarioEdit = async (user) => {
         dispatch(setUserEdit(user));
     };
 
-
-  
+    const startActulizarUsuario = async (payload) => {
+        try {
+            const { data } = await simoApi.put(`/auth/${payload.idusuario}`, payload);
+            // Si todo sale bien, podrías manejar la respuesta aquí
+        } catch (error) {
+            const messageError = error.response?.data?.msg || 'Ha ocurrido un error al actualizar el usuario.';
+            console.log(messageError);
+            dispatch(setMessageError(messageError)); // Actualiza el estado de error en Redux
+            setTimeout(() => {
+                dispatch(clearErrorMessage()); // Limpia el mensaje después de un tiempo
+            }, 5000); // 5 segundos de espera para visualizar el mensaje
+            throw new Error(messageError); // Lanzamos el error para que el catch en `startActualizar` lo capture
+        }
+    };
     return{
         //Propiedades
             status,
@@ -90,7 +106,8 @@ export const useAuthStore=()=>{
             checkAuthToken,
             startLogout,
             starUsuarios,
-            startUsuarioEdit
+            startUsuarioEdit,
+            startActulizarUsuario
 
     }
 }

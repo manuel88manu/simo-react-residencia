@@ -12,6 +12,7 @@ export const SimoPage = () => {
 
   // Añadido para depuración
   useEffect(() => {
+    
   }, [stateViewSimo,stateViewUser])
 
   return (

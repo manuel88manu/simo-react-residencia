@@ -85,9 +85,9 @@ export const useAuthStore=()=>{
         } catch (error) {
             const messageError = error.response?.data?.msg || 'Ha ocurrido un error al actualizar el usuario.';
             console.log(messageError);
-            dispatch(setMessageError(messageError)); // Actualiza el estado de error en Redux
+           // Actualiza el estado de error en Redux
             setTimeout(() => {
-                dispatch(clearErrorMessage()); // Limpia el mensaje después de un tiempo
+            // Limpia el mensaje después de un tiempo
             }, 5000); // 5 segundos de espera para visualizar el mensaje
             throw new Error(messageError); // Lanzamos el error para que el catch en `startActualizar` lo capture
         }

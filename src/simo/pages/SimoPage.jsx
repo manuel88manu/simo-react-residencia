@@ -4,20 +4,32 @@ import { SimoLayout } from '../layout/SimoLayout'
 import { AgregarUserView, GestioUsersView } from '../views'
 import { EditarUserView } from '../views/EditarUserView'
 import { useViewStore } from '../../../hooks'
+import { usePeriodoStore } from '../../../hooks/usePeriodoStore'
+import { AgregarPeriodoView } from '../views/AgregarPeriodoView'
+import { BoxFieldPeriodo } from '../../auth/components/BoxFieldPeriodo'
 
 export const SimoPage = () => {
   const { stateViewSimo,stateViewUser } = useViewStore()
+  const {vigente,startPeriodoVigen}=usePeriodoStore()
 
   // Crear una constante para simular que el valor de stateViewUser siempre es 'tablaUsuario'
 
   // Añadido para depuración
   useEffect(() => {
-    
-  }, [stateViewSimo,stateViewUser])
+    startPeriodoVigen();
+  }, [stateViewSimo,stateViewUser,vigente])
+  
 
   return (
+    <>
     <SimoLayout>
-      {stateViewSimo === "Gestión de Usuario"? (
+      {
+      (!vigente)?(
+        <AgregarPeriodoView>
+          <BoxFieldPeriodo/>
+        </AgregarPeriodoView>
+      ) :(
+      stateViewSimo === "Gestión de Usuario"? (
         <GestioUsersView>
           {
             stateViewUser==="agregarUsuario"?
@@ -57,7 +69,8 @@ export const SimoPage = () => {
       ) : (
         // Si el estado no coincide con ninguno de los anteriores, mostrar un mensaje por defecto
         <Typography variant="h6">Vista desconocida</Typography>
-      )}
+      ))}
     </SimoLayout>
+    </>
   )
 }

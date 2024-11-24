@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import { usePeriodoStore } from "../../../hooks";
+import Swal from "sweetalert2";
 
 export const BoxFieldPeriodo = () => {
-   const {startIgresarPeriodo}= usePeriodoStore()
+   const {startIgresarPeriodo,startObtenerPeriodos,periodo}= usePeriodoStore()
    const [budgets, setBudgets] = useState({
     estatal: "",
     fortamun: "",
@@ -37,24 +38,55 @@ export const BoxFieldPeriodo = () => {
   };
 
   // Acción al guardar
-  const handleSave = () => {
+  const handleSave = async() => {
 
-    try {
-        const presupuestos = [
-            { tipo: 'estatal', prodim: 0, indirectos: 0, monto_inici:budgets.estatal, monto_rest:0 },
-            { tipo: 'faismun', prodim:budgets.proDim, indirectos:budgets.indirectos, monto_inici: budgets.faismun, monto_rest: 0 },
-            { tipo: 'fortamun', prodim: 0, indirectos: 0, monto_inici: budgets.fortamun, monto_rest: 0 },
-            { tipo: 'odirectas', prodim: 0, indirectos: 0, monto_inici: budgets.directas, monto_rest: 0 },
-            { tipo: 'federal', prodim: 0, indirectos: 0, monto_inici: budgets.federal, monto_rest: 0 },
-        ];
+    const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Una vez ingresado los presupuestos para el presente periodo no se podra modificar, asegurate que esta correcto las cantidades",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, ingresar presupuestos",
+        cancelButtonText: "No, cancelar",
+    });
 
-     startIgresarPeriodo(presupuestos)
+    if (result.isConfirmed) {
+        try {
+            const presupuestos = [
+                { tipo: 'estatal', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.estatal).toFixed(2), monto_rest: 0 },
+                { tipo: 'faismun', prodim: budgets.proDim, indirectos: budgets.indirectos, monto_inici: parseFloat(budgets.faismun).toFixed(2), monto_rest: 0 },
+                { tipo: 'fortamun', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.fortamun).toFixed(2), monto_rest: 0 },
+                { tipo: 'odirectas', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.directas).toFixed(2), monto_rest: 0 },
+                { tipo: 'federal', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.federal).toFixed(2), monto_rest: 0 },
+            ]; 
+    
+         await startIgresarPeriodo(presupuestos)
+
+         Swal.fire({
+            title: "¡Operación exitosa!",
+            text: "El periodo con sus respectivos presupuesto fueron agregados correctamente",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+        })
+    
+        } catch (error) {
+            Swal.fire({
+                title: "Error",
+                text: error.message || "Hubo un problema al agregar los presupuestos",
+                icon: "error",
+                confirmButtonText: "Aceptar",
+            });
+        }
 
 
-    } catch (error) {
-        console.log(error)
+    }else {
+        await Swal.fire({
+            title: "Operación cancelada",
+            text: "No se realizó ningún cambio.",
+            icon: "info",
+            confirmButtonText: "Aceptar",
+        });
+        return false;
     }
-   
 };
 
   return (

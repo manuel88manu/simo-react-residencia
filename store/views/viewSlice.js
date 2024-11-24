@@ -5,7 +5,8 @@ export const viewsSlice = createSlice({
     initialState: {
         stateViewSimo:'inicio',
         stateViewUser:'agregarUsuario',
-        stateModalUser:false
+        stateModalUser:false,
+        estadoPresupuesto:'estatal'
     },
     reducers: {
         onStateSimo:(state,{payload})=>{
@@ -17,10 +18,13 @@ export const viewsSlice = createSlice({
         },
         onModalUser:(state,{payload})=>{
             state.stateModalUser=payload
+        },
+        onEstadoPresupuesto:(state,{payload})=>{
+            state.estadoPresupuesto=payload
         }
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { onStateSimo,onStateUser,onModalUser } = viewsSlice.actions;
+export const { onStateSimo,onStateUser,onModalUser,onEstadoPresupuesto} = viewsSlice.actions;

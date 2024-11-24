@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { onModalUser, onStateSimo, onStateUser } from "../store/views/viewSlice";
+import { onEstadoPresupuesto, onModalUser, onStateSimo, onStateUser } from "../store/views/viewSlice";
 
 export const useViewStore = () => {
-  const { stateViewSimo, stateViewUser,stateModalUser } = useSelector((state) => state.views);
+  const { stateViewSimo, stateViewUser,stateModalUser,estadoPresupuesto } = useSelector((state) => state.views);
   const dispatch = useDispatch();
 
   const selectViewSimo = async(estado) => {
@@ -17,14 +17,20 @@ export const useViewStore = () => {
     dispatch(onModalUser(payload))
   }
 
+  const selecTipoPeriodo=async(tipo)=>{
+    dispatch(onEstadoPresupuesto(tipo))
+  }
+
   return {
     // Propiedades
     stateViewSimo,
     stateViewUser,
     stateModalUser,
+    estadoPresupuesto,
     // Métodos
     selectViewSimo,
     selectViewUser,
-    selectModalUser
+    selectModalUser,
+    selecTipoPeriodo
   };
 };

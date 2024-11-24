@@ -1,12 +1,13 @@
 import { Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { SimoLayout } from '../layout/SimoLayout'
-import { AgregarUserView, GestioUsersView } from '../views'
+import { AgregarUserView, GestionAvanceView, GestioUsersView } from '../views'
 import { EditarUserView } from '../views/EditarUserView'
 import { useViewStore } from '../../../hooks'
 import { usePeriodoStore } from '../../../hooks/usePeriodoStore'
 import { AgregarPeriodoView } from '../views/AgregarPeriodoView'
 import { BoxFieldPeriodo } from '../../auth/components/BoxFieldPeriodo'
+import { AvancesPresupuestos } from '../components/AvancesPresupuestos'
 
 export const SimoPage = () => {
   const { stateViewSimo,stateViewUser } = useViewStore()
@@ -44,12 +45,12 @@ export const SimoPage = () => {
         <div>
           <Typography variant="h4">Bienvenido a la Página de Inicio</Typography>
         </div>
-      ) : stateViewSimo === 'agregarUsuario' ? (
-        // Si el estado es 'agregarUsuario', mostrar la vista de agregar usuario
-        <div>
-          <Typography variant="h4">Agregar Nuevo Usuario</Typography>
-          <AgregarUserView />
-        </div>
+      ) : stateViewSimo === 'Gestión de Avance' ? (
+        <GestionAvanceView>
+          {
+            <AvancesPresupuestos/>
+          }
+        </GestionAvanceView>
       ) : stateViewSimo === 'editarUsuario' ? (
         // Si el estado es 'editarUsuario', mostrar la vista de edición de usuario
         <div>

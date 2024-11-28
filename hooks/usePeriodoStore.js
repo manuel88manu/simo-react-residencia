@@ -36,9 +36,7 @@ const startIgresarPeriodo=async(presupuestos)=>{
 
 const startObtenerPeriodos=async(idperiodo)=>{
     try {
-    console.log(idperiodo)
     const { data } = await simoApi.get(`/periody/presupuestos`, { params: { idperiodo } });
-    console.log('Presupuestos',data.presupuestos)
     if (Array.isArray(data.presupuestos)) {
         data.presupuestos.forEach((presupuesto) => {
             switch (presupuesto.tipo) {

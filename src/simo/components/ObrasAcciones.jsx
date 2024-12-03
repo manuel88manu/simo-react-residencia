@@ -14,11 +14,60 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useViewStore } from "../../../hooks";
+import { usePeriodoStore, useViewStore } from "../../../hooks";
 
 export const ObrasAcciones = () => {
-
+    
+  const [presupuestoActivo, setPresupuestoActivo] = useState({});
   const { estadoPresupuesto } = useViewStore();
+  const {
+    presuEstatal,
+    presuFaismun,
+    presuFortamun,
+    presuOdirectas,
+    presuFederal,
+  } = usePeriodoStore();
+
+  const opciones = {
+    fortamun: [
+      { value: "seguridad_publica", label: "Seguridad Publica" },
+      { value: "otros", label: "Otros" },
+    ],
+    faismun11: [ 
+      { value: "zona_atencion_prioritaria", label: "Zona de atencion prioritaria" },
+      { value: "incidencia_directa", label: "Incidencia Directa" },
+      { value: "indirectos", label: "Indirectos" },
+      { value: "prodim", label: "PRODIM" },
+      { value: "incidencia_complementaria", label: "Incidencia Complementaria" },
+    ],
+    faismun10: [
+        { value: "zona_atencion_prioritaria", label: "Zona de atencion prioritaria" },
+        { value: "incidencia_directa", label: "Incidencia Directa" },
+        { value: "indirectos", label: "Indirectos" },
+        { value: "incidencia_complementaria", label: "Incidencia Complementaria" },
+      ],
+      faismun01: [
+        { value: "zona_atencion_prioritaria", label: "Zona de atencion prioritaria" },
+        { value: "incidencia_directa", label: "Incidencia Directa" },
+        { value: "prodim", label: "PRODIM" },
+        { value: "incidencia_complementaria", label: "Incidencia Complementaria" },
+      ],
+      faismun00: [
+        { value: "zona_atencion_prioritaria", label: "Zona de atencion prioritaria" },
+        { value: "incidencia_directa", label: "Incidencia Directa" },
+        { value: "incidencia_complementaria", label: "Incidencia Complementaria" },
+      ],
+    default: [
+      { value: "default1", label: "Opción por Defecto 1" },
+      { value: "default2", label: "Opción por Defecto 2" },
+    ],
+  };
+
+  const claveFaismun = `faismun${presupuestoActivo.indirectos}${presupuestoActivo.prodim}`;
+  const opcionesSeleccionadas =
+    presupuestoActivo.tipo === "fortamun"
+      ? opciones.fortamun
+      : opciones[claveFaismun] || opciones.default;
 
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaTermino, setFechaTermino] = useState(null);
@@ -61,13 +110,22 @@ export const ObrasAcciones = () => {
     // Lógica para finalizar el proceso
   };
 
-  useEffect(() => {
-    
 
-    
+  useEffect(() => {
+    const presupuestoMapping = {
+      estatal: presuEstatal,
+      faismun: presuFaismun,
+      fortamun: presuFortamun,
+      odirectas: presuOdirectas,
+      federal: presuFederal,
+    };
+
+    setRubros('')
+    setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
   }, [estadoPresupuesto]);
+  
   return (
-    <Box sx={{ padding: 2, backgroundColor: "#f7f7f7" }}>
+    <Box sx={{ padding: 2, backgroundColor: "#f7f7f7", mt: 1.4, maxHeight: 'calc(100vh - 100px)', overflowY: 'auto' }}>
       <Grid container spacing={2}>
         {/* Columna 1 */}
         <Grid item xs={3}>
@@ -78,17 +136,32 @@ export const ObrasAcciones = () => {
             size="small"
             sx={{ backgroundColor: "#fff" }}
           />
-          <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
-            <InputLabel>Rubros</InputLabel>
-            <Select
-              value={rubros} // Se agrega el estado value
-              onChange={(e) => setRubros(e.target.value)} // Se maneja el cambio del select
-              size="small"
-            >
-              <MenuItem value="opcion1">Opción 1</MenuItem>
-              <MenuItem value="opcion2">Opción 2</MenuItem>
-            </Select>
-          </FormControl>
+         {
+            (presupuestoActivo.tipo === "fortamun" || presupuestoActivo.tipo === "faismun") && (
+                <FormControl
+                fullWidth
+                margin="normal"
+                size="small"
+                sx={{
+                    backgroundColor: "#fff",
+                }}
+                >
+                <InputLabel>Rubros</InputLabel>
+                <Select
+                    value={rubros} // Se agrega el estado value
+                    onChange={(e) => setRubros(e.target.value)} // Se maneja el cambio del select
+                    size="small"
+                >
+                    {opcionesSeleccionadas.map((opcion) => (
+                     <MenuItem key={opcion.value} value={opcion.value}>
+                    {opcion.label}
+                     </MenuItem>
+                     ))}
+
+                </Select>
+                </FormControl>
+            )
+            }
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Programa</InputLabel>
             <Select
@@ -142,7 +215,7 @@ export const ObrasAcciones = () => {
 
         {/* Columna 2 */}
         <Grid item xs={3}>
-          <Typography variant="body2">Capacidad</Typography>
+          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Capacidad</Typography>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Unidad</InputLabel>
             <Select
@@ -162,7 +235,7 @@ export const ObrasAcciones = () => {
             size="small"
             sx={{ backgroundColor: "#fff" }}
           />
-          <Typography variant="body2" sx={{ marginTop: 2 }}>
+          <Typography variant="body2" sx={{ marginTop: 2 ,fontWeight: 'bold' }}>
             Beneficio
           </Typography>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
@@ -188,9 +261,10 @@ export const ObrasAcciones = () => {
 
         {/* Columna 3 */}
         <Grid item xs={3}>
-          <Typography variant="body2">Fecha de Obra</Typography>
+          <Typography variant="body2" sx={{fontWeight: 'bold' }}>Fecha de Obra</Typography>
         <DatePicker
                 label="Inicio"
+                sx={{ mt: 2}}
                 value={fechaInicio}
                 onChange={(newValue) => setFechaInicio(newValue)}
                 textField={(params) => (
@@ -203,7 +277,7 @@ export const ObrasAcciones = () => {
                 )}
                 />
                 <DatePicker
-                sx={{ mt: 2, mb: 4.4 }}
+                sx={{ mt: 2, mb: 2.6 }}
                 label="Término"
                 value={fechaTermino}
                 onChange={(newValue) => setFechaTermino(newValue)}
@@ -236,7 +310,7 @@ export const ObrasAcciones = () => {
         </Grid>
 
         {/* Columna 4 */}
-        <Grid item xs={3}>
+        <Grid item xs={3} sx={{mt:2.4}}>
           <Box
             sx={{
               border: "1px solid #ccc",

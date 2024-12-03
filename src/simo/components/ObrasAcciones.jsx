@@ -19,6 +19,13 @@ export const ObrasAcciones = () => {
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaTermino, setFechaTermino] = useState(null);
 
+  const [rubros, setRubros] = useState(""); // Estado para los select
+  const [programa, setPrograma] = useState(""); // Estado para los select
+  const [subprograma, setSubprograma] = useState(""); // Estado para los select
+  const [ejecucion, setEjecucion] = useState(""); // Estado para los select
+  const [unidadCapacidad, setUnidadCapacidad] = useState(""); // Estado para los select
+  const [unidadBeneficio, setUnidadBeneficio] = useState(""); // Estado para los select
+
   const validarFechas = () => {
     if (!fechaInicio || !fechaTermino) return false;
     return fechaTermino >= fechaInicio;
@@ -64,28 +71,44 @@ export const ObrasAcciones = () => {
           />
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Rubros</InputLabel>
-            <Select size="small">
+            <Select
+              value={rubros} // Se agrega el estado value
+              onChange={(e) => setRubros(e.target.value)} // Se maneja el cambio del select
+              size="small"
+            >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Programa</InputLabel>
-            <Select size="small">
+            <Select
+              value={programa} // Se agrega el estado value
+              onChange={(e) => setPrograma(e.target.value)} // Se maneja el cambio del select
+              size="small"
+            >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Subprograma</InputLabel>
-            <Select size="small">
+            <Select
+              value={subprograma} // Se agrega el estado value
+              onChange={(e) => setSubprograma(e.target.value)} // Se maneja el cambio del select
+              size="small"
+            >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Ejecución</InputLabel>
-            <Select size="small">
+            <Select
+              value={ejecucion} // Se agrega el estado value
+              onChange={(e) => setEjecucion(e.target.value)} // Se maneja el cambio del select
+              size="small"
+            >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
             </Select>
@@ -113,7 +136,11 @@ export const ObrasAcciones = () => {
           <Typography variant="body2">Capacidad</Typography>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Unidad</InputLabel>
-            <Select size="small">
+            <Select
+              value={unidadCapacidad} // Se agrega el estado value
+              onChange={(e) => setUnidadCapacidad(e.target.value)} // Se maneja el cambio del select
+              size="small"
+            >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
             </Select>
@@ -131,7 +158,11 @@ export const ObrasAcciones = () => {
           </Typography>
           <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
             <InputLabel>Unidad</InputLabel>
-            <Select size="small">
+            <Select
+              value={unidadBeneficio} // Se agrega el estado value
+              onChange={(e) => setUnidadBeneficio(e.target.value)} // Se maneja el cambio del select
+              size="small"
+            >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
             </Select>
@@ -149,34 +180,40 @@ export const ObrasAcciones = () => {
         {/* Columna 3 */}
         <Grid item xs={3}>
           <Typography variant="body2">Fecha de Obra</Typography>
-          <DatePicker
-            label="Inicio"
-            value={fechaInicio}
-            onChange={(newValue) => setFechaInicio(newValue)}
-            renderInput={(params) => (
-              <TextField fullWidth {...params} size="small" sx={{ backgroundColor: "#fff" }} />
-            )}
-          />
-          <DatePicker
-            sx={{ mt: 2, mb:4.4 }}
-            label="Término"
-            value={fechaTermino}
-            onChange={(newValue) => setFechaTermino(newValue)}
-            renderInput={(params) => (
-              <TextField
-                fullWidth
-                {...params}
-                error={fechaInicio && fechaTermino && !validarFechas()}
-                helperText={
-                  fechaInicio && fechaTermino && !validarFechas()
-                    ? "La fecha de término no puede ser menor que la de inicio"
-                    : ""
-                }
-                size="small"
-                sx={{ backgroundColor: "#fff" }}
-              />
-            )}
-          />
+        <DatePicker
+                label="Inicio"
+                value={fechaInicio}
+                onChange={(newValue) => setFechaInicio(newValue)}
+                textField={(params) => (
+                    <TextField 
+                    fullWidth 
+                    {...params} 
+                    size="small" 
+                    sx={{ backgroundColor: "#fff" }} 
+                    />
+                )}
+                />
+                <DatePicker
+                sx={{ mt: 2, mb: 4.4 }}
+                label="Término"
+                value={fechaTermino}
+                onChange={(newValue) => setFechaTermino(newValue)}
+                textField={(params) => (
+                    <TextField
+                    fullWidth
+                    {...params}
+                    error={fechaInicio && fechaTermino && !validarFechas()}
+                    helperText={
+                        fechaInicio && fechaTermino && !validarFechas()
+                        ? "La fecha de término no puede ser menor que la de inicio"
+                        : ""
+                    }
+                    size="small"
+                    sx={{ backgroundColor: "#fff" }}
+                    />
+                )}
+                />
+
           <TextField
             fullWidth
             label="Presupuesto"
@@ -223,7 +260,6 @@ export const ObrasAcciones = () => {
                 <CheckCircleIcon fontSize="large" color="success" />
               </IconButton>
             </Box>
-
             <Box
               sx={{
                 display: "flex",
@@ -247,7 +283,6 @@ export const ObrasAcciones = () => {
                 <CheckCircleIcon fontSize="large" color="success" />
               </IconButton>
             </Box>
-
             <Box
               sx={{
                 display: "flex",
@@ -271,7 +306,6 @@ export const ObrasAcciones = () => {
                 <CheckCircleIcon fontSize="large" color="success" />
               </IconButton>
             </Box>
-
             <Box
               sx={{
                 display: "flex",
@@ -295,7 +329,6 @@ export const ObrasAcciones = () => {
                 <CheckCircleIcon fontSize="large" color="success" />
               </IconButton>
             </Box>
-
             <Box
               sx={{
                 display: "flex",

@@ -8,6 +8,8 @@ import { usePeriodoStore } from '../../../hooks/usePeriodoStore'
 import { AgregarPeriodoView } from '../views/AgregarPeriodoView'
 import { BoxFieldPeriodo } from '../../auth/components/BoxFieldPeriodo'
 import { AvancesPresupuestos } from '../components/AvancesPresupuestos'
+import { AgregarObraView } from '../views/AgregarObraView'
+import { ObrasAcciones } from '../components/ObrasAcciones'
 
 export const SimoPage = () => {
   const { stateViewSimo,stateViewUser } = useViewStore()
@@ -51,12 +53,12 @@ export const SimoPage = () => {
             <AvancesPresupuestos/>
           }
         </GestionAvanceView>
-      ) : stateViewSimo === 'editarUsuario' ? (
-        // Si el estado es 'editarUsuario', mostrar la vista de edición de usuario
-        <div>
-          <Typography variant="h4">Editar Usuario</Typography>
-          <EditarUserView />
-        </div>
+      ) : stateViewSimo === 'Agregar Obra' ? (
+          <AgregarObraView>
+            {
+              <ObrasAcciones/>
+            }
+          </AgregarObraView>
       ) : stateViewSimo === 'otraVista' ? (
         // Si el estado es 'otraVista', mostrar otro componente
         <div>

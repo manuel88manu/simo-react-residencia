@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useEffect, useState } from "react"; 
 import {
   Grid,
   TextField,
@@ -14,8 +14,12 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { useViewStore } from "../../../hooks";
 
 export const ObrasAcciones = () => {
+
+  const { estadoPresupuesto } = useViewStore();
+
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaTermino, setFechaTermino] = useState(null);
 
@@ -57,6 +61,11 @@ export const ObrasAcciones = () => {
     // Lógica para finalizar el proceso
   };
 
+  useEffect(() => {
+    
+
+    
+  }, [estadoPresupuesto]);
   return (
     <Box sx={{ padding: 2, backgroundColor: "#f7f7f7" }}>
       <Grid container spacing={2}>

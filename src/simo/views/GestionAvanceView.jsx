@@ -6,9 +6,9 @@ export const GestionAvanceView = ({children}) => {
 
   const {selecTipoPeriodo,estadoPresupuesto}=useViewStore()
 
-  const selectPresupuesto=async(tipo)=>{
+  const selectPresupuesto=(tipo)=>{
 
-    await selecTipoPeriodo(tipo)
+     selecTipoPeriodo(tipo)
 
   }
   return (

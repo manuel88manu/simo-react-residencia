@@ -17,7 +17,8 @@ export const useViewStore = () => {
     dispatch(onModalUser(payload))
   }
 
-  const selecTipoPeriodo=async(tipo)=>{
+  const selecTipoPeriodo=(tipo)=>{
+    if(tipo===estadoPresupuesto)return;
     dispatch(onEstadoPresupuesto(tipo))
   }
 

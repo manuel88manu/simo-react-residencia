@@ -126,7 +126,7 @@ export const ObrasAcciones = () => {
   
   return (
     <Box sx={{ padding: 2, backgroundColor: "#f7f7f7", mt: 1.4, maxHeight: 'calc(100vh - 100px)', overflowY: 'auto' }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} >
         {/* Columna 1 */}
         <Grid item xs={3}>
           <TextField
@@ -148,6 +148,8 @@ export const ObrasAcciones = () => {
                 >
                 <InputLabel>Rubros</InputLabel>
                 <Select
+                    label="rubros"
+                    name="rubros"
                     value={rubros} // Se agrega el estado value
                     onChange={(e) => setRubros(e.target.value)} // Se maneja el cambio del select
                     size="small"
@@ -168,6 +170,8 @@ export const ObrasAcciones = () => {
               value={programa} // Se agrega el estado value
               onChange={(e) => setPrograma(e.target.value)} // Se maneja el cambio del select
               size="small"
+              label="programa"
+              name="programa"
             >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
@@ -179,6 +183,8 @@ export const ObrasAcciones = () => {
               value={subprograma} // Se agrega el estado value
               onChange={(e) => setSubprograma(e.target.value)} // Se maneja el cambio del select
               size="small"
+              label="subprograma"
+              name="subprograma"
             >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
@@ -190,6 +196,8 @@ export const ObrasAcciones = () => {
               value={ejecucion} // Se agrega el estado value
               onChange={(e) => setEjecucion(e.target.value)} // Se maneja el cambio del select
               size="small"
+              label="ejecucion"
+              name="ejecucion"
             >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
@@ -222,6 +230,8 @@ export const ObrasAcciones = () => {
               value={unidadCapacidad} // Se agrega el estado value
               onChange={(e) => setUnidadCapacidad(e.target.value)} // Se maneja el cambio del select
               size="small"
+              label="unidadcap"
+              name="unidadcap"
             >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>
@@ -244,6 +254,8 @@ export const ObrasAcciones = () => {
               value={unidadBeneficio} // Se agrega el estado value
               onChange={(e) => setUnidadBeneficio(e.target.value)} // Se maneja el cambio del select
               size="small"
+              label="unidadbene"
+              name="unidadbene"
             >
               <MenuItem value="opcion1">Opción 1</MenuItem>
               <MenuItem value="opcion2">Opción 2</MenuItem>

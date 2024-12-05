@@ -41,7 +41,6 @@ export const opciones = {
       { value: "SC-AGUA POTABLE", label: "SC-AGUA POTABLE" },
       { value: "SD-ALCANTARILLADO", label: "SD-ALCANTARILLADO" },
       { value: "SE-URBANIZACION", label: "SE-URBANIZACION" },
-      { value: "SE-URBANIZACION", label: "SE-URBANIZACION" },
       { value: "SF-PAVIMENTACION EN COLONIAS POPULARES", label: "SF-PAVIMENTACION EN COLONIAS POPULARES" },
       { value: "SG-ELECTRIFICACION", label: "SG-ELECTRIFICACION" },
       { value: "SH-VIVIENDA DIGNA", label: "SH-VIVIENDA DIGNA" },

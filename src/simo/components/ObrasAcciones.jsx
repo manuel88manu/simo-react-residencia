@@ -15,15 +15,22 @@
     import { DatePicker } from "@mui/x-date-pickers";
     import CheckCircleIcon from "@mui/icons-material/CheckCircle";
     import CancelIcon from "@mui/icons-material/Cancel";
-    import { usePeriodoStore, useViewStore } from "../../../hooks";
-    import { opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
+    import { useForm, usePeriodoStore, useViewStore } from "../../../hooks";
+    import { convertirFechasADate, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
+import { useObraStore } from "../../../hooks/useObraStore";
 
 
     export const ObrasAcciones = () => {
+    
+    const {obra:obrainicio,obras,dictamen:dictameInicial}=useObraStore();    
 
-    const [rubros, setRubros] = useState(""); // Estado para los select
-    const [programa, setPrograma] = useState(""); // Estado para los select
-    const [subprograma, setSubprograma] = useState(""); // Estado para los select
+    const{nombre,bene_unidad,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
+    const {fec_inicio,fec_termino,onInputChange:onChangeDictamen,formState}=useForm(dictameInicial)
+    
+
+
+
+   
     const [rubrosInputValue, setRubrosInputValue] = useState(''); // Para el Autocomplete de rubros
     const [programaInputValue, setProgramaInputValue] = useState('');
     const [subprogramaInputValue, setSubprogramaInputValue] = useState('');  // Para el Autocomplete de programa
@@ -58,27 +65,21 @@
     : opcionesSubprograma[programa] || [];
 
 
-    const [fechaInicio, setFechaInicio] = useState(null);
-    const [fechaTermino, setFechaTermino] = useState(null);
-
-    
 
 
-
-
-    
-    const [ejecucion, setEjecucion] = useState(""); // Estado para los select
     const [unidadCapacidad, setUnidadCapacidad] = useState(""); // Estado para los select
     const [unidadBeneficio, setUnidadBeneficio] = useState(""); // Estado para los select
 
     const validarFechas = () => {
-        if (!fechaInicio || !fechaTermino) return false;
-        return fechaTermino >= fechaInicio;
+        if (!fec_inicio || !fec_termino) return false;
+        return fec_inicio >= fec_termino;
     };
 
     // Métodos independientes para cada acción
     const agregarObra = () => {
-        console.log("Agregar Obra");
+        const dictamen= convertirFechasADate(formState)
+        console.log("Obra",obra);
+        console.log("dictamen",dictamen)
         // Lógica para agregar obra
     };
 
@@ -111,10 +112,8 @@
         odirectas: presuOdirectas,
         federal: presuFederal,
         };
-
-        setRubros('');
-        setPrograma(null);
-        setSubprograma(null);
+        
+        onResetForm()
         setRubrosInputValue(''); // Limpia el texto del campo de rubros
         setProgramaInputValue(''); 
         setSubprogramaInputValue('');
@@ -130,41 +129,51 @@
             <TextField
                 fullWidth
                 label="Nombre De La Obra"
+                name="nombre"
+                value={nombre}
+                onChange={onObraChange}
                 variant="outlined"
                 size="small"
                 sx={{ backgroundColor: "#fff" }}
             />
             {
                 (presupuestoActivo.tipo === "fortamun" || presupuestoActivo.tipo === "faismun") && (
-                 <Autocomplete
-                        fullWidth
-                        margin="normal"
-                        size="small"
-                        sx={{ backgroundColor: "#fff", mt: 2 }}
-                        options={opcionesSeleccionadas}
-                        getOptionLabel={(opcion) => opcion.label}
-                        value={opcionesSeleccionadas.find((opcion) => opcion.value === rubros) || null}
-                        inputValue={rubrosInputValue} // Usar el nuevo estado
-                        onInputChange={(e, newValue) => setRubrosInputValue(newValue)} // Sincronizar el texto visible
-                        onChange={(e, value) => setRubros(value?.value || "")} // Actualizar el valor seleccionado
-                        renderInput={(params) => (
-                            <TextField {...params} label="Rubros" variant="outlined" size="small" />
-                        )}
-                        isOptionEqualToValue={(option, value) => option.value === value?.value}
-                        />
+                    <Autocomplete
+                    fullWidth
+                    margin="normal"
+                    size="small"
+                    name="rubros"
+                    sx={{ backgroundColor: "#fff", mt: 2 }}
+                    options={opcionesSeleccionadas}
+                    getOptionLabel={(opcion) => opcion.label}
+                    value={opcionesSeleccionadas.find((opcion) => opcion.value === rubros) || null} // Valor seleccionado
+                    inputValue={rubrosInputValue} // Controla el texto visible
+                    onInputChange={(e, newValue) => setRubrosInputValue(newValue)} // Sincroniza el texto visible
+                    onChange={(e, value) => {
+                        onObraChange({ target: { name: "rubros", value: value?.value || "" } }); // Llama a onObraChange con el nuevo valor
+                    }}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Rubros" variant="outlined" size="small" />
+                    )}
+                    isOptionEqualToValue={(option, value) => option.value === value?.value}
+                />
+                
                 )
                 }
             <Autocomplete
                 fullWidth
                 margin="normal"
                 size="small"
+                name="programa"
+                onChange={(e, value) => {
+                    onObraChange({ target: { name: "programa", value: value?.value || "" } }); // Llama a onObraChange con el nuevo valor
+                }}
                 sx={{ backgroundColor: "#fff", mt: 2 }}
                 options={opcionesProgramasSeleccionadas}
                 getOptionLabel={(opcion) => opcion.label}
                 value={opcionesProgramasSeleccionadas.find((opcion) => opcion.value === programa) || null}
                 inputValue={programaInputValue} // Usar el nuevo estado
                 onInputChange={(e, newValue) => setProgramaInputValue(newValue)} // Sincronizar el texto visible
-                onChange={(e, value) => setPrograma(value?.value || null)} // Actualizar el valor seleccionado
                 renderInput={(params) => (
                     <TextField {...params} label="Programa" variant="outlined" size="small" />
                 )}
@@ -173,16 +182,19 @@
 
                 <Autocomplete
                 fullWidth
-                disabled={programa===null?true:false}
+                disabled={programa===''?true:false}
                 margin="normal"
                 size="small"
+                name="subprograma"
+                onChange={(e, value) => {
+                    onObraChange({ target: { name: "subprograma", value: value?.value || "" } }); // Llama a onObraChange con el nuevo valor
+                }}
                 sx={{ backgroundColor: "#fff", mt: 2 }}
                 options={opcionesSubprogramasSeleccionadas}
                 getOptionLabel={(opcion) => opcion.label}
                 value={opcionesSubprogramasSeleccionadas.find((opcion) => opcion.value === subprograma) || null}
                 inputValue={subprogramaInputValue} // Controla el texto visible
                 onInputChange={(e, newValue) => setSubprogramaInputValue(newValue)} // Sincroniza el texto
-                onChange={(e, value) => setSubprograma(value?.value || null)} // Maneja la selección
                 renderInput={(params) => (
                     <TextField {...params} label="Subprograma" variant="outlined" size="small" />
                 )}
@@ -191,11 +203,11 @@
             <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
                 <InputLabel>Ejecución</InputLabel>
                 <Select
+                name="ejecucion"
+                onChange={onObraChange}
                 value={ejecucion} // Se agrega el estado value
-                onChange={(e) => setEjecucion(e.target.value)} // Se maneja el cambio del select
                 size="small"
                 label="ejecucion"
-                name="ejecucion"
                 >
                 <MenuItem value="CONTRATO">CONTRATO</MenuItem>
                 <MenuItem value="ADMINISTRACION">ADMINISTRACION</MenuItem>
@@ -207,6 +219,9 @@
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="loca_col"
+                onChange={onObraChange}
+                value={loca_col} 
                 sx={{ backgroundColor: "#fff" }}
             />
             <TextField
@@ -215,6 +230,9 @@
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="empleo_event"
+                onChange={onObraChange}
+                value={empleo_event} 
                 sx={{ backgroundColor: "#fff" }}
             />
             </Grid>
@@ -229,6 +247,9 @@
             variant="outlined"
             margin="normal"
             size="small"
+            name="cap_unidad"
+            onChange={onObraChange}
+            value={cap_unidad} 
             sx={{ backgroundColor: "#fff" }}
         />
             <TextField
@@ -237,6 +258,9 @@
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="cap_cantidad"
+                onChange={onObraChange}
+                value={cap_cantidad}
                 sx={{ backgroundColor: "#fff" }}
             />
             <Typography variant="body2" sx={{ marginTop: 2 ,fontWeight: 'bold' }}>
@@ -248,8 +272,10 @@
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="bene_unidad"
+                onChange={onObraChange}
+                value={bene_unidad}
                 sx={{ backgroundColor: "#fff" }}
-                name="unidadbene"
             />
 
             <TextField
@@ -258,6 +284,9 @@
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="bene_cantidad"
+                onChange={onObraChange}
+                value={bene_cantidad}
                 sx={{ backgroundColor: "#fff" }}
             />
             </Grid>
@@ -267,30 +296,37 @@
             <Typography variant="body2" sx={{fontWeight: 'bold' }}>Fecha de Obra</Typography>
             <DatePicker
                     label="Inicio"
-                    sx={{ mt: 2}}
-                    value={fechaInicio}
-                    onChange={(newValue) => setFechaInicio(newValue)}
-                    textField={(params) => (
-                        <TextField 
-                        fullWidth 
-                        {...params} 
-                        size="small" 
-                        sx={{ backgroundColor: "#fff" }} 
-                        />
-                    )}
-                    />
-                    <DatePicker
-                    sx={{ mt: 2, mb: 2.6 }}
-                    label="Término"
-                    value={fechaTermino}
-                    onChange={(newValue) => setFechaTermino(newValue)}
+                    sx={{ mt: 2 }}
+                    value={fec_inicio}
+                    name="fec_inicio"
+                    onChange={(value) => {
+                        onChangeDictamen({ target: { name: "fec_inicio", value } }); // Adaptación para `onObraChange`
+                    }}
                     textField={(params) => (
                         <TextField
                         fullWidth
                         {...params}
-                        error={fechaInicio && fechaTermino && !validarFechas()}
+                        size="small"
+                        sx={{ backgroundColor: "#fff" }}
+                        />
+                    )}
+                    />
+
+                    <DatePicker
+                    label="Término"
+                    sx={{ mt: 2, mb: 2.6 }}
+                    value={fec_termino}
+                    name="fec_termino"
+                    onChange={(value) => {
+                        onChangeDictamen({ target: { name: "fec_termino", value } }); // Adaptación para `onObraChange`
+                    }}
+                    textField={(params) => (
+                        <TextField
+                        fullWidth
+                        {...params}
+                        error={fec_inicio && fec_termino && !validarFechas()}
                         helperText={
-                            fechaInicio && fechaTermino && !validarFechas()
+                            fec_inicio && fec_termino && !validarFechas()
                             ? "La fecha de término no puede ser menor que la de inicio"
                             : ""
                         }
@@ -300,14 +336,17 @@
                     )}
                     />
 
+
             <TextField
                 fullWidth
                 label="Presupuesto"
                 variant="outlined"
                 margin="normal"
-                value="$0.00"
                 disabled
                 size="small"
+                name="presupuesto"
+                onChange={onObraChange}
+                value={presupuesto}
                 sx={{ backgroundColor: "#fff" }}
             />
             </Grid>

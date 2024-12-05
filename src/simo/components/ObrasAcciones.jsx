@@ -16,11 +16,19 @@
     import CheckCircleIcon from "@mui/icons-material/CheckCircle";
     import CancelIcon from "@mui/icons-material/Cancel";
     import { usePeriodoStore, useViewStore } from "../../../hooks";
-    import { opciones, opcionesPrograma } from "../../../helpers";
+    import { opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
 
 
     export const ObrasAcciones = () => {
-        
+
+    const [rubros, setRubros] = useState(""); // Estado para los select
+    const [programa, setPrograma] = useState(""); // Estado para los select
+    const [subprograma, setSubprograma] = useState(""); // Estado para los select
+    const [rubrosInputValue, setRubrosInputValue] = useState(''); // Para el Autocomplete de rubros
+    const [programaInputValue, setProgramaInputValue] = useState('');
+    const [subprogramaInputValue, setSubprogramaInputValue] = useState('');  // Para el Autocomplete de programa
+
+    console.log(programa)    
     const [presupuestoActivo, setPresupuestoActivo] = useState({});
     const { estadoPresupuesto } = useViewStore();
     const {
@@ -34,29 +42,32 @@
     
 
     const claveFaismun = `faismun${presupuestoActivo.indirectos}${presupuestoActivo.prodim}`;
+    
     const opcionesSeleccionadas =
-        presupuestoActivo.tipo === "fortamun"
-        ? opciones.fortamun
-        : opciones[claveFaismun] || opciones.default;
-    
-    const opcionesProgramasSeleccionadas=
-        presupuestoActivo.tipo==="fortamun"
-        ? opcionesPrograma.fortamun
-        : opcionesPrograma.faismun || opciones.default;
-    
+    presupuestoActivo.tipo === "fortamun"
+    ? opciones.fortamun
+    : opciones[claveFaismun] || opciones.default || [];
+
+    const opcionesProgramasSeleccionadas =
+    presupuestoActivo.tipo === "fortamun"
+    ? opcionesPrograma.fortamun
+    : opcionesPrograma.faismun || opcionesPrograma.default || [];
+
+    const opcionesSubprogramasSeleccionadas =
+    programa === null
+    ? opcionesSubprograma.default || []
+    : opcionesSubprograma[programa] || [];
+
 
     const [fechaInicio, setFechaInicio] = useState(null);
     const [fechaTermino, setFechaTermino] = useState(null);
 
-    const [rubros, setRubros] = useState(""); // Estado para los select
-    const [programa, setPrograma] = useState(""); // Estado para los select
-    const [rubrosInputValue, setRubrosInputValue] = useState(''); // Para el Autocomplete de rubros
-    const [programaInputValue, setProgramaInputValue] = useState(''); // Para el Autocomplete de programa
+    
 
 
 
 
-    const [subprograma, setSubprograma] = useState(""); // Estado para los select
+    
     const [ejecucion, setEjecucion] = useState(""); // Estado para los select
     const [unidadCapacidad, setUnidadCapacidad] = useState(""); // Estado para los select
     const [unidadBeneficio, setUnidadBeneficio] = useState(""); // Estado para los select
@@ -104,10 +115,13 @@
 
         setRubros('');
         setPrograma(null);
+        setSubprograma(null);
         setRubrosInputValue(''); // Limpia el texto del campo de rubros
         setProgramaInputValue(''); 
+        setSubprogramaInputValue('');
         setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
     }, [estadoPresupuesto]);
+
     
     return (
         <Box sx={{ padding: 2, backgroundColor: "#f7f7f7", mt: 1.4, maxHeight: 'calc(100vh - 100px)', overflowY: 'auto' }}>
@@ -157,20 +171,24 @@
                 )}
                 isOptionEqualToValue={(option, value) => option.value === value?.value}
                 />
-                
-            <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
-                <InputLabel>Subprograma</InputLabel>
-                <Select
-                value={subprograma} // Se agrega el estado value
-                onChange={(e) => setSubprograma(e.target.value)} // Se maneja el cambio del select
+
+                <Autocomplete
+                fullWidth
+                disabled={programa===null?true:false}
+                margin="normal"
                 size="small"
-                label="subprograma"
-                name="subprograma"
-                >
-                <MenuItem value="opcion1">Opción 1</MenuItem>
-                <MenuItem value="opcion2">Opción 2</MenuItem>
-                </Select>
-            </FormControl>
+                sx={{ backgroundColor: "#fff", mt: 2 }}
+                options={opcionesSubprogramasSeleccionadas}
+                getOptionLabel={(opcion) => opcion.label}
+                value={opcionesSubprogramasSeleccionadas.find((opcion) => opcion.value === subprograma) || null}
+                inputValue={subprogramaInputValue} // Controla el texto visible
+                onInputChange={(e, newValue) => setSubprogramaInputValue(newValue)} // Sincroniza el texto
+                onChange={(e, value) => setSubprograma(value?.value || null)} // Maneja la selección
+                renderInput={(params) => (
+                    <TextField {...params} label="Subprograma" variant="outlined" size="small" />
+                )}
+                isOptionEqualToValue={(option, value) => option.value === value?.value}
+                />
             <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
                 <InputLabel>Ejecución</InputLabel>
                 <Select

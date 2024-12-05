@@ -28,7 +28,6 @@
     const [programaInputValue, setProgramaInputValue] = useState('');
     const [subprogramaInputValue, setSubprogramaInputValue] = useState('');  // Para el Autocomplete de programa
 
-    console.log(programa)    
     const [presupuestoActivo, setPresupuestoActivo] = useState({});
     const { estadoPresupuesto } = useViewStore();
     const {
@@ -198,8 +197,8 @@
                 label="ejecucion"
                 name="ejecucion"
                 >
-                <MenuItem value="opcion1">Opción 1</MenuItem>
-                <MenuItem value="opcion2">Opción 2</MenuItem>
+                <MenuItem value="CONTRATO">CONTRATO</MenuItem>
+                <MenuItem value="ADMINISTRACION">ADMINISTRACION</MenuItem>
                 </Select>
             </FormControl>
             <TextField
@@ -223,19 +222,15 @@
             {/* Columna 2 */}
             <Grid item xs={3}>
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Capacidad</Typography>
-            <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
-                <InputLabel>Unidad</InputLabel>
-                <Select
-                value={unidadCapacidad} // Se agrega el estado value
-                onChange={(e) => setUnidadCapacidad(e.target.value)} // Se maneja el cambio del select
-                size="small"
-                label="unidadcap"
-                name="unidadcap"
-                >
-                <MenuItem value="opcion1">Opción 1</MenuItem>
-                <MenuItem value="opcion2">Opción 2</MenuItem>
-                </Select>
-            </FormControl>
+            
+            <TextField
+            fullWidth
+            label="Unidad"
+            variant="outlined"
+            margin="normal"
+            size="small"
+            sx={{ backgroundColor: "#fff" }}
+        />
             <TextField
                 fullWidth
                 label="Cantidad"
@@ -247,19 +242,16 @@
             <Typography variant="body2" sx={{ marginTop: 2 ,fontWeight: 'bold' }}>
                 Beneficio
             </Typography>
-            <FormControl fullWidth margin="normal" size="small" sx={{ backgroundColor: "#fff" }}>
-                <InputLabel>Unidad</InputLabel>
-                <Select
-                value={unidadBeneficio} // Se agrega el estado value
-                onChange={(e) => setUnidadBeneficio(e.target.value)} // Se maneja el cambio del select
+            <TextField
+                fullWidth
+                label="Unidad"
+                variant="outlined"
+                margin="normal"
                 size="small"
-                label="unidadbene"
+                sx={{ backgroundColor: "#fff" }}
                 name="unidadbene"
-                >
-                <MenuItem value="opcion1">Opción 1</MenuItem>
-                <MenuItem value="opcion2">Opción 2</MenuItem>
-                </Select>
-            </FormControl>
+            />
+
             <TextField
                 fullWidth
                 label="Cantidad"

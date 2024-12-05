@@ -36,12 +36,16 @@ export const obraSlice = createSlice({
 ,
     },
     reducers: {
-        increment: (state, /* action */ ) => {
-            state.counter += 1;
+        setObra:(state,{payload})=>{
+            state.obra=payload
         },
+
+        setDictamen:(state,{payload})=>{
+            state.dictamen=payload
+        }
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { increment } = obraSlice.actions;
+export const { setObra, setDictamen } = obraSlice.actions;

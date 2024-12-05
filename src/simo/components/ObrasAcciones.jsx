@@ -16,21 +16,18 @@
     import CheckCircleIcon from "@mui/icons-material/CheckCircle";
     import CancelIcon from "@mui/icons-material/Cancel";
     import { useForm, usePeriodoStore, useViewStore } from "../../../hooks";
-    import { convertirFechasADate, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
+    import { convertirFechasADate, dictameInicial, obrainicio, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
 import { useObraStore } from "../../../hooks/useObraStore";
 
 
     export const ObrasAcciones = () => {
     
-    const {obra:obrainicio,obras,dictamen:dictameInicial}=useObraStore();    
+    const {obras,startAgregarObra}=useObraStore();    
 
     const{nombre,bene_unidad,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
     const {fec_inicio,fec_termino,onInputChange:onChangeDictamen,formState}=useForm(dictameInicial)
     
 
-
-
-   
     const [rubrosInputValue, setRubrosInputValue] = useState(''); // Para el Autocomplete de rubros
     const [programaInputValue, setProgramaInputValue] = useState('');
     const [subprogramaInputValue, setSubprogramaInputValue] = useState('');  // Para el Autocomplete de programa
@@ -77,9 +74,10 @@ import { useObraStore } from "../../../hooks/useObraStore";
 
     // Métodos independientes para cada acción
     const agregarObra = () => {
+
         const dictamen= convertirFechasADate(formState)
-        console.log("Obra",obra);
-        console.log("dictamen",dictamen)
+
+        startAgregarObra({Presupuesto_idPresupuesto:presupuestoActivo.idPresupuesto,obra,dictamen})
         // Lógica para agregar obra
     };
 

@@ -1,10 +1,20 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { setDictamen, setObra } from '../store/obra/obraSlice'
+import { setDictamen, setObra, setObraExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
-   const {obras,obra,dictamen}=useSelector(state=>state.obra)
+
+   const {obras,
+    obra,
+    dictamen,
+    valueObraAgregar,
+    valuePresupuestoAgregar,
+    valueExpedienteAgregar,
+    valueDictamenGenerar,
+    valueFinalizar
+    }=useSelector(state=>state.obra)
+
    const dispatch=useDispatch()
 
    const startAgregarObra=async({Presupuesto_idPresupuesto,obra,dictamen})=>{
@@ -12,7 +22,8 @@ export const useObraStore = () => {
         const {data}=await simoApi.post("/obra/newobra",{Presupuesto_idPresupuesto,obra,dictamen})
         dispatch(setObra(data.obra))
         dispatch(setDictamen(data.dictamen))
-        
+        dispatch(setObraExito())
+
         console.log(data)
         
     } catch (error) {
@@ -28,6 +39,11 @@ return{
     obra,
     obras,
     dictamen,
+    valueDictamenGenerar,
+    valueExpedienteAgregar,
+    valueFinalizar,
+    valueObraAgregar,
+    valuePresupuestoAgregar,
 
     //METODOS
     startAgregarObra

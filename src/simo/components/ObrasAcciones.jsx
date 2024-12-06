@@ -18,11 +18,19 @@
     import { useForm, usePeriodoStore, useViewStore } from "../../../hooks";
     import { convertirFechasADate, dictameInicial, obrainicio, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
 import { useObraStore } from "../../../hooks/useObraStore";
+import Swal from "sweetalert2";
 
 
     export const ObrasAcciones = () => {
     
-    const {obras,startAgregarObra}=useObraStore();    
+    const {obras,
+        startAgregarObra,
+        valueDictamenGenerar,
+        valueExpedienteAgregar,
+        valueFinalizar,
+        valueObraAgregar,
+        valuePresupuestoAgregar
+    }=useObraStore();    
 
     const{nombre,bene_unidad,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
     const {fec_inicio,fec_termino,onInputChange:onChangeDictamen,formState}=useForm(dictameInicial)
@@ -73,12 +81,27 @@ import { useObraStore } from "../../../hooks/useObraStore";
     };
 
     // Métodos independientes para cada acción
-    const agregarObra = () => {
+    const agregarObra = async() => {
+        try {
 
-        const dictamen= convertirFechasADate(formState)
+       const dictamen= convertirFechasADate(formState)
 
-        startAgregarObra({Presupuesto_idPresupuesto:presupuestoActivo.idPresupuesto,obra,dictamen})
-        // Lógica para agregar obra
+       await startAgregarObra({Presupuesto_idPresupuesto:presupuestoActivo.idPresupuesto,obra,dictamen})
+       Swal.fire({
+        title: "¡Operación exitosa!",
+        text: "La informacion inicial de la obra fue agregada correctamente",
+        icon: "success",
+        confirmButtonText: "Aceptar",
+    })
+
+    } catch (error) {
+        Swal.fire({
+            title: "Error",
+            text: error.message || "Hubo un problema al agregar los presupuestos",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+        });
+    }
     };
 
     const agregarPresupuesto = () => {
@@ -375,12 +398,18 @@ import { useObraStore } from "../../../hooks/useObraStore";
                     padding: 1,
                     backgroundColor: "#f0f0f0",
                     borderRadius: 1,
-                    minWidth: "150px"
+                    minWidth: "150px",
                     }}
                     onClick={agregarObra}  // Acción independiente
+                    disabled={valueObraAgregar.notvisible} 
                 >
                     <Typography sx={{ flex: 1, fontSize: "1rem" }}>Agregar Obra</Typography>
-                    <CheckCircleIcon fontSize="large" color="success" />
+                    {
+                        (valueObraAgregar.icono)?
+                        <CheckCircleIcon fontSize="large" color="success" />
+                        :<CancelIcon fontSize="large" color="error" />
+                    }
+                    
                 </IconButton>
                 </Box>
                 <Box
@@ -401,9 +430,14 @@ import { useObraStore } from "../../../hooks/useObraStore";
                     minWidth: "150px"
                     }}
                     onClick={agregarPresupuesto}  // Acción independiente
+                    disabled={valuePresupuestoAgregar.notvisible} 
                 >
-                    <Typography sx={{ flex: 1, fontSize: "1rem" }}>Agregar Presupuesto</Typography>
-                    <CheckCircleIcon fontSize="large" color="success" />
+                   <Typography sx={{ flex: 1, fontSize: "1rem" }}>Agregar Presupuesto</Typography>
+                    {
+                        (valuePresupuestoAgregar.icono)?
+                        <CheckCircleIcon fontSize="large" color="success" />
+                        :<CancelIcon fontSize="large" color="error" />
+                    }
                 </IconButton>
                 </Box>
                 <Box
@@ -424,9 +458,14 @@ import { useObraStore } from "../../../hooks/useObraStore";
                     minWidth: "150px"
                     }}
                     onClick={agregarExpediente}  // Acción independiente
+                    disabled={valueExpedienteAgregar.notvisible}
                 >
                     <Typography sx={{ flex: 1, fontSize: "1rem" }}>Agregar Expediente</Typography>
-                    <CheckCircleIcon fontSize="large" color="success" />
+                    {
+                        (valueExpedienteAgregar.icono)?
+                        <CheckCircleIcon fontSize="large" color="success" />
+                        :<CancelIcon fontSize="large" color="error" />
+                    }
                 </IconButton>
                 </Box>
                 <Box
@@ -447,9 +486,14 @@ import { useObraStore } from "../../../hooks/useObraStore";
                     minWidth: "150px"
                     }}
                     onClick={generarDictamen}  // Acción independiente
+                    disabled={valueDictamenGenerar.notvisible} 
                 >
                     <Typography sx={{ flex: 1, fontSize: "1rem" }}>Generar Dictamen</Typography>
-                    <CheckCircleIcon fontSize="large" color="success" />
+                    {
+                        (valueDictamenGenerar.icono)?
+                        <CheckCircleIcon fontSize="large" color="success" />
+                        :<CancelIcon fontSize="large" color="error" />
+                    }
                 </IconButton>
                 </Box>
                 <Box
@@ -470,9 +514,14 @@ import { useObraStore } from "../../../hooks/useObraStore";
                     minWidth: "150px"
                     }}
                     onClick={finalizarProceso}  // Acción independiente
+                    disabled={valueDictamenGenerar.notvisible} 
                 >
                     <Typography sx={{ flex: 1, fontSize: "1rem" }}>Finalizar Proceso</Typography>
-                    <CancelIcon fontSize="large" color="error" />
+                    {
+                        (valueDictamenGenerar.icono)?
+                        <CheckCircleIcon fontSize="large" color="success" />
+                        :<CancelIcon fontSize="large" color="error" />
+                    }
                 </IconButton>
                 </Box>
             </Box>

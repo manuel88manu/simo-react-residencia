@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Swal from 'sweetalert2';
 import {
   Box,
@@ -47,6 +48,7 @@ export const AgregarPresupuestoModal = () => {
   };
 
   const handleRowSelect = (row) => {
+    console.log("Fila seleccionada:", row);
     setSelectedRow(row.idpartida === selectedRow ? null : row.idpartida);
   };
 
@@ -109,7 +111,7 @@ export const AgregarPresupuestoModal = () => {
               />
               <Box display="flex" justifyContent="center" marginBottom={2}>
                 <IconButton color="primary" onClick={handleAddPartida}>
-                  <AddIcon />
+                  <AddCircleIcon fontSize="large"/>
                 </IconButton>
               </Box>
               <TableContainer component={Paper}>
@@ -149,8 +151,9 @@ export const AgregarPresupuestoModal = () => {
           </Grid>
           {/* Segunda fila */}
           <Grid item xs={12}>
-            <Typography align="center">Este es un mensaje adicional</Typography>
+            
           </Grid>
+          
         </Grid>
       </Box>
     </ReactModal>

@@ -5,6 +5,7 @@ export const obraSlice = createSlice({
     name: 'obra',
     initialState: {
         obras:[],
+        partidas:[],
         obra:{
             idobra:null,
             nombre:"",
@@ -53,7 +54,8 @@ export const obraSlice = createSlice({
             icono:false,
             notvisible:true,
             termino:null
-        }
+        },
+        modalPresupuesto:false
 ,
     },
     reducers: {
@@ -88,6 +90,12 @@ export const obraSlice = createSlice({
             state.valueFinalizar.icono=false
             state.valueFinalizar.notvisible=true
             state.valueFinalizar.termino=null
+        },
+        setModalPresupuesto:(state,{payload})=>{
+            state.modalPresupuesto=payload
+        },
+        getPartidas:(state,{payload})=>{
+            state.partidas=payload
         }
     }
 });
@@ -97,4 +105,6 @@ export const obraSlice = createSlice({
 export const { setObra,
                setDictamen,
                setObraExito,
+               setModalPresupuesto,
+               getPartidas
             } = obraSlice.actions;

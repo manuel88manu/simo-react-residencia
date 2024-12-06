@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { setDictamen, setObra, setObraExito } from '../store/obra/obraSlice'
+import { getPartidas, setDictamen, setModalPresupuesto, setObra, setObraExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -12,7 +12,9 @@ export const useObraStore = () => {
     valuePresupuestoAgregar,
     valueExpedienteAgregar,
     valueDictamenGenerar,
-    valueFinalizar
+    valueFinalizar,
+    modalPresupuesto,
+    partidas
     }=useSelector(state=>state.obra)
 
    const dispatch=useDispatch()
@@ -34,6 +36,30 @@ export const useObraStore = () => {
 
    }
 
+   const startModalPresuValue=(payload)=>{
+    console.log(payload)
+   dispatch(setModalPresupuesto(payload))
+
+   }
+
+   const  startObtenerPartidas=async(idobra)=>{
+    const { data } = await simoApi.get(`/obra/addpartidas`, { params: { idobra } });
+    const partidas=data.partidas;
+    console.log(partidas)
+    dispatch(getPartidas(partidas))
+   }
+
+   const startAgregarPartidas=async(idobra,nombre)=>{
+    try {
+        await simoApi.post(`/obra/newpartida`, {obra_idobra:idobra,nombre_par:nombre});
+        await startObtenerPartidas(idobra)
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+   }
+
 return{
     //propuedades
     obra,
@@ -44,9 +70,15 @@ return{
     valueFinalizar,
     valueObraAgregar,
     valuePresupuestoAgregar,
+    modalPresupuesto,
+    partidas,
 
     //METODOS
-    startAgregarObra
+    startAgregarObra,
+    startModalPresuValue,
+    startObtenerPartidas,
+    startAgregarPartidas
+
 
 
 

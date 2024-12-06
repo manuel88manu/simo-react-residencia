@@ -19,6 +19,7 @@
     import { convertirFechasADate, dictameInicial, obrainicio, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
 import { useObraStore } from "../../../hooks/useObraStore";
 import Swal from "sweetalert2";
+import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 
 
     export const ObrasAcciones = () => {
@@ -29,7 +30,8 @@ import Swal from "sweetalert2";
         valueExpedienteAgregar,
         valueFinalizar,
         valueObraAgregar,
-        valuePresupuestoAgregar
+        valuePresupuestoAgregar,
+        startModalPresuValue,
     }=useObraStore();    
 
     const{nombre,bene_unidad,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
@@ -105,8 +107,8 @@ import Swal from "sweetalert2";
     };
 
     const agregarPresupuesto = () => {
-        console.log("Agregar Presupuesto");
-        // Lógica para agregar presupuesto
+        
+        startModalPresuValue(true)
     };
 
     const agregarExpediente = () => {
@@ -140,7 +142,6 @@ import Swal from "sweetalert2";
         setSubprogramaInputValue('');
         setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
     }, [estadoPresupuesto]);
-
     
     return (
         <Box sx={{ padding: 2, backgroundColor: "#f7f7f7", mt: 1.4, maxHeight: 'calc(100vh - 100px)', overflowY: 'auto' }}>
@@ -527,6 +528,7 @@ import Swal from "sweetalert2";
             </Box>
             </Grid>
         </Grid>
+        <AgregarPresupuestoModal/>
         </Box>
     );
     };

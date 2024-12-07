@@ -52,31 +52,7 @@ export const AgregarPresupuestoModal = () => {
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
-  const [selectedRow, setSelectedRow] = useState({ idpartida: 0 });
-
-  const handleAddPartida = async() => {
-    try {
-        const idobra = obra.idobra;
-        await startAgregarPartidas(idobra, nombre);
-
-    } catch (error) {
-        Swal.fire({
-            title: "Error",
-            text: error.message || "Hubo un problema al agregar los presupuestos",
-            icon: "error",
-            confirmButtonText: "Aceptar",
-        });
-    }
-  };
-
-  const handleRowSelect = (row) => {
-    setSelectedRow(row);
-  };
-
-  const handleEdit = (row) => {
-    console.log('Editando partida:', row);
-  };
-
+  const [selectedRow, setSelectedRow] = useState({});
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [formData, setFormData] = useState({
     nombre_conc: '',
@@ -85,41 +61,65 @@ export const AgregarPresupuestoModal = () => {
     cantidad: 0,
   });
 
+  const handleAddPartida = async () => {
+    try {
+      const idobra = obra.idobra;
+      await startAgregarPartidas(idobra, nombre);
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Hubo un problema al agregar los presupuestos',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  };
+
+  const handleRowSelect = (row) => {
+    setSelectedRow(row);
+  };
+
+  const handleEdit = (row) => {
+    console.log('Editando partida o concepto:', row);
+  };
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddConcept = async() => {
+  const handleAddConcept = async () => {
     try {
-        const concepto = {
-            ...formData,
-            p_unitario: parseFloat(formData.p_unitario).toFixed(2),
-            cantidad: parseFloat(formData.cantidad).toFixed(2),
-          };
-      
-          const idobra = obra.idobra;
-         await startAgregarConceptos(selectedRow.idpartida, concepto, idobra);
-        
+      if (!selectedRow?.idpartida) {
+        Swal.fire('Error', 'Por favor, selecciona una partida primero.', 'error');
+        return;
+      }
+
+      const concepto = {
+        ...formData,
+        p_unitario: parseFloat(formData.p_unitario).toFixed(2),
+        cantidad: parseFloat(formData.cantidad).toFixed(2),
+      };
+
+      const idobra = obra.idobra;
+      await startAgregarConceptos(selectedRow.idpartida, concepto, idobra);
     } catch (error) {
-        Swal.fire({
-            title: "Error",
-            text: error.message || "Hubo un problema al agregar los presupuestos",
-            icon: "error",
-            confirmButtonText: "Aceptar",
-        });
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Hubo un problema al agregar los presupuestos',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
     }
   };
 
-  const handleRowClick = (row, index) => {
-    setSelectedConcept(index === selectedConcept ? null : index);
+  const handleRowClick = (concepto) => {
+    setSelectedConcept(selectedConcept?.idconcepto === concepto.idconcepto ? null : concepto);
   };
 
   const oncloseModal = () => {
     startModalPresuValue(false);
     setTimeout(() => {
-      const openButton = document.querySelector(
-        '[data-testid="open-modal-button"]'
-      );
+      const openButton = document.querySelector('[data-testid="open-modal-button"]');
       if (openButton) {
         openButton.focus();
       }
@@ -131,7 +131,7 @@ export const AgregarPresupuestoModal = () => {
   }, [obra]);
 
   useEffect(() => {
-    startObtenerConceptos(selectedRow.idpartida);
+    if (selectedRow?.idpartida) startObtenerConceptos(selectedRow.idpartida);
   }, [selectedRow]);
 
   return (
@@ -188,7 +188,7 @@ export const AgregarPresupuestoModal = () => {
                             <TableCell>{partida.monto_tot}</TableCell>
                             <TableCell>
                               {selectedRow?.idpartida === partida.idpartida && (
-                                <IconButton onClick={() => handleEdit(selectedRow)} color="secondary">
+                                <IconButton onClick={() => handleEdit(partida)} color="secondary">
                                   <EditIcon />
                                 </IconButton>
                               )}
@@ -206,9 +206,9 @@ export const AgregarPresupuestoModal = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                  <Typography align="center">
-                <strong>ID Partida:</strong> {selectedRow?.idpartida || 'Ninguno seleccionado'}
-                </Typography>
+                    <Typography align="center">
+                      <strong>ID Partida:</strong> {selectedRow?.idpartida || 'Ninguno seleccionado'}
+                    </Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
@@ -263,18 +263,27 @@ export const AgregarPresupuestoModal = () => {
                         <TableCell>ID Concepto</TableCell>
                         <TableCell>Nombre</TableCell>
                         <TableCell>Monto</TableCell>
+                        <TableCell>Acciones</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {conceptos.map((concepto, index) => (
+                      {conceptos.map((concepto) => (
                         <TableRow
-                          key={concepto.idConcepto}
-                          selected={index === selectedConcept}
-                          onClick={() => handleRowClick(concepto, index)}
+                          key={concepto.idconcepto}
+                          selected={selectedConcept?.idconcepto === concepto.idconcepto}
+                          onClick={() => handleRowClick(concepto)}
+                          style={{ cursor: 'pointer' }}
                         >
                           <TableCell>{concepto.idconcepto}</TableCell>
                           <TableCell>{concepto.nombre_conc}</TableCell>
                           <TableCell>{concepto.monto}</TableCell>
+                          <TableCell>
+                            {selectedConcept?.idconcepto === concepto.idconcepto && (
+                              <IconButton onClick={() => handleEdit(concepto)} color="secondary">
+                                <EditIcon />
+                              </IconButton>
+                            )}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

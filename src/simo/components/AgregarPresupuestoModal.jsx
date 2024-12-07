@@ -40,7 +40,8 @@ const customStyles = {
 ReactModal.setAppElement('#root');
 
 export const AgregarPresupuestoModal = () => {
-  const { usuarioEditable, startActulizarUsuario } = useAuthStore();
+  
+
   const {
     startModalPresuValue,
     modalPresupuesto,
@@ -48,10 +49,15 @@ export const AgregarPresupuestoModal = () => {
     startObtenerPartidas,
     obra,
     startAgregarPartidas,
+    conceptos,
+    startObtenerConceptos,
+    startAgregarConceptos
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState({
+                                                   idpartida:0,
+                                                });
 
   const handleAddPartida = () => {
     const idobra = obra.idobra;
@@ -60,26 +66,21 @@ export const AgregarPresupuestoModal = () => {
 
   const handleRowSelect = (row) => {
     console.log('Fila seleccionada:', row);
-    setSelectedRow(row.idpartida === selectedRow ? null : row.idpartida);
+    setSelectedRow(row);
   };
 
-  const handleEdit = () => {
-    if (selectedRow) {
-      console.log(
-        'Editando partida:',
-        partidas.find((p) => p.idpartida === selectedRow)
-      );
-    }
+  const handleEdit = (row) => {
+    console.log('Editando partida:', row);
   };
 
-  const [conceptos, setConceptos] = useState([]);
+  //======================CONCEPTOS=============================================
+
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [formData, setFormData] = useState({
-    idPartida: '',
-    nombre: '',
+    nombre_conc: '',
     unidad: '',
-    pUnitario: '',
-    cantidad: '',
+    p_unitario: 0,
+    cantidad: 0,
   });
 
   const handleInputChange = (e) => {
@@ -87,28 +88,16 @@ export const AgregarPresupuestoModal = () => {
   };
 
   const handleAddConcept = () => {
-    const { idPartida, nombre, unidad, pUnitario, cantidad } = formData;
-
-    if (idPartida && nombre && unidad && pUnitario && cantidad) {
-      const monto = parseFloat(pUnitario) * parseFloat(cantidad);
-
-      setConceptos([
-        ...conceptos,
-        {
-          idConcepto: idPartida,
-          nombreConc: nombre,
-          monto: monto.toFixed(2),
-        },
-      ]);
-
-      setFormData({
-        idPartida: '',
-        nombre: '',
-        unidad: '',
-        pUnitario: '',
-        cantidad: '',
-      });
+    const concepto={
+        ...formData,
+        p_unitario:parseFloat(formData.p_unitario).toFixed(2),
+        cantidad:parseFloat(formData.cantidad).toFixed(2)
     }
+
+    const idobra=obra.idobra;
+    
+    startAgregarConceptos(selectedRow.idpartida,concepto,idobra)
+    
   };
 
   const handleRowClick = (row, index) => {
@@ -144,6 +133,15 @@ export const AgregarPresupuestoModal = () => {
       rootElement.removeAttribute('inert');
     }
   }, [modalPresupuesto]);
+
+
+  //--------------Use effect para tabla conceptos-------------------------
+
+  useEffect(() => {
+  startObtenerConceptos(selectedRow.idpartida)
+  
+  }, [selectedRow])
+  
 
   return (
     <ReactModal
@@ -185,64 +183,70 @@ export const AgregarPresupuestoModal = () => {
                 style={{height:'260px', maxHeight: '260px', overflowY: 'auto' }}
               >
                 <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID Partida</TableCell>
-                      <TableCell>Nombre de Partida</TableCell>
-                      <TableCell>Acciones</TableCell>
+                <TableHead>
+                <TableRow>
+                    <TableCell>ID Partida</TableCell>
+                    <TableCell>Nombre de Partida</TableCell>
+                    <TableCell>Monto Total</TableCell> {/* Nueva columna */}
+                    <TableCell>Acciones</TableCell>
+                </TableRow>
+                </TableHead>
+                <TableBody>
+                {partidas.map((partida) => (
+                    <TableRow
+                    key={partida.idpartida}
+                    selected={selectedRow?.idpartida === partida.idpartida} // Comparación con el ID
+                    onClick={() => handleRowSelect(partida)}
+                    style={{ cursor: 'pointer' }}
+                    >
+                    <TableCell>{partida.idpartida}</TableCell>
+                    <TableCell>{partida.nombre_par}</TableCell>
+                    <TableCell>{partida.monto_tot}</TableCell> {/* Mostrar monto_tot */}
+                    <TableCell>
+                        {selectedRow?.idpartida === partida.idpartida && (
+                        <IconButton onClick={() => handleEdit(selectedRow)} color="secondary">
+                            <EditIcon />
+                        </IconButton>
+                        )}
+                    </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {partidas.map((partida) => (
-                      <TableRow
-                        key={partida.idpartida}
-                        selected={selectedRow === partida.idpartida}
-                        onClick={() => handleRowSelect(partida)}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <TableCell>{partida.idpartida}</TableCell>
-                        <TableCell>{partida.nombre_par}</TableCell>
-                        <TableCell>
-                          {selectedRow === partida.idpartida && (
-                            <IconButton onClick={handleEdit} color="secondary">
-                              <EditIcon />
-                            </IconButton>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
+                ))}
+                </TableBody>
                 </Table>
               </TableContainer>
             </Box>
           </Grid>
+          
 
-          {/* Segunda columna: Agregar Concepto */}
+          {/*=================== Segunda columna: Agregar Concepto================== */}
+
+
+
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" align="center">
               Agregar Concepto
             </Typography>
             <Grid container spacing={2}>
             <Grid container spacing={2} alignItems="center" style={{ marginTop: '16px' }}>
-  {/* Typography ocupa menos espacio */}
-  <Grid item xs={12} sm={3}>
-    <Typography variant="body1" align="right">
-      {`ID Partida: ${9}`}
-    </Typography>
-  </Grid>
+            {/* Typography ocupa menos espacio */}
+            <Grid item xs={12} sm={3} style={{ paddingRight: '16px' }}>
+                <Typography variant="body1" align="right"  >
+                {`ID Partida: ${selectedRow?.idpartida ? selectedRow.idpartida : "Ninguno seleccionado"}`}
+                </Typography>
+            </Grid>
 
-  {/* TextField ocupa más espacio */}
-  <Grid item xs={12} sm={9}>
-    <TextField
-      fullWidth
-      size="small"
-      name="nombre"
-      value={formData.idPartida}
-      onChange={handleInputChange}
-      label="Nombre de Concepto"
-    />
-  </Grid>
-</Grid>
+            {/* TextField ocupa más espacio */}
+            <Grid item xs={12} sm={9}>
+                <TextField
+                fullWidth
+                size="small"
+                name="nombre_conc"
+                value={formData.nombre_conc}
+                onChange={handleInputChange}
+                label="Nombre de Concepto"
+                />
+            </Grid>
+            </Grid>
 
               <Grid item xs={12} sm={4}>
                 <TextField
@@ -258,8 +262,8 @@ export const AgregarPresupuestoModal = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  name="pUnitario"
-                  value={formData.pUnitario}
+                  name="p_unitario"
+                  value={formData.p_unitario}
                   onChange={handleInputChange}
                   label="P. Unitario"
                 />
@@ -277,12 +281,12 @@ export const AgregarPresupuestoModal = () => {
             </Grid>
             <Box textAlign="center" marginTop={2}>
               <IconButton color="primary" onClick={handleAddConcept}>
-                <AddIcon />
+              <AddCircleIcon fontSize="large" />
               </IconButton>
             </Box>
             <TableContainer
               component={Paper}
-              style={{height:'250px', maxHeight: '250px', overflowY: 'auto' }}
+              style={{height:'245px', maxHeight: '245px', overflowY: 'auto' }}
             >
               <Table stickyHeader>
                 <TableHead>
@@ -299,8 +303,8 @@ export const AgregarPresupuestoModal = () => {
                       selected={index === selectedConcept}
                       onClick={() => handleRowClick(concepto, index)}
                     >
-                      <TableCell>{concepto.idConcepto}</TableCell>
-                      <TableCell>{concepto.nombreConc}</TableCell>
+                      <TableCell>{concepto.idconcepto}</TableCell>
+                      <TableCell>{concepto.nombre_conc}</TableCell>
                       <TableCell>{concepto.monto}</TableCell>
                     </TableRow>
                   ))}

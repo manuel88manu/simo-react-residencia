@@ -6,6 +6,7 @@ export const obraSlice = createSlice({
     initialState: {
         obras:[],
         partidas:[],
+        conceptos:[],
         obra:{
             idobra:null,
             nombre:"",
@@ -96,6 +97,9 @@ export const obraSlice = createSlice({
         },
         getPartidas:(state,{payload})=>{
             state.partidas=payload
+        },
+        getConceptos:(state,{payload})=>{
+            state.conceptos=payload
         }
     }
 });
@@ -106,5 +110,6 @@ export const { setObra,
                setDictamen,
                setObraExito,
                setModalPresupuesto,
-               getPartidas
+               getPartidas,
+               getConceptos
             } = obraSlice.actions;

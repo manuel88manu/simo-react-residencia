@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getPartidas, setDictamen, setModalPresupuesto, setObra, setObraExito } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, setDictamen, setModalPresupuesto, setObra, setObraExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -14,7 +14,8 @@ export const useObraStore = () => {
     valueDictamenGenerar,
     valueFinalizar,
     modalPresupuesto,
-    partidas
+    partidas,
+    conceptos
     }=useSelector(state=>state.obra)
 
    const dispatch=useDispatch()
@@ -60,6 +61,26 @@ export const useObraStore = () => {
     }
    }
 
+   const startObtenerConceptos=async(idpartida)=>{
+    const {data}=await simoApi.get(`/obra/addconceptos`,{params:{idpartida}})
+    const conceptos=data.conceptos;
+    dispatch(getConceptos(conceptos))
+
+   }
+
+   const startAgregarConceptos=async(idpartida,concepto,idobra)=>{
+    try {
+        await simoApi.post(`/obra/newconcepto`, {partida_idpartida:idpartida,concepto:concepto});
+        await startObtenerConceptos(idpartida)
+        await startObtenerPartidas(idobra)
+
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+   }
+
 return{
     //propuedades
     obra,
@@ -72,15 +93,15 @@ return{
     valuePresupuestoAgregar,
     modalPresupuesto,
     partidas,
+    conceptos,
 
     //METODOS
     startAgregarObra,
     startModalPresuValue,
     startObtenerPartidas,
-    startAgregarPartidas
-
-
-
+    startAgregarPartidas,
+    startObtenerConceptos,
+    startAgregarConceptos
 
 }
 

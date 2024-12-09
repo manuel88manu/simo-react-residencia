@@ -127,6 +127,10 @@ export const AgregarPresupuestoModal = () => {
             icon: "success",
             confirmButtonText: "Aceptar",
         })
+
+        setSelectedConcept({})
+        setSelectedRow({})
+        startModalPresuValue(false)
     } catch (error) {
         Swal.fire({
             title: 'Error',

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getConceptos, getPartidas, getPresupuesto, setDictamen, setModalPresupuesto, setObra, setObraExito, setPresupuestoExito } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalPresupuesto, setObra, setObraExito, setPresupuestoExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -96,6 +96,45 @@ export const useObraStore = () => {
     }
    }
 
+   const startAgregarExpediente=async()=>{
+    try {
+        
+        dispatch(setExpedienteExitoso())
+        
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+
+   }
+
+   
+   const startGenerarDictamen=async()=>{
+    try {
+
+        dispatch(setDictamenExitoso())
+        
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+   }
+
+   const startFinalizarObra=async()=>{
+    try {
+        
+        dispatch(resetValues())
+        dispatch(resetIngresarObra())
+        
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+   }
+
 return{
     //propuedades
     obra,
@@ -117,7 +156,10 @@ return{
     startAgregarPartidas,
     startObtenerConceptos,
     startAgregarConceptos,
-    startValidarPresupuesto
+    startValidarPresupuesto,
+    startAgregarExpediente,
+    startGenerarDictamen,
+    startFinalizarObra
 
 }
 

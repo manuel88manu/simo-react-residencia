@@ -82,6 +82,20 @@ export const obraSlice = createSlice({
         state.valueExpedienteAgregar.icono=false
         state.valueExpedienteAgregar.notvisible=false
         },
+        setExpedienteExitoso:(state)=>{
+        state.valueExpedienteAgregar.icono=true
+        state.valueExpedienteAgregar.notvisible=true
+
+        state.valueDictamenGenerar.icono=false
+        state.valueDictamenGenerar.notvisible=false
+        },
+        setDictamenExitoso:(state)=>{
+            state.valueDictamenGenerar.icono=true
+            state.valueDictamenGenerar.notvisible=true
+
+            state.valueFinalizar.icono=false
+            state.valueFinalizar.notvisible=false
+        },
         resetValues:(state)=>{
             state.valueObraAgregar.icono=false
             state.valueObraAgregar.notvisible=false
@@ -98,6 +112,31 @@ export const obraSlice = createSlice({
             state.valueFinalizar.icono=false
             state.valueFinalizar.notvisible=true
             state.valueFinalizar.termino=null
+
+
+        },
+        resetIngresarObra:(state)=>{
+        state.partidas=[]
+        state.conceptos=[]
+        
+        state.obra.idobra=null
+        state.obra.nombre=""
+        state.obra.bene_unidad=""
+        state.obra.subprograma=""
+        state.obra.programa=""
+        state.obra.rubros=""
+        state.obra.empleo_event=""
+        state.obra.presupuesto=0
+        state.obra.bene_cantidad=0
+        state.obra.cap_cantidad=0
+        state.obra.cap_unidad=""
+        state.obra.ejecucion=""
+        state.obra.loca_col=""
+
+        state.dictamen={}
+
+
+
         },
         setModalPresupuesto:(state,{payload})=>{
             state.modalPresupuesto=payload
@@ -123,5 +162,9 @@ export const { setObra,
                getPartidas,
                getConceptos,
                getPresupuesto,
-               setPresupuestoExito
+               setPresupuestoExito,
+               setExpedienteExitoso,
+               setDictamenExitoso,
+               resetValues,
+               resetIngresarObra
             } = obraSlice.actions;

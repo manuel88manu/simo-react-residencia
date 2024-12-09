@@ -33,7 +33,13 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         valueObraAgregar,
         valuePresupuestoAgregar,
         startModalPresuValue,
+        startAgregarExpediente,
+        startGenerarDictamen,
+        startFinalizarObra
     }=useObraStore();    
+
+
+    //-------------------Solo para simular la validacion de botones----------------------
 
     const{nombre,bene_unidad,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
     const {fec_inicio,fec_termino,onInputChange:onChangeDictamen,formState}=useForm(dictameInicial)
@@ -113,18 +119,25 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
     };
 
     const agregarExpediente = () => {
-        console.log("Agregar Expediente");
-        // Lógica para agregar expediente
+        
+        startAgregarExpediente()
     };
 
     const generarDictamen = () => {
-        console.log("Generar Dictamen");
-        // Lógica para generar dictamen
+        startGenerarDictamen()
     };
 
     const finalizarProceso = () => {
-        console.log("Finalizar Proceso");
-        // Lógica para finalizar el proceso
+        startFinalizarObra()
+        Swal.fire({
+            title: "¡Operación exitosa!",
+            text: "El Registro de La Obra a sido finalizada",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+        })
+        onResetForm()
+        
+
     };
 
 
@@ -526,11 +539,11 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
                     minWidth: "150px"
                     }}
                     onClick={finalizarProceso}  // Acción independiente
-                    disabled={valueDictamenGenerar.notvisible} 
+                    disabled={valueFinalizar.notvisible} 
                 >
                     <Typography sx={{ flex: 1, fontSize: "1rem" }}>Finalizar Proceso</Typography>
                     {
-                        (valueDictamenGenerar.icono)?
+                        (valueFinalizar.icono)?
                         <CheckCircleIcon fontSize="large" color="success" />
                         :<CancelIcon fontSize="large" color="error" />
                     }

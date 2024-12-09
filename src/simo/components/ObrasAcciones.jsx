@@ -16,7 +16,7 @@
     import CheckCircleIcon from "@mui/icons-material/CheckCircle";
     import CancelIcon from "@mui/icons-material/Cancel";
     import { useForm, usePeriodoStore, useViewStore } from "../../../hooks";
-    import { convertirFechasADate, dictameInicial, formatCurrency, obrainicio, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
+    import { convertirFechasADate, dictameInicial, formatCurrency, obrainicio, opciones, opcionesPrograma, opcionesSubprograma, showAlert } from "../../../helpers";
 import { useObraStore } from "../../../hooks/useObraStore";
 import Swal from "sweetalert2";
 import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
@@ -143,6 +143,17 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         setSubprogramaInputValue('');
         setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
     }, [estadoPresupuesto]);
+
+
+    useEffect(() => {
+     if(PresupuestoObra.idobra!=null){
+        const idobra=PresupuestoObra.idobra;
+        const nombre= PresupuestoObra.nombre;
+        showAlert(nombre,idobra)
+     }
+     
+    }, [])
+    
     
     return (
         <Box sx={{ padding: 2, backgroundColor: "#f7f7f7", mt: 1.4, maxHeight: 'calc(100vh - 100px)', overflowY: 'auto' }}>

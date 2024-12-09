@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 
 export const convertirFechasADate = (obj) => {
     return {
@@ -44,4 +45,29 @@ export const formatCurrency = (value) => {
   return `$${value
     .toFixed(2) // Asegura dos decimales
     .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`; // Inserta comas para separar miles
+};
+
+export const showAlert = (nombre, idobra) => {
+  Swal.fire({
+    title: "¡Alerta Importante Registro de Obra No Finalizado!",
+    html: `
+      <p style="font-size: 1.2rem; line-height: 1.3; text-align: left;">
+        El registro de la obra llamada <strong style="font-size: 1.3rem; font-weight: bold;">${nombre}</strong>
+        con registro: <strong style="font-size: 1.3rem; font-weight: bold;">${idobra}</strong> no ha sido finalizada aún.<br /> 
+       <span style="color: red; font-weight: bold;">No se permitirá registrar ninguna nueva obra si no se ha finalizado la actual.</span>
+      </p>
+    `,
+    icon: "warning", // Icono de advertencia
+    background: "#fff", // Fondo blanco
+    iconColor: "#856404", // Color del icono
+    padding: "30px", // Espaciado dentro de la alerta
+    timer: 10400, // Duración de la alerta
+    showCloseButton: true, // Botón de cierre visible
+    customClass: {
+      popup: "swal-popup", // Personalización de la alerta
+      title: "swal-title", // Título de la alerta
+      content: "swal-content", // Contenido de la alerta
+    },
+    showConfirmButton: false, // Eliminar el botón de confirmación
+  });
 };

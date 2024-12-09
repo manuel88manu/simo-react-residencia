@@ -49,6 +49,7 @@ export const AgregarPresupuestoModal = () => {
     conceptos,
     startObtenerConceptos,
     startAgregarConceptos,
+    startValidarPresupuesto
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
@@ -115,6 +116,26 @@ export const AgregarPresupuestoModal = () => {
   const handleRowClick = (concepto) => {
     setSelectedConcept(selectedConcept?.idconcepto === concepto.idconcepto ? null : concepto);
   };
+
+
+  const validarPresupuesto=async()=>{
+    try {
+        await startValidarPresupuesto(obra.idobra)
+        Swal.fire({
+            title: "¡Operación exitosa!",
+            text: "El presupuesto es valido y se agrego correctamente",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+        })
+    } catch (error) {
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Hubo un problema al agregar los presupuestos',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+    }
+  }
 
   const oncloseModal = () => {
     startModalPresuValue(false);
@@ -294,7 +315,7 @@ export const AgregarPresupuestoModal = () => {
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center" marginTop={2}>
-              <IconButton color="secondary">
+              <IconButton color="secondary" onClick={validarPresupuesto}>
                 <SaveAsIcon fontSize="large" />
               </IconButton>
             </Box>

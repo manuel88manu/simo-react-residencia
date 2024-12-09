@@ -75,6 +75,13 @@ export const obraSlice = createSlice({
 
             state.valueFinalizar.termino=false
         },
+        setPresupuestoExito:(state)=>{
+        state.valuePresupuestoAgregar.icono=true
+        state.valuePresupuestoAgregar.notvisible=true
+
+        state.valueExpedienteAgregar.icono=false
+        state.valueExpedienteAgregar.notvisible=false
+        },
         resetValues:(state)=>{
             state.valueObraAgregar.icono=false
             state.valueObraAgregar.notvisible=false
@@ -100,6 +107,9 @@ export const obraSlice = createSlice({
         },
         getConceptos:(state,{payload})=>{
             state.conceptos=payload
+        },
+        getPresupuesto:(state,{payload})=>{
+          state.obra.presupuesto=payload;    
         }
     }
 });
@@ -111,5 +121,7 @@ export const { setObra,
                setObraExito,
                setModalPresupuesto,
                getPartidas,
-               getConceptos
+               getConceptos,
+               getPresupuesto,
+               setPresupuestoExito
             } = obraSlice.actions;

@@ -38,3 +38,10 @@ export const dictameInicial={
     meta_porciento:"100%",
     metas_por:"100%"
 }
+
+export const formatCurrency = (value) => {
+  if (value === null || value === undefined) return "$0.00";
+  return `$${value
+    .toFixed(2) // Asegura dos decimales
+    .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`; // Inserta comas para separar miles
+};

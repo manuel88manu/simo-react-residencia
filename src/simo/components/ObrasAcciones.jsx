@@ -16,7 +16,7 @@
     import CheckCircleIcon from "@mui/icons-material/CheckCircle";
     import CancelIcon from "@mui/icons-material/Cancel";
     import { useForm, usePeriodoStore, useViewStore } from "../../../hooks";
-    import { convertirFechasADate, dictameInicial, obrainicio, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
+    import { convertirFechasADate, dictameInicial, formatCurrency, obrainicio, opciones, opcionesPrograma, opcionesSubprograma } from "../../../helpers";
 import { useObraStore } from "../../../hooks/useObraStore";
 import Swal from "sweetalert2";
 import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
@@ -25,6 +25,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
     export const ObrasAcciones = () => {
     
     const {obras,
+        obra:PresupuestoObra,
         startAgregarObra,
         valueDictamenGenerar,
         valueExpedienteAgregar,
@@ -367,8 +368,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
                 disabled
                 size="small"
                 name="presupuesto"
-                onChange={onObraChange}
-                value={presupuesto}
+                value={formatCurrency(PresupuestoObra.presupuesto)} 
                 sx={{ backgroundColor: "#fff" }}
             />
             </Grid>

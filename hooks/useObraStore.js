@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getConceptos, getPartidas, setDictamen, setModalPresupuesto, setObra, setObraExito } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, getPresupuesto, setDictamen, setModalPresupuesto, setObra, setObraExito, setPresupuestoExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -81,6 +81,21 @@ export const useObraStore = () => {
     }
    }
 
+   const startValidarPresupuesto=async(idobra)=>{
+  
+    try {
+        const {data}= await simoApi.put(`/obra/updatapresu/${idobra}`)
+        const presupuesto= data.resultadoAdicional.presupuesto;
+        dispatch(getPresupuesto(presupuesto))
+        dispatch(setPresupuestoExito())
+
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+   }
+
 return{
     //propuedades
     obra,
@@ -101,7 +116,8 @@ return{
     startObtenerPartidas,
     startAgregarPartidas,
     startObtenerConceptos,
-    startAgregarConceptos
+    startAgregarConceptos,
+    startValidarPresupuesto
 
 }
 

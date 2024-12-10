@@ -148,6 +148,18 @@ export const useObraStore = () => {
     }
  }
 
+ const startActualizarPartida=async(idobra,partida)=>{
+    try {
+
+       await simoApi.put('/obra/updatepartida',{partida:partida})
+       await startObtenerPartidas(idobra) 
+        
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+ }
 return{
     //propuedades
     obra,
@@ -173,7 +185,8 @@ return{
     startAgregarExpediente,
     startGenerarDictamen,
     startFinalizarObra,
-    startActualizarConcepto
+    startActualizarConcepto,
+    startActualizarPartida
 
 }
 

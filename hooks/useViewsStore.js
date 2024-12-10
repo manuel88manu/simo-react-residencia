@@ -28,6 +28,7 @@ export const useViewStore = () => {
     stateViewUser,
     stateModalUser,
     estadoPresupuesto,
+    onModalUser,
     // Métodos
     selectViewSimo,
     selectViewUser,

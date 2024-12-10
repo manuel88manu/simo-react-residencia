@@ -7,12 +7,12 @@ import { useAuthStore, useViewStore } from '../../../hooks';
 import { EditarUserModal } from '../../auth/components';
 
 export const EditarUserView = () => {
-  const { starUsuarios, usuarios,startUsuarioEdit } = useAuthStore();
-  const {selectModalUser}=useViewStore()
+  const { starUsuarios, usuarios,startUsuarioEdit} = useAuthStore();
+  const {selectModalUser,stateViewUser,stateModalUser}=useViewStore()
 
   useEffect(() => {
     starUsuarios();
-  }, [starUsuarios]);
+  }, [stateViewUser,stateModalUser]);
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');

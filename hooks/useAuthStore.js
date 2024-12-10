@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
 import { clearErrorMessage, onChecking, onLogin, onLogout, setMessageError, setUserEdit, setUserExito, setUsuarios } from "../store/auth/authSlice"
+import { onModalUser } from "../store/views/viewSlice"
 
 export const useAuthStore=()=>{
     const {status,user,errorMessage,usuarios,ingresoExito,usuarioEditable}=useSelector(state=>state.auth)
@@ -81,6 +82,7 @@ export const useAuthStore=()=>{
     const startActulizarUsuario = async (payload) => {
         try {
             const { data } = await simoApi.put(`/auth/${payload.idusuario}`, payload);
+            dispatch(onModalUser(false))
             // Si todo sale bien, podrías manejar la respuesta aquí
         } catch (error) {
             const messageError = error.response?.data?.msg || 'Ha ocurrido un error al actualizar el usuario.';

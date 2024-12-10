@@ -35,7 +35,8 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         startModalPresuValue,
         startAgregarExpediente,
         startGenerarDictamen,
-        startFinalizarObra
+        startFinalizarObra,
+        modalPresupuesto
     }=useObraStore();    
 
 
@@ -552,7 +553,11 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
             </Box>
             </Grid>
         </Grid>
-        <AgregarPresupuestoModal/>
+        {
+         (modalPresupuesto)?
+         <AgregarPresupuestoModal/>:''
+            
+        }    
         </Box>
     );
     };

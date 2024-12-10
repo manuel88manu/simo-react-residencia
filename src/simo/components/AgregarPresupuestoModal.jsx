@@ -50,7 +50,8 @@ export const AgregarPresupuestoModal = () => {
     startObtenerConceptos,
     startAgregarConceptos,
     startValidarPresupuesto,
-    startActualizarConcepto
+    startActualizarConcepto,
+    startActualizarPartida
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
@@ -77,13 +78,21 @@ export const AgregarPresupuestoModal = () => {
     }
   };
 
+  const nombrePartiRef = useRef();
+
   const handleRowSelect = (row) => {
+    setNombre(row.nombre_par)
     setSelectedRow(row);
     const clean={nombre_conc: '',
         unidad: '',
         p_unitario: 0,
         cantidad: 0}
         setFormData(clean)
+    if (nombrePartiRef.current) {
+        nombrePartiRef.current.focus(); // Esto pone el foco en el TextField
+        nombrePartiRef.current.select(); // Esto selecciona todo el texto en el TextField
+      }
+
   };
 
   const handleEdit = async(row) => {
@@ -104,8 +113,25 @@ export const AgregarPresupuestoModal = () => {
     }
   };
 
-  const handleEditPartida=(part)=>{
-
+  const handleEditPartida=async(part)=>{
+    try {
+        const partida={
+            idpartida:selectedRow.idpartida,
+            nombre_par:nombre
+        }
+        await startActualizarPartida(obra.idobra,partida)
+        setNombre('')
+        setSelectedRow({})
+ 
+    } catch (error) {
+        setSelectedRow({})
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Hubo un problema al agregar los presupuestos',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+    }
   }
 
   const handleInputChange = (e) => {
@@ -137,6 +163,8 @@ export const AgregarPresupuestoModal = () => {
     }
   };
   const nombreConcRef = useRef();
+
+  
 
   const handleRowClick = (concepto) => {
     setSelectedConcept(selectedConcept?.idconcepto === concepto.idconcepto ? null : concepto);
@@ -213,6 +241,7 @@ export const AgregarPresupuestoModal = () => {
                     size="small"
                     label="Nombre"
                     value={nombre}
+                    inputRef={nombrePartiRef}
                     onChange={(e) => setNombre(e.target.value)}
                     margin="normal"
                   />
@@ -221,11 +250,10 @@ export const AgregarPresupuestoModal = () => {
                       <AddCircleIcon fontSize="large" />
                     </IconButton>
                   </Box>
-                  <TableContainer component={Paper} style={{ height: '260px', overflowY: 'auto' }}>
+                  <TableContainer component={Paper} style={{ height: '292px', overflowY: 'auto' }}>
                     <Table stickyHeader>
                       <TableHead>
                         <TableRow>
-                          <TableCell>ID Partida</TableCell>
                           <TableCell>Nombre de Partida</TableCell>
                           <TableCell>Monto Total</TableCell>
                           <TableCell>Acciones</TableCell>
@@ -239,7 +267,6 @@ export const AgregarPresupuestoModal = () => {
                             onClick={() => handleRowSelect(partida)}
                             style={{ cursor: 'pointer' }}
                           >
-                            <TableCell>{partida.idpartida}</TableCell>
                             <TableCell>{partida.nombre_par}</TableCell>
                             <TableCell>{partida.monto_tot}</TableCell>
                             <TableCell>
@@ -262,11 +289,6 @@ export const AgregarPresupuestoModal = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography align="center">
-                      <strong>ID Partida:</strong> {selectedRow?.idpartida || 'Ninguno seleccionado'}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       size="small"
@@ -275,6 +297,7 @@ export const AgregarPresupuestoModal = () => {
                       onChange={handleInputChange}
                       inputRef={nombreConcRef}// Conectamos la referencia aquí
                       label="Nombre de Concepto"
+                      sx={{mt:1.99}}
                     />
                   </Grid>
                   <Grid item xs={4}>
@@ -313,11 +336,10 @@ export const AgregarPresupuestoModal = () => {
                     <AddCircleIcon fontSize="large" />
                   </IconButton>
                 </Box>
-                <TableContainer component={Paper} style={{ height: '220px', overflowY: 'auto' }}>
+                <TableContainer component={Paper} style={{ height: '245px', overflowY: 'auto' }}>
                   <Table stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <TableCell>ID Concepto</TableCell>
                         <TableCell>Nombre</TableCell>
                         <TableCell>Monto</TableCell>
                         <TableCell>Acciones</TableCell>
@@ -331,7 +353,6 @@ export const AgregarPresupuestoModal = () => {
                           onClick={() => handleRowClick(concepto)}
                           style={{ cursor: 'pointer' }}
                         >
-                          <TableCell>{concepto.idconcepto}</TableCell>
                           <TableCell>{concepto.nombre_conc}</TableCell>
                           <TableCell>{concepto.monto}</TableCell>
                           <TableCell>

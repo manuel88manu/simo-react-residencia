@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactModal from 'react-modal';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Swal from 'sweetalert2';
@@ -49,7 +49,8 @@ export const AgregarPresupuestoModal = () => {
     conceptos,
     startObtenerConceptos,
     startAgregarConceptos,
-    startValidarPresupuesto
+    startValidarPresupuesto,
+    startActualizarConcepto
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
@@ -78,11 +79,34 @@ export const AgregarPresupuestoModal = () => {
 
   const handleRowSelect = (row) => {
     setSelectedRow(row);
+    const clean={nombre_conc: '',
+        unidad: '',
+        p_unitario: 0,
+        cantidad: 0}
+        setFormData(clean)
   };
 
-  const handleEdit = (row) => {
-    console.log('Editando partida o concepto:', row);
+  const handleEdit = async(row) => {
+    try {
+        await startActualizarConcepto(obra.idobra,formData)
+        const clean={nombre_conc: '',
+            unidad: '',
+            p_unitario: 0,
+            cantidad: 0}
+        setFormData(clean)
+    } catch (error) {
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Hubo un problema al agregar los presupuestos',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+    }
   };
+
+  const handleEditPartida=(part)=>{
+
+  }
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -112,9 +136,16 @@ export const AgregarPresupuestoModal = () => {
       });
     }
   };
+  const nombreConcRef = useRef();
 
   const handleRowClick = (concepto) => {
     setSelectedConcept(selectedConcept?.idconcepto === concepto.idconcepto ? null : concepto);
+    setFormData(concepto)
+    if (nombreConcRef.current) {
+        nombreConcRef.current.focus(); // Esto pone el foco en el TextField
+        nombreConcRef.current.select(); // Esto selecciona todo el texto en el TextField
+      }
+    
   };
 
 
@@ -213,7 +244,7 @@ export const AgregarPresupuestoModal = () => {
                             <TableCell>{partida.monto_tot}</TableCell>
                             <TableCell>
                               {selectedRow?.idpartida === partida.idpartida && (
-                                <IconButton onClick={() => handleEdit(partida)} color="secondary">
+                                <IconButton onClick={() => handleEditPartida(partida)} color="secondary">
                                   <EditIcon />
                                 </IconButton>
                               )}
@@ -242,6 +273,7 @@ export const AgregarPresupuestoModal = () => {
                       name="nombre_conc"
                       value={formData.nombre_conc}
                       onChange={handleInputChange}
+                      inputRef={nombreConcRef}// Conectamos la referencia aquí
                       label="Nombre de Concepto"
                     />
                   </Grid>

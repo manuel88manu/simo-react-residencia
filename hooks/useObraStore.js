@@ -174,6 +174,18 @@ export const useObraStore = () => {
     }
  }
 
+ const startEliminarPartida=async(idobra,partida)=>{
+    try {
+        await simoApi.delete(`/obra/deletepartida/${partida.idpartida}`)
+        await startObtenerConceptos(partida.idpartida)
+        await startObtenerPartidas(idobra)
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        console.log(messageError)
+        throw new Error(messageError);
+    }
+ }
+
 return{
     //propuedades
     obra,
@@ -201,7 +213,8 @@ return{
     startFinalizarObra,
     startActualizarConcepto,
     startActualizarPartida,
-    startEliminarConcepto
+    startEliminarConcepto,
+    startEliminarPartida
 
 }
 

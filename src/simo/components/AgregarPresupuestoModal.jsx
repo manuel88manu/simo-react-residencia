@@ -53,7 +53,8 @@ export const AgregarPresupuestoModal = () => {
     startValidarPresupuesto,
     startActualizarConcepto,
     startActualizarPartida,
-    startEliminarConcepto
+    startEliminarConcepto,
+    startEliminarPartida
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
@@ -85,6 +86,7 @@ export const AgregarPresupuestoModal = () => {
   const handleRowSelect = (row) => {
     setNombre(row.nombre_par)
     setSelectedRow(row);
+    console.log(selectedRow)
     const clean={nombre_conc: '',
         unidad: '',
         p_unitario: 0,
@@ -97,6 +99,38 @@ export const AgregarPresupuestoModal = () => {
 
   };
 
+
+ const handleDeletePartida=async(row)=>{
+
+  const result = await Swal.fire({
+    title: "¿Estás seguro?",
+    text:  `Deseas eliminar la partida llamada " ${selectedRow.nombre_par} " tambien se eliminara sus conceptos`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar concepto",
+    cancelButtonText: "No, cancelar",
+});
+
+if (result.isConfirmed) {
+
+    try {
+
+    await startEliminarPartida(obra.idobra,selectedRow)
+    setNombre('')
+    setSelectedRow({})
+
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Hubo un problema al agregar los presupuestos',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  }else {
+    return;
+  }
+ }
 
   const handleDeleteConcepto=async(row)=>{
 
@@ -155,7 +189,8 @@ export const AgregarPresupuestoModal = () => {
     try {
         const partida={
             idpartida:selectedRow.idpartida,
-            nombre_par:nombre
+            nombre_par:nombre,
+            obra_idobra:selectedRow.obra_idobra
         }
         await startActualizarPartida(obra.idobra,partida)
         setNombre('')
@@ -163,6 +198,7 @@ export const AgregarPresupuestoModal = () => {
  
     } catch (error) {
         setSelectedRow({})
+        setNombre('')
         Swal.fire({
             title: 'Error',
             text: error.message || 'Hubo un problema al agregar los presupuestos',
@@ -253,8 +289,13 @@ export const AgregarPresupuestoModal = () => {
   }, [obra]);
 
   useEffect(() => {
-    if (selectedRow?.idpartida) startObtenerConceptos(selectedRow.idpartida);
+    selectedRow?.idpartida ?startObtenerConceptos(selectedRow.idpartida)
+    :startObtenerConceptos(-1)
+
   }, [selectedRow]);
+  
+ 
+  
 
   return (
     <ReactModal
@@ -309,9 +350,14 @@ export const AgregarPresupuestoModal = () => {
                             <TableCell>{partida.monto_tot}</TableCell>
                             <TableCell>
                               {selectedRow?.idpartida === partida.idpartida && (
+                                <Box display="flex" alignItems="center" gap={1}>
                                 <IconButton onClick={() => handleEditPartida(partida)} color="secondary">
                                   <EditIcon />
                                 </IconButton>
+                                <IconButton onClick={() => handleDeletePartida(partida)} color="error">
+                                <DeleteIcon />
+                                </IconButton>
+                                </Box>
                               )}
                             </TableCell>
                           </TableRow>

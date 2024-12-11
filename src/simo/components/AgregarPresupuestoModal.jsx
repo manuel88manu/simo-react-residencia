@@ -54,7 +54,8 @@ export const AgregarPresupuestoModal = () => {
     startActualizarConcepto,
     startActualizarPartida,
     startEliminarConcepto,
-    startEliminarPartida
+    startEliminarPartida,
+    starteliminarObra
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
@@ -86,7 +87,6 @@ export const AgregarPresupuestoModal = () => {
   const handleRowSelect = (row) => {
     setNombre(row.nombre_par)
     setSelectedRow(row);
-    console.log(selectedRow)
     const clean={nombre_conc: '',
         unidad: '',
         p_unitario: 0,
@@ -145,8 +145,6 @@ if (result.isConfirmed) {
 
   if (result.isConfirmed) {
     try {
-    
-    console.log(selectedConcept)
     await startEliminarConcepto(obra.idobra,selectedConcept)
     const clean={nombre_conc: '',
       unidad: '',
@@ -265,12 +263,52 @@ if (result.isConfirmed) {
         setSelectedRow({})
         startModalPresuValue(false)
     } catch (error) {
+        if(error.data?.comun){
         Swal.fire({
             title: 'Error',
             text: error.message || 'Hubo un problema al agregar los presupuestos',
             icon: 'error',
             confirmButtonText: 'Aceptar',
           });
+        }else{
+
+          const result = await Swal.fire({
+            title: "Seguir Editando Presupuesto o Eliminar obra",
+            text: `${error.message}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Seguir Editando Presupuesto",
+            cancelButtonText: "Eliminar Obra",
+        });
+        
+        if (!result.isConfirmed) {
+            const confirmDelete = await Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer. ¿Realmente deseas eliminar la obra?",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+            });
+        
+            confirmDelete.isConfirmed
+                ?(async() => {
+                  await starteliminarObra(obra.idobra)
+                  setSelectedConcept({})
+                  setSelectedRow({})
+                 
+                  Swal.fire({
+                      title: "Eliminado",
+                      text: "La obra ha sido eliminada correctamente.",
+                      icon: "success",
+                  });
+                  // Puedes llamar a una función de eliminación aquí
+                  // await eliminarObra(idObra);
+              })()
+                :(Swal.fire("Cancelado", "La obra no ha sido eliminada.", "info"))
+        }
+
+        }
     }
   }
 
@@ -285,7 +323,7 @@ if (result.isConfirmed) {
   };
 
   useEffect(() => {
-    startObtenerPartidas(obra.idobra);
+    startObtenerPartidas(obra.idobra)
   }, [obra]);
 
   useEffect(() => {

@@ -26,8 +26,6 @@ export const useObraStore = () => {
         dispatch(setObra(data.obra))
         dispatch(setDictamen(data.dictamen))
         dispatch(setObraExito())
-
-        console.log(data)
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
@@ -38,7 +36,6 @@ export const useObraStore = () => {
    }
 
    const startModalPresuValue=(payload)=>{
-    console.log(payload)
    dispatch(setModalPresupuesto(payload))
 
    }
@@ -46,7 +43,6 @@ export const useObraStore = () => {
    const  startObtenerPartidas=async(idobra)=>{
     const { data } = await simoApi.get(`/obra/addpartidas`, { params: { idobra } });
     const partidas=data.partidas;
-    console.log(partidas)
     dispatch(getPartidas(partidas))
    }
 
@@ -56,7 +52,6 @@ export const useObraStore = () => {
         await startObtenerPartidas(idobra)
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
    }
@@ -76,7 +71,6 @@ export const useObraStore = () => {
 
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
    }
@@ -90,9 +84,15 @@ export const useObraStore = () => {
         dispatch(setPresupuestoExito())
 
     } catch (error) {
-        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
-        throw new Error(messageError);
+        const errorDetails = {
+            message: error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra',
+            status: error.response?.status || 500,
+            data: error.response?.data || null,
+            stack: error.stack,
+        };
+
+        // Lanza el error completo para manejo posterior
+        throw errorDetails;
     }
    }
 
@@ -103,7 +103,6 @@ export const useObraStore = () => {
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
 
@@ -117,7 +116,6 @@ export const useObraStore = () => {
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
    }
@@ -130,7 +128,6 @@ export const useObraStore = () => {
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
    }
@@ -143,7 +140,6 @@ export const useObraStore = () => {
 
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
  }
@@ -156,7 +152,6 @@ export const useObraStore = () => {
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
  }
@@ -169,7 +164,6 @@ export const useObraStore = () => {
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
  }
@@ -181,7 +175,19 @@ export const useObraStore = () => {
         await startObtenerPartidas(idobra)
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
+        throw new Error(messageError);
+    }
+ }
+
+ const starteliminarObra=async(idobra)=>{
+    try {
+        await simoApi.delete(`/obra/deleteobra/${idobra}`)
+        startModalPresuValue(false)
+        dispatch(resetValues())
+        dispatch(resetIngresarObra())
+
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
         throw new Error(messageError);
     }
  }
@@ -214,7 +220,8 @@ return{
     startActualizarConcepto,
     startActualizarPartida,
     startEliminarConcepto,
-    startEliminarPartida
+    startEliminarPartida,
+    starteliminarObra
 
 }
 

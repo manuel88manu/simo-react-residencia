@@ -132,6 +132,10 @@ export const obraSlice = createSlice({
         state.obra.cap_unidad=""
         state.obra.ejecucion=""
         state.obra.loca_col=""
+        if (state.obra?.presupuesto_idpresupuesto) {
+            state.obra.presupuesto_idpresupuesto = null; // Solo se hace esto si el atributo existe
+          }
+
 
         state.dictamen={}
 

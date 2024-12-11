@@ -115,8 +115,9 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
     };
 
     const agregarPresupuesto = () => {
-        
-        startModalPresuValue(true)
+        if (!modalPresupuesto) { // Verifica que no esté ya abierto
+            startModalPresuValue(true);
+        }
     };
 
     const agregarExpediente = () => {
@@ -553,11 +554,10 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
             </Box>
             </Grid>
         </Grid>
-        {
-         (modalPresupuesto)?
-         <AgregarPresupuestoModal/>:''
-            
-        }    
+        
+
+         <AgregarPresupuestoModal/>
+           
         </Box>
     );
     };

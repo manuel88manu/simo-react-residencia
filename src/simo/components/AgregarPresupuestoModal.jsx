@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Swal from 'sweetalert2';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Grid,
@@ -51,7 +52,8 @@ export const AgregarPresupuestoModal = () => {
     startAgregarConceptos,
     startValidarPresupuesto,
     startActualizarConcepto,
-    startActualizarPartida
+    startActualizarPartida,
+    startEliminarConcepto
   } = useObraStore();
 
   const [nombre, setNombre] = useState('');
@@ -94,6 +96,42 @@ export const AgregarPresupuestoModal = () => {
       }
 
   };
+
+
+  const handleDeleteConcepto=async(row)=>{
+
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text:  `Deseas eliminar el concepto llamado " ${selectedConcept.nombre_conc} "`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar concepto",
+      cancelButtonText: "No, cancelar",
+  });
+
+  if (result.isConfirmed) {
+    try {
+    
+    console.log(selectedConcept)
+    await startEliminarConcepto(obra.idobra,selectedConcept)
+    const clean={nombre_conc: '',
+      unidad: '',
+      p_unitario: 0,
+      cantidad: 0}
+     setFormData(clean)
+
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: error.message || 'Hubo un problema al agregar los presupuestos',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  }else {
+    return;
+  }
+  }
 
   const handleEdit = async(row) => {
     try {
@@ -356,12 +394,17 @@ export const AgregarPresupuestoModal = () => {
                           <TableCell>{concepto.nombre_conc}</TableCell>
                           <TableCell>{concepto.monto}</TableCell>
                           <TableCell>
-                            {selectedConcept?.idconcepto === concepto.idconcepto && (
-                              <IconButton onClick={() => handleEdit(concepto)} color="secondary">
-                                <EditIcon />
-                              </IconButton>
-                            )}
-                          </TableCell>
+                    {selectedConcept?.idconcepto === concepto.idconcepto && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <IconButton onClick={() => handleEdit(concepto)} color="secondary">
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteConcepto(concepto)} color="error">
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    )}
+                  </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

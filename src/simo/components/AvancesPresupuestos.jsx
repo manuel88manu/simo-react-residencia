@@ -71,7 +71,6 @@ export const AvancesPresupuestos = () => {
       odirectas: presuOdirectas,
       federal: presuFederal,
     };
-
     setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
   }, [estadoPresupuesto]);
 

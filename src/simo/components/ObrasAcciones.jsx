@@ -58,6 +58,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         presuFortamun,
         presuOdirectas,
         presuFederal,
+        periodo
     } = usePeriodoStore();
 
     
@@ -144,6 +145,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 
 
     useEffect(() => {
+        console.log('cambio');
         const presupuestoMapping = {
         estatal: presuEstatal,
         faismun: presuFaismun,
@@ -157,7 +159,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         setProgramaInputValue(''); 
         setSubprogramaInputValue('');
         setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
-    }, [estadoPresupuesto]);
+    }, [estadoPresupuesto,periodo]);
 
 
     useEffect(() => {

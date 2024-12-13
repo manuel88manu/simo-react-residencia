@@ -23,7 +23,9 @@ export const convertirFechasADate = (obj) => {
     cap_cantidad:0,
     cap_unidad:'',
     ejecucion:'',
-    loca_col:""
+    loca_col:"",
+    num_obra:"",
+    num_aproba:""
 }
 
 export const dictameInicial={
@@ -47,13 +49,13 @@ export const formatCurrency = (value) => {
     .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`; // Inserta comas para separar miles
 };
 
-export const showAlert = (nombre, idobra) => {
+export const showAlert = (nombre, num_obra) => {
   Swal.fire({
     title: "¡Alerta Importante Registro de Obra No Finalizado!",
     html: `
       <p style="font-size: 1.2rem; line-height: 1.3; text-align: left;">
         El registro de la obra llamada <strong style="font-size: 1.3rem; font-weight: bold;">${nombre}</strong>
-        con registro: <strong style="font-size: 1.3rem; font-weight: bold;">${idobra}</strong> no ha sido finalizada aún.<br /> 
+        con numero de obra: <strong style="font-size: 1.3rem; font-weight: bold;">${num_obra}</strong> no ha sido finalizada aún.<br /> 
        <span style="color: red; font-weight: bold;">No se permitirá registrar ninguna nueva obra si no se ha finalizado la actual.</span>
       </p>
     `,

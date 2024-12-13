@@ -42,7 +42,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 
     //-------------------Solo para simular la validacion de botones----------------------
 
-    const{nombre,bene_unidad,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
+    const{nombre,bene_unidad,num_obra,subprograma,programa,rubros,empleo_event,presupuesto,bene_cantidad,cap_unidad,cap_cantidad,ejecucion,loca_col,onInputChange:onObraChange,formState:obra,onResetForm}=useForm(obrainicio)
     const {fec_inicio,fec_termino,onInputChange:onChangeDictamen,formState}=useForm(dictameInicial)
     
 
@@ -162,9 +162,9 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 
     useEffect(() => {
      if(PresupuestoObra.idobra!=null){
-        const idobra=PresupuestoObra.idobra;
+        const num_obra=PresupuestoObra.num_obra;
         const nombre= PresupuestoObra.nombre;
-        showAlert(nombre,idobra)
+        showAlert(nombre,num_obra)
      }
      
     }, [])
@@ -385,6 +385,17 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
                     )}
                     />
 
+                <TextField
+                fullWidth
+                label="Numero de Obra"
+                variant="outlined"
+                margin="normal"
+                name="num_obra"
+                onChange={onObraChange}
+                value={num_obra}
+                size="small"
+                sx={{ backgroundColor: "#fff" }}
+            />   
 
             <TextField
                 fullWidth

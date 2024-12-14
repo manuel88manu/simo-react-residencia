@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useEffect, useState } from "react";
 import {
   Grid,
@@ -15,6 +19,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { usePeriodoStore, useViewStore } from "../../../hooks";
+import { useObraStore } from "../../../hooks/useObraStore";
 
 export const AvancesPresupuestos = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -29,39 +34,13 @@ export const AvancesPresupuestos = () => {
     faltante,
     startObtenerFaltante
   } = usePeriodoStore();
+
+  const {obras}=useObraStore()
  
   // Estado para manejar `faltante`
-  
-  const rows = [
-    {
-      nombre: "Instalación de sistemas de captación de agua de lluvia en la Comunidad",
-      monto: 400000,
-      meta: "Cantidad: 50 hogares beneficiados. Unidad: Hogares(ml)",
-    },
-    {
-      nombre: "Elaboración de planes estratégicos de desarrollo para el Municipio",
-      monto: 45000,
-      meta: "Cantidad: 1 plan estratégico elaborado. Unidad: Plan",
-    },
-    {
-      nombre: "Actualización del sistema de gestión municipal para la mejora en la recaudación de impuestos",
-      monto: 20000,
-      meta: "Cantidad: 1 sistema implementado. Unidad: Sistema",
-    },
-    {
-      nombre: "Rehabilitación de caminos rurales en comunidades indígenas",
-      monto: 150000,
-      meta: "Cantidad: 20 km de caminos rehabilitados. Unidad: km",
-    },
-    {
-      nombre: "Ampliación de la red eléctrica en zonas marginadas",
-      monto: 250000,
-      meta: "Cantidad: 200 hogares conectados. Unidad: Hogares",
-    },
-  ];
 
-  const handleRowClick = (row, index) => {
-    setSelectedRow(index);
+  const handleRowClick = (row) => {
+    setSelectedRow(row);
     console.log(row);
   };
 
@@ -270,83 +249,71 @@ export const AvancesPresupuestos = () => {
 
       {/* Contenido */}
       <Grid item>
-        <Grid container spacing={4}>
-          {/* Columna izquierda */}
-          <Grid item xs={4}>
-            <Box
-              sx={{
-                p: 3,
-                backgroundColor: "#f0f8ff",
-                borderRadius: "10px",
-                boxShadow: 2,
-              }}
-            >
-              {renderContent()}
-            </Box>
-          </Grid>
+  <Grid container spacing={4} direction="row">
+    {/* Columna izquierda */}
+    <Grid item xs={12} sm={6} md={4}>
+      <Box
+        sx={{
+          p: 3,
+          backgroundColor: "#f0f8ff",
+          borderRadius: "10px",
+          width: "450px", 
+          boxShadow: 2,
+        }}
+      >
+        {renderContent()}
+      </Box>
+    </Grid>
 
-          {/* Columna derecha */}
-          <Grid item xs={8}>
-            <TableContainer
-              component={Paper}
+    {/* Columna derecha */}
+    <Grid item xs={12} sm={6} md={8}>
+    <TableContainer component={Paper} style={{ height: '368px', overflowY: 'auto', width: "880px" }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow
               sx={{
-                boxShadow: 3,
-                maxHeight: "365px", // Limita la altura de la tabla para permitir el scroll
-                overflowY: "auto", // Habilita el scroll vertical
+                backgroundColor: "#1976d2", // Color de fondo azul para el encabezado
+                "& th": {
+                  color: "black", // Aseguramos que el texto sea blanco
+                  fontWeight: "bold",
+                },
               }}
             >
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow
-                    sx={{
-                      backgroundColor: "#1976d2", // Color de fondo azul para el encabezado
-                      "& th": {
-                        color: "black", // Aseguramos que el texto sea blanco
-                        fontWeight: "bold",
-                      },
-                    }}
-                  >
-                    <TableCell>Nombre De Obra</TableCell>
-                    <TableCell>Monto Ejercido</TableCell>
-                    <TableCell>Metas</TableCell>
-                    {selectedRow !== null && <TableCell>Acciones</TableCell>}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row, index) => (
-                    <TableRow
-                      key={index}
-                      onClick={() => handleRowClick(row, index)}
-                      selected={selectedRow === index}
-                      sx={{
-                        cursor: "pointer",
-                        backgroundColor: selectedRow === index ? "#e3f2fd" : "white",
-                        "&:hover": {
-                          backgroundColor: "#f1f1f1",
-                        },
-                      }}
-                    >
-                      <TableCell>{row.nombre}</TableCell>
-                      <TableCell>{`$${row.monto.toLocaleString()}`}</TableCell>
-                      <TableCell>{row.meta}</TableCell>
-                      {selectedRow === index && (
-                        <TableCell>
-                          <IconButton color="primary">
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton color="secondary">
-                            <InsertDriveFileIcon />
-                          </IconButton>
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        </Grid>
-      </Grid>
+              <TableCell>Nombre De Obra</TableCell>
+              <TableCell>Monto Ejercido</TableCell>
+              <TableCell>Metas</TableCell>
+             <TableCell>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {obras.map((obra) => (
+              <TableRow
+                key={obra.idobra}
+                onClick={() => handleRowClick(obra)}
+                selected={selectedRow?.idobra===obra.idobra}
+                style={{ cursor: 'pointer' }}
+              >
+                <TableCell>{obra.nombre}</TableCell>
+                <TableCell>{`$${obra.monto.toLocaleString()}`}</TableCell>
+                <TableCell>{obra.meta}</TableCell>
+                {selectedRow?.idobra===obra.idobra && (
+                  <TableCell>
+                    <IconButton color="primary">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="secondary">
+                      <InsertDriveFileIcon />
+                    </IconButton>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
+  </Grid>
+</Grid>
     </Grid>
   );
 };

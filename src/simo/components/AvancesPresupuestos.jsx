@@ -15,6 +15,7 @@ import {
   Paper,
   IconButton,
   Box,
+  TextField,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
@@ -35,13 +36,22 @@ export const AvancesPresupuestos = () => {
     startObtenerFaltante
   } = usePeriodoStore();
 
-  const {obras}=useObraStore()
- 
-  // Estado para manejar `faltante`
+  const {obras,startObtenerObrasPresu}=useObraStore()
+
+  const [presupuestoActivo, setPresupuestoActivo] = useState({});
+
+  const [numObra, setNumObra] = useState("");
+
+  // Función para manejar el cambio en el TextField
+  const handleChange = (event) => {
+    setNumObra(event.target.value); // Actualiza el estado con el valor del input
+    startObtenerObrasPresu(presupuestoActivo.idPresupuesto,(event.target.value).trim())
+  };
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
-    console.log(row);
+    
+    
   };
 
 
@@ -64,21 +74,21 @@ export const AvancesPresupuestos = () => {
               {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
               </strong>
               <br />
-               <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
+               <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
                Zona de Atención Prioritaria e Incidencia Directa
               </strong>
               <br />
-              <strong style={{ fontSize: '15px', fontWeight: 'bold',color: '#089004' }}>
+              <strong style={{ fontSize: '16px', fontWeight: 'bold',color: '#089004' }}>
                40% Presupuesto Asignado Minimo: 
               </strong>
-              <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+              <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
                {` $${faltante.monto_zap_indirecto.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
               </strong>
               <br />
-              <strong style={{ fontSize: '15px', fontWeight: 'bold',color: '#d2010d' }}>
+              <strong style={{ fontSize: '16px', fontWeight: 'bold',color: '#d2010d' }}>
                Presupuesto Restante: 
               </strong>
-              <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+              <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
               {faltante.monto_zap_indirecto_falt <= 0
                 ? " $0"
                 : ` $${faltante.monto_zap_indirecto_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
@@ -86,21 +96,21 @@ export const AvancesPresupuestos = () => {
               <br/>
               {faltante?.monto_prodim && (
                   <>
-                    <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
+                    <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
                       PRODIM
                     </strong>
                     <br />
-                    <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#089004' }}>
+                    <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#089004' }}>
                       2% Presupuesto Asignado Máximo:
                     </strong>
-                    <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                    <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
                       {` $${faltante.monto_prodim.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
                     </strong>
                     <br />
-                    <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#d2010d' }}>
+                    <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#d2010d' }}>
                       Presupuesto Restante:
                     </strong>
-                    <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                    <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
                       {` $${faltante.monto_prodim_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
                     </strong>
                     <br />
@@ -109,21 +119,21 @@ export const AvancesPresupuestos = () => {
 
               {faltante?.monto_indirectos && (
                 <>
-                  <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
+                  <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
                     FAISMUN
                   </strong>
                   <br />
-                  <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#089004' }}>
+                  <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#089004' }}>
                     3% Presupuesto Asignado Máximo:
                   </strong>
-                  <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                  <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
                     {` $${faltante.monto_indirectos.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
                   </strong>
                   <br />
-                  <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#d2010d' }}>
+                  <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#d2010d' }}>
                     Presupuesto Restante:
                   </strong>
-                  <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                  <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
                     {` $${faltante.monto_indirectos_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
                   </strong>
                 </>
@@ -214,7 +224,7 @@ export const AvancesPresupuestos = () => {
   }
 
 
-  const [presupuestoActivo, setPresupuestoActivo] = useState({});
+ 
 
   useEffect(() => {
     const presupuestoMapping = {
@@ -226,16 +236,37 @@ export const AvancesPresupuestos = () => {
     };
     setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
     startObtenerFaltante(presupuestoMapping[estadoPresupuesto].idPresupuesto)
+    startObtenerObrasPresu(presupuestoMapping[estadoPresupuesto].idPresupuesto,numObra)
+    setNumObra('')
+    setSelectedRow(null)
+
   }, [estadoPresupuesto]);
 
     //-----------------Interface dinamica--------------------------
     
 
   return (
-    <Grid container direction="column" spacing={3} style={{ padding: "16px" }}>
+    <Grid container direction="column" spacing={3} style={{marginTop: "1px" }}>
       {/* Header */}
-      <Grid item>
-        <Typography variant="h4" align="center" color="primary" fontWeight="bold">
+      <Grid item xs={12}>
+    {/* Contenedor de tipo flex */}
+    
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <TextField
+      label="Buscar No. De Obra"
+      variant="outlined"
+      name="num_obra_buscar"
+      size="small"
+      sx={{
+        backgroundColor: "#fff",
+        width: "190px", // Ajusta el tamaño según tus necesidades
+      }}
+      value={numObra} // El valor del TextField será el estado numObra
+      onChange={handleChange} // Al escribir en el TextField, actualizamos el estado
+    />
+      {/* Título centrado */}
+      <div style={{ flex: 1, textAlign: "center",marginRight:"145px" }}>
+        <Typography variant="h4" color="primary" fontWeight="bold">
           Monto Autorizado Total:{" "}
           <span style={{ fontWeight: "normal" }}>
             {presupuestoActivo.monto_inici
@@ -245,7 +276,9 @@ export const AvancesPresupuestos = () => {
               : "$0.00"}
           </span>
         </Typography>
-      </Grid>
+      </div>
+    </div>
+  </Grid>
 
       {/* Contenido */}
       <Grid item>
@@ -255,7 +288,7 @@ export const AvancesPresupuestos = () => {
       <Box
         sx={{
           p: 3,
-          backgroundColor: "#f0f8ff",
+          backgroundColor: "white",
           borderRadius: "10px",
           width: "450px", 
           boxShadow: 2,
@@ -278,10 +311,12 @@ export const AvancesPresupuestos = () => {
                   fontWeight: "bold",
                 },
               }}
-            >
+            > 
+              <TableCell>Num. de Obra</TableCell>
               <TableCell>Nombre De Obra</TableCell>
               <TableCell>Monto Ejercido</TableCell>
               <TableCell>Metas</TableCell>
+              <TableCell>Num. de Aprobacion</TableCell>
              <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -293,9 +328,13 @@ export const AvancesPresupuestos = () => {
                 selected={selectedRow?.idobra===obra.idobra}
                 style={{ cursor: 'pointer' }}
               >
+                <TableCell>{obra.num_obra}</TableCell>
                 <TableCell>{obra.nombre}</TableCell>
-                <TableCell>{`$${obra.monto.toLocaleString()}`}</TableCell>
-                <TableCell>{obra.meta}</TableCell>
+                <TableCell>{`$${obra.presupuesto.toLocaleString()}`}</TableCell>
+                <TableCell> {obra.metas.split("<br>").map((line, index) => (
+                    <div key={index}>{line}</div>
+                  ))}</TableCell>
+                <TableCell>{obra.num_aproba}</TableCell>
                 {selectedRow?.idobra===obra.idobra && (
                   <TableCell>
                     <IconButton color="primary">

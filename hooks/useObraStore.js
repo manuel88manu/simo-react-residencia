@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalPresupuesto, setObra, setObraExito, setPresupuestoExito } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -192,6 +192,17 @@ export const useObraStore = () => {
     }
  }
 
+ const startObtenerObrasPresu=async(idPresupuesto,num_obra)=>{
+    try {
+        const {data}=await simoApi.get(`/obra/getObrasPresu`,{params:{idPresupuesto,num_obra}})
+        const obras=data.obras;
+        dispatch(setObrasPresu(obras))     
+
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        throw new Error(messageError);
+    }
+ }
 return{
     //propuedades
     obra,
@@ -221,7 +232,9 @@ return{
     startActualizarPartida,
     startEliminarConcepto,
     startEliminarPartida,
-    starteliminarObra
+    starteliminarObra,
+    startObtenerObrasPresu
+    
 
 }
 

@@ -157,6 +157,9 @@ export const obraSlice = createSlice({
         },
         getPresupuesto:(state,{payload})=>{
           state.obra.presupuesto=payload;    
+        },
+        setObrasPresu:(state,{payload})=>{
+            state.obras=payload
         }
     }
 });
@@ -174,5 +177,6 @@ export const { setObra,
                setExpedienteExitoso,
                setDictamenExitoso,
                resetValues,
-               resetIngresarObra
+               resetIngresarObra,
+               setObrasPresu
             } = obraSlice.actions;

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
-import { getPeriodo, getSinVigencia, setPresuEstatal, setpresuFaismun, setpresuFederal, setpresuFortamun, setpresuOdirectas } from "../store/periody/periodoSlice"
+import { getPeriodo, getSinVigencia, setBorrarFaltante, setFaltante, setPresuEstatal, setpresuFaismun, setpresuFederal, setpresuFortamun, setpresuOdirectas} from "../store/periody/periodoSlice"
 
 export const usePeriodoStore=()=>{
-const {periodo,vigente,presuEstatal,presuFaismun,presuFortamun,presuOdirectas,presuFederal}=useSelector(state=>state.periodo)
+const {periodo,vigente,presuEstatal,presuFaismun,presuFortamun,presuOdirectas,presuFederal,faltante}=useSelector(state=>state.periodo)
 const dispatch=useDispatch()
 
 const startPeriodoVigen=async()=>{
@@ -70,6 +70,18 @@ const startObtenerPeriodos=async(idperiodo)=>{
 
 }
 
+const startObtenerFaltante=async(idPresupuesto)=>{
+ try {
+    dispatch(setBorrarFaltante())
+    const { data } = await simoApi.get(`/periody/faltante`, { params: { idPresupuesto } });
+    dispatch(setFaltante(data.faltante))
+ } catch (error) {
+    const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+    throw new Error(messageError);
+ }
+
+}
+
 return{
     //propiedades
     periodo,
@@ -79,10 +91,12 @@ return{
     presuFederal,
     presuFortamun,
     presuOdirectas,
+    faltante,
     //Metodos
     startPeriodoVigen,
     startIgresarPeriodo,
-    startObtenerPeriodos
+    startObtenerPeriodos,
+    startObtenerFaltante
 }
 
 }

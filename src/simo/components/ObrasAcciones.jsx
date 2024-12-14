@@ -170,8 +170,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
      }
      
     }, [])
-    
-    
+  
     return (
         <Box sx={{ padding: 2, backgroundColor: "#f7f7f7", mt: 1.4, maxHeight: 'calc(100vh - 100px)', overflowY: 'auto' }}>
         <Grid container spacing={2} >

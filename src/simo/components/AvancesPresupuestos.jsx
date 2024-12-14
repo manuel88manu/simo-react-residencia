@@ -26,8 +26,12 @@ export const AvancesPresupuestos = () => {
     presuFortamun,
     presuOdirectas,
     presuFederal,
+    faltante,
+    startObtenerFaltante
   } = usePeriodoStore();
-
+ 
+  // Estado para manejar `faltante`
+  
   const rows = [
     {
       nombre: "Instalación de sistemas de captación de agua de lluvia en la Comunidad",
@@ -61,6 +65,176 @@ export const AvancesPresupuestos = () => {
     console.log(row);
   };
 
+
+  const renderContent=()=>{
+    switch (presupuestoActivo.tipo) {
+      case 'faismun':
+        return(
+          <>
+            <Typography variant="body1" gutterBottom>
+            {
+             !faltante || faltante.monto_restante === undefined ? (
+            <span>No hay monto restante disponible</span>
+             ) : (
+            <>
+              <strong style={{ fontSize: '25px', fontWeight: 'bold',color: '#d2010d' }}>
+               Presupuesto Restante Total: 
+              </strong>
+              <br />
+              <strong style={{ fontSize: '20px', fontWeight: 'bold',color: '#e24b53' }}>
+              {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+              </strong>
+              <br />
+               <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
+               Zona de Atención Prioritaria e Incidencia Directa
+              </strong>
+              <br />
+              <strong style={{ fontSize: '15px', fontWeight: 'bold',color: '#089004' }}>
+               40% Presupuesto Asignado Minimo: 
+              </strong>
+              <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+               {` $${faltante.monto_zap_indirecto.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+              </strong>
+              <br />
+              <strong style={{ fontSize: '15px', fontWeight: 'bold',color: '#d2010d' }}>
+               Presupuesto Restante: 
+              </strong>
+              <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+              {faltante.monto_zap_indirecto_falt <= 0
+                ? " $0"
+                : ` $${faltante.monto_zap_indirecto_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+               </strong>
+              <br/>
+              {faltante?.monto_prodim && (
+                  <>
+                    <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
+                      PRODIM
+                    </strong>
+                    <br />
+                    <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#089004' }}>
+                      2% Presupuesto Asignado Máximo:
+                    </strong>
+                    <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                      {` $${faltante.monto_prodim.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                    </strong>
+                    <br />
+                    <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#d2010d' }}>
+                      Presupuesto Restante:
+                    </strong>
+                    <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                      {` $${faltante.monto_prodim_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                    </strong>
+                    <br />
+                  </>
+                )}
+
+              {faltante?.monto_indirectos && (
+                <>
+                  <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
+                    FAISMUN
+                  </strong>
+                  <br />
+                  <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#089004' }}>
+                    3% Presupuesto Asignado Máximo:
+                  </strong>
+                  <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                    {` $${faltante.monto_indirectos.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                  </strong>
+                  <br />
+                  <strong style={{ fontSize: '15px', fontWeight: 'bold', color: '#d2010d' }}>
+                    Presupuesto Restante:
+                  </strong>
+                  <strong style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                    {` $${faltante.monto_indirectos_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                  </strong>
+                </>
+              )}
+            </>  
+            )
+}
+          </Typography>
+          </>
+        );
+        case 'fortamun':
+        return(
+          <>
+            <Typography variant="body1" gutterBottom>
+            {
+               !faltante || faltante.monto_restante === undefined ? (
+                <span>No hay monto restante disponible</span>
+                 ) : (
+                  <>
+                      <strong style={{ fontSize: '25px', fontWeight: 'bold',color: '#d2010d' }}>
+                      Presupuesto Restante Total: 
+                      </strong>
+                      <br />
+                      <strong style={{ fontSize: '20px', fontWeight: 'bold',color: '#e24b53' }}>
+                      {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      </strong>
+                      <br />
+                      <br />
+                      <strong style={{ fontSize: '25px', fontWeight: 'bold' }}>
+                      Seguridad Publica
+                      </strong>
+                      <br />
+                      <strong style={{ fontSize: '17px', fontWeight: 'bold',color: '#089004' }}>
+                      20% Presupuesto Asignado Minimo: 
+                      </strong>
+                      <br />
+                      <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                      {` $${faltante.monto_seguridad.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      </strong>
+                      <br />
+                      <strong style={{ fontSize: '17px', fontWeight: 'bold',color: '#d2010d' }}>
+                      Presupuesto Restante: 
+                      </strong>
+                      <br />
+                      <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                      {faltante.monto_seguridad_falt <= 0
+                        ? " $0"
+                        : ` $${faltante.monto_seguridad_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      </strong>
+                  </>
+                 )
+            }
+          </Typography>
+          </>
+        );
+        case 'estatal':
+        case 'federal':
+        case 'odirectas':
+        return(
+          <>
+            <Typography variant="body1" gutterBottom>
+            {
+                !faltante || faltante.monto_restante === undefined ? (
+                  <span>No hay monto restante disponible</span>
+                   ) : (
+                    <>
+                      <strong style={{ fontSize: '25px', fontWeight: 'bold',color: '#d2010d' }}>
+                      Presupuesto Restante Total: 
+                      </strong>
+                    <br />
+                    <strong style={{ fontSize: '20px', fontWeight: 'bold',color: '#e24b53' }}>
+                    {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                    </strong>
+                    <br />
+                    </>
+                   )
+            }
+          </Typography>
+          </>
+        );
+        default:
+          return (
+            <Typography variant="body1" gutterBottom>
+              <strong>No hay información disponible para este tipo.</strong>
+            </Typography>
+          );
+    }
+  }
+
+
   const [presupuestoActivo, setPresupuestoActivo] = useState({});
 
   useEffect(() => {
@@ -72,7 +246,11 @@ export const AvancesPresupuestos = () => {
       federal: presuFederal,
     };
     setPresupuestoActivo(presupuestoMapping[estadoPresupuesto] || {});
+    startObtenerFaltante(presupuestoMapping[estadoPresupuesto].idPresupuesto)
   }, [estadoPresupuesto]);
+
+    //-----------------Interface dinamica--------------------------
+    
 
   return (
     <Grid container direction="column" spacing={3} style={{ padding: "16px" }}>
@@ -103,27 +281,7 @@ export const AvancesPresupuestos = () => {
                 boxShadow: 2,
               }}
             >
-              <Typography variant="h6" color="secondary" gutterBottom>
-                <strong>Detalles Presupuestales:</strong>
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Zona de Atención Prioritaria:</strong> $470,760.15
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Monto para indirectos:</strong> $47,076.02
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Monto para PRODIM:</strong> $31,384.01
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Incidencia Directa:</strong> $31,384.01
-              </Typography>
-              <Typography variant="body1" gutterBottom color="error">
-                <strong>Por Aprobar Total:</strong> $1,104,200.50
-              </Typography>
-              <Typography variant="body1" gutterBottom color="error">
-                <strong>Por Aprobar I.Directas:</strong> $1,104,200.50
-              </Typography>
+              {renderContent()}
             </Box>
           </Grid>
 

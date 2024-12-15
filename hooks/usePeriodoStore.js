@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
-import { getPeriodo, getSinVigencia, setBorrarFaltante, setFaltante, setPresuEstatal, setpresuFaismun, setpresuFederal, setpresuFortamun, setpresuOdirectas} from "../store/periody/periodoSlice"
+import { getPeriodo, getPeriodoVigenteTrue, getSinVigencia, setBorrarFaltante, setFaltante, setPresuEstatal, setpresuFaismun, setpresuFederal, setpresuFortamun, setpresuOdirectas} from "../store/periody/periodoSlice"
 
 export const usePeriodoStore=()=>{
 const {periodo,vigente,presuEstatal,presuFaismun,presuFortamun,presuOdirectas,presuFederal,faltante}=useSelector(state=>state.periodo)
@@ -63,7 +63,7 @@ const startObtenerPeriodos=async(idperiodo)=>{
     } else {
         console.error("El formato de data.presupuestos no es válido.");
     }
-
+     dispatch(getPeriodoVigenteTrue())
     } catch (error) {
         console.log(error.data.msg)
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -15,7 +15,8 @@ export const useObraStore = () => {
     valueFinalizar,
     modalPresupuesto,
     partidas,
-    conceptos
+    conceptos,
+    modalAprobacion
     }=useSelector(state=>state.obra)
 
    const dispatch=useDispatch()
@@ -39,7 +40,9 @@ export const useObraStore = () => {
    dispatch(setModalPresupuesto(payload))
 
    }
-
+   const startAprobaModalValue=(payload)=>{
+    dispatch(setModalAproba(payload))
+   }
    const  startObtenerPartidas=async(idobra)=>{
     const { data } = await simoApi.get(`/obra/addpartidas`, { params: { idobra } });
     const partidas=data.partidas;
@@ -203,6 +206,16 @@ export const useObraStore = () => {
         throw new Error(messageError);
     }
  }
+ const startActualizarNumApro=async(idobra,num_aproba,idPresupuesto)=>{
+    try {
+       await simoApi.put('/obra/updatenumaproba',{idobra,num_aproba} )
+       await startObtenerObrasPresu(idPresupuesto,'')
+       startAprobaModalValue(false)
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        throw new Error(messageError);
+    }
+ }
 return{
     //propuedades
     obra,
@@ -216,6 +229,7 @@ return{
     modalPresupuesto,
     partidas,
     conceptos,
+    modalAprobacion,
 
     //METODOS
     startAgregarObra,
@@ -233,7 +247,10 @@ return{
     startEliminarConcepto,
     startEliminarPartida,
     starteliminarObra,
-    startObtenerObrasPresu
+    startObtenerObrasPresu,
+    startAprobaModalValue,
+    startActualizarNumApro
+    
     
 
 }

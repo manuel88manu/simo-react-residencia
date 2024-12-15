@@ -58,7 +58,8 @@ export const obraSlice = createSlice({
             notvisible:true,
             termino:null
         },
-        modalPresupuesto:false
+        modalPresupuesto:false,
+        modalAprobacion:false
 ,
     },
     reducers: {
@@ -149,6 +150,9 @@ export const obraSlice = createSlice({
         setModalPresupuesto:(state,{payload})=>{
             state.modalPresupuesto=payload
         },
+        setModalAproba:(state,{payload})=>{
+            state.modalAprobacion=payload
+        },
         getPartidas:(state,{payload})=>{
             state.partidas=payload
         },
@@ -178,5 +182,6 @@ export const { setObra,
                setDictamenExitoso,
                resetValues,
                resetIngresarObra,
-               setObrasPresu
+               setObrasPresu,
+               setModalAproba
             } = obraSlice.actions;

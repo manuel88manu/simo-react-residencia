@@ -80,12 +80,6 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
     ? opcionesSubprograma.default || []
     : opcionesSubprograma[programa] || [];
 
-
-
-
-    const [unidadCapacidad, setUnidadCapacidad] = useState(""); // Estado para los select
-    const [unidadBeneficio, setUnidadBeneficio] = useState(""); // Estado para los select
-
     const validarFechas = () => {
         if (!fec_inicio || !fec_termino) return false;
         return fec_inicio >= fec_termino;
@@ -145,7 +139,6 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 
 
     useEffect(() => {
-        console.log('cambio');
         const presupuestoMapping = {
         estatal: presuEstatal,
         faismun: presuFaismun,

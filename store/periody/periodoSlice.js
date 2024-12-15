@@ -60,6 +60,8 @@
         reducers: {
             getPeriodo:(state,{payload})=>{
                 state.periodo=payload;
+            },
+            getPeriodoVigenteTrue:(state)=>{
                 state.vigente=true
             },
             getSinVigencia:(state)=>{
@@ -101,5 +103,6 @@
         setpresuFortamun,
         setpresuFaismun,
         setFaltante,
-        setBorrarFaltante
+        setBorrarFaltante,
+        getPeriodoVigenteTrue
     } = periodoSlice.actions;

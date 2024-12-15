@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useState } from "react";
 import {
   Grid,
@@ -21,6 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { usePeriodoStore, useViewStore } from "../../../hooks";
 import { useObraStore } from "../../../hooks/useObraStore";
+import { AgregarNumAprobaModal } from "./AgregarNumAprobaModal";
 
 export const AvancesPresupuestos = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -36,10 +33,11 @@ export const AvancesPresupuestos = () => {
     startObtenerFaltante
   } = usePeriodoStore();
 
-  const {obras,startObtenerObrasPresu}=useObraStore()
+  const {obras,startObtenerObrasPresu,startAprobaModalValue}=useObraStore()
 
   const [presupuestoActivo, setPresupuestoActivo] = useState({});
 
+  const [idobra, setidobra] = useState(0)
   const [numObra, setNumObra] = useState("");
 
   // Función para manejar el cambio en el TextField
@@ -51,9 +49,12 @@ export const AvancesPresupuestos = () => {
   const handleRowClick = (row) => {
     setSelectedRow(row);
     
-    
   };
 
+  const handleEditObra=(obra)=>{
+    setidobra(obra.idobra)
+    startAprobaModalValue(true)
+  }
 
   const renderContent=()=>{
     switch (presupuestoActivo.tipo) {
@@ -312,11 +313,11 @@ export const AvancesPresupuestos = () => {
                 },
               }}
             > 
-              <TableCell>Num. de Obra</TableCell>
+              <TableCell sx={{ width: '100px', fontWeight: 'bold' }}>Num. de Obra</TableCell>
               <TableCell>Nombre De Obra</TableCell>
               <TableCell>Monto Ejercido</TableCell>
               <TableCell>Metas</TableCell>
-              <TableCell>Num. de Aprobacion</TableCell>
+              <TableCell sx={{ width: '160px', fontWeight: 'bold' }}>Num. de Aprobacion</TableCell>
              <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -334,10 +335,12 @@ export const AvancesPresupuestos = () => {
                 <TableCell> {obra.metas.split("<br>").map((line, index) => (
                     <div key={index}>{line}</div>
                   ))}</TableCell>
-                <TableCell>{obra.num_aproba}</TableCell>
+                <TableCell>{obra.num_aproba.split("\n").map((line, index) => (
+                    <div key={index}>{line}</div>
+                  ))}</TableCell>
                 {selectedRow?.idobra===obra.idobra && (
                   <TableCell>
-                    <IconButton color="primary">
+                    <IconButton onClick={() => handleEditObra(obra)} color="primary">
                       <EditIcon />
                     </IconButton>
                     <IconButton color="secondary">
@@ -353,6 +356,11 @@ export const AvancesPresupuestos = () => {
     </Grid>
   </Grid>
 </Grid>
+<AgregarNumAprobaModal 
+    idobra={idobra} 
+    idPresupuesto={presupuestoActivo?.idPresupuesto || 0} 
+    num_obra={selectedRow?.num_obra || 'ValorPredeterminado'} 
+/>
     </Grid>
   );
 };

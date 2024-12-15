@@ -73,3 +73,21 @@ export const showAlert = (nombre, num_obra) => {
     showConfirmButton: false, // Eliminar el botón de confirmación
   });
 };
+
+export function formatValue(value) {
+  if (!value) return ''; // Si no hay valor, retornar una cadena vacía.
+  
+  // Asegurarse de que el valor es un número o una cadena numérica.
+  let [integerPart, decimalPart] = value.toString().split('.');
+  
+  // Formatear la parte entera con comas
+  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+  // Si tiene parte decimal, la unimos de nuevo con el punto
+  if (decimalPart) {
+    return `${integerPart}.${decimalPart}`;
+  }
+  
+  // Si no tiene parte decimal, simplemente devolvemos la parte entera con comas
+  return integerPart;
+}

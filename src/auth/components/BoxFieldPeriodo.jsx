@@ -9,11 +9,13 @@ import {
   Box,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import { usePeriodoStore } from "../../../hooks";
+import { usePeriodoStore, useViewStore } from "../../../hooks";
 import Swal from "sweetalert2";
+import { formatValue } from "../../../helpers";
 
 export const BoxFieldPeriodo = () => {
    const {startIgresarPeriodo,startObtenerPeriodos,periodo}= usePeriodoStore()
+   const {selectViewSimo}=useViewStore()
    const [budgets, setBudgets] = useState({
     estatal: "",
     fortamun: "",
@@ -41,8 +43,14 @@ export const BoxFieldPeriodo = () => {
   const handleSave = async() => {
 
     const result = await Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Una vez ingresado los presupuestos para el presente periodo no se podra modificar, asegurate que esta correcto las cantidades",
+        title: "¿Estás seguro? VERIFICALO",
+        html: `
+    <span style="font-size: 20px; font-weight: bold;">FAISMUN: $${formatValue(budgets.faismun)}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">FORTAMUN: $${formatValue(budgets.fortamun)}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">O.Directas: $${formatValue(budgets.directas)}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">Estatal: $${formatValue(budgets.estatal)}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">Federal: $${formatValue(budgets.federal)}</span><br><br>
+    Una vez ingresado los presupuestos para el presente periodo no se podrá modificar`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Sí, ingresar presupuestos",
@@ -60,6 +68,7 @@ export const BoxFieldPeriodo = () => {
             ]; 
     
          await startIgresarPeriodo(presupuestos)
+         selectViewSimo("inicio")
 
          Swal.fire({
             title: "¡Operación exitosa!",

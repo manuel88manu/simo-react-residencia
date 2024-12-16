@@ -10,6 +10,8 @@ import { BoxFieldPeriodo } from '../../auth/components/BoxFieldPeriodo'
 import { AvancesPresupuestos } from '../components/AvancesPresupuestos'
 import { AgregarObraView } from '../views/AgregarObraView'
 import { ObrasAcciones } from '../components/ObrasAcciones'
+import { HistoricoView } from '../views/HistoricoView'
+import { ContenidoHistorico } from '../components/ContenidoHistorico'
 
 export const SimoPage = () => {
   const { stateViewSimo,stateViewUser } = useViewStore()
@@ -59,11 +61,11 @@ export const SimoPage = () => {
               <ObrasAcciones/>
             }
           </AgregarObraView>
-      ) : stateViewSimo === 'otraVista' ? (
+      ) : stateViewSimo === 'Histórico' ? (
         // Si el estado es 'otraVista', mostrar otro componente
-        <div>
-          <Typography variant="h4">Otra Vista</Typography>
-        </div>
+        <HistoricoView>
+          {<ContenidoHistorico/>}
+        </HistoricoView>
       ) : stateViewSimo === 'perfil' ? (
         // Si el estado es 'perfil', mostrar vista de perfil
         <div>

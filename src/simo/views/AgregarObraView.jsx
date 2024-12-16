@@ -127,6 +127,7 @@ export const AgregarObraView = ({ children }) => {
                 </Grid>
 
                 <Box
+                    
                     component='main'
                     sx={{ flexGrow: 1, pt: 1 }}
                 >

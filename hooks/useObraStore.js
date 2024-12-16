@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito,setObrasBusqueda, setLimpiarBusqueda } from '../store/obra/obraSlice'
 
 export const useObraStore = () => {
 
@@ -16,7 +16,8 @@ export const useObraStore = () => {
     modalPresupuesto,
     partidas,
     conceptos,
-    modalAprobacion
+    modalAprobacion,
+    busqueda
     }=useSelector(state=>state.obra)
 
    const dispatch=useDispatch()
@@ -216,6 +217,20 @@ export const useObraStore = () => {
         throw new Error(messageError);
     }
  }
+ const startBuscarObras=async(año,tipo,programa,num_obra)=>{
+  try {
+    const {data}=await simoApi.get(`/obra/shareobras`,{params:{año,tipo,programa,num_obra}})
+    const obras=data.obras
+    dispatch(setObrasBusqueda(obras))
+
+  } catch (error) {
+    const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+    throw new Error(messageError);
+  }  
+ }
+ const startLimpiarBusqueda=()=>{
+    dispatch(setLimpiarBusqueda())
+ }
 return{
     //propuedades
     obra,
@@ -230,6 +245,7 @@ return{
     partidas,
     conceptos,
     modalAprobacion,
+    busqueda,
 
     //METODOS
     startAgregarObra,
@@ -249,7 +265,9 @@ return{
     starteliminarObra,
     startObtenerObrasPresu,
     startAprobaModalValue,
-    startActualizarNumApro
+    startActualizarNumApro,
+    startBuscarObras,
+    startLimpiarBusqueda
     
     
 

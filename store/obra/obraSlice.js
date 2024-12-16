@@ -5,6 +5,7 @@ export const obraSlice = createSlice({
     name: 'obra',
     initialState: {
         obras:[],
+        busqueda:[],
         partidas:[],
         conceptos:[],
         obra:{
@@ -164,6 +165,12 @@ export const obraSlice = createSlice({
         },
         setObrasPresu:(state,{payload})=>{
             state.obras=payload
+        },
+        setObrasBusqueda:(state,{payload})=>{
+            state.busqueda=payload
+        },
+        setLimpiarBusqueda:(state)=>{
+            state.busqueda=[]
         }
     }
 });
@@ -183,5 +190,7 @@ export const { setObra,
                resetValues,
                resetIngresarObra,
                setObrasPresu,
-               setModalAproba
+               setModalAproba,
+               setObrasBusqueda,
+               setLimpiarBusqueda
             } = obraSlice.actions;

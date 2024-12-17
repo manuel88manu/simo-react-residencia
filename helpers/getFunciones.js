@@ -91,3 +91,8 @@ export function formatValue(value) {
   // Si no tiene parte decimal, simplemente devolvemos la parte entera con comas
   return integerPart;
 }
+
+export const getCurrentYear = () => {
+  const now = new Date(); // Obtiene la fecha y hora actual
+  return now.getFullYear(); // Extrae solo el año
+};

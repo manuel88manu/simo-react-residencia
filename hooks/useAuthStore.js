@@ -13,7 +13,7 @@ export const useAuthStore=()=>{
             const {data}= await simoApi.post('/auth',{correo,contraseña})
             localStorage.setItem('token',data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
-            dispatch(onLogin({name:data.name, uid:data.uid}))
+            dispatch(onLogin({name:data.name, uid:data.uid,correo:correo}))
 
         } catch (error) {
             dispatch(onLogout(error.response.data?.msg || ''))
@@ -27,9 +27,7 @@ export const useAuthStore=()=>{
     const startRegister=async({nombre,correo,username,activo,celular,rol,contraseña})=>{
         try {
             const {data}= await simoApi.post('/auth/new',{nombre,correo,username,activo,celular,rol,contraseña})
-            //localStorage.setItem('token',data.token)
-            //localStorage.setItem('token-init-date', new Date().getTime())
-            //dispatch(onLogin({name:data.name, uid:data.uid}))
+            await startMovimientoAgregar(`Dio de alta al usuario ${correo}`)
             dispatch(setUserExito(true))
             setTimeout(() => {
                 dispatch(setUserExito(false))
@@ -82,6 +80,7 @@ export const useAuthStore=()=>{
     const startActulizarUsuario = async (payload) => {
         try {
             const { data } = await simoApi.put(`/auth/${payload.idusuario}`, payload);
+            await startMovimientoAgregar(`Actualizo al usuario ${payload.correo}`)
             dispatch(onModalUser(false))
             // Si todo sale bien, podrías manejar la respuesta aquí
         } catch (error) {
@@ -94,6 +93,18 @@ export const useAuthStore=()=>{
             throw new Error(messageError); // Lanzamos el error para que el catch en `startActualizar` lo capture
         }
     };
+
+    const startMovimientoAgregar=async(accion)=>{
+        try {
+            const idUsuario=user.uid
+            const correo=user.correo
+            await simoApi.post('/auth/movimientos',{idUsuario,correo,accion})
+
+        } catch (error) {
+            const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
+        }
+    }
     return{
         //Propiedades
             status,
@@ -109,7 +120,8 @@ export const useAuthStore=()=>{
             startLogout,
             starUsuarios,
             startUsuarioEdit,
-            startActulizarUsuario
+            startActulizarUsuario,
+            startMovimientoAgregar
 
     }
 }

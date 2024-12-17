@@ -2,6 +2,8 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
 import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito,setObrasBusqueda, setLimpiarBusqueda } from '../store/obra/obraSlice'
+import { useAuthStore } from './useAuthStore'
+import { formatCurrency } from '../helpers'
 
 export const useObraStore = () => {
 
@@ -20,11 +22,14 @@ export const useObraStore = () => {
     busqueda
     }=useSelector(state=>state.obra)
 
+    const {startMovimientoAgregar}=useAuthStore()
+
    const dispatch=useDispatch()
 
    const startAgregarObra=async({Presupuesto_idPresupuesto,obra,dictamen})=>{
     try {
         const {data}=await simoApi.post("/obra/newobra",{Presupuesto_idPresupuesto,obra,dictamen})
+        await startMovimientoAgregar(`Inicializo la obra ${obra.num_obra}`)
         dispatch(setObra(data.obra))
         dispatch(setDictamen(data.dictamen))
         dispatch(setObraExito())
@@ -54,6 +59,7 @@ export const useObraStore = () => {
     try {
         await simoApi.post(`/obra/newpartida`, {obra_idobra:idobra,nombre_par:nombre});
         await startObtenerPartidas(idobra)
+        await startMovimientoAgregar(`Agrego la partida: ${nombre} en la obra: ${obra.num_obra}`)
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
         throw new Error(messageError);
@@ -72,6 +78,8 @@ export const useObraStore = () => {
         await simoApi.post(`/obra/newconcepto`, {partida_idpartida:idpartida,concepto:concepto});
         await startObtenerConceptos(idpartida)
         await startObtenerPartidas(idobra)
+        await startMovimientoAgregar(`Agrego el concepto: ${concepto.nombre_conc} en la obra: ${obra.num_obra}`)
+
 
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
@@ -84,6 +92,7 @@ export const useObraStore = () => {
     try {
         const {data}= await simoApi.put(`/obra/updatapresu/${idobra}`)
         const presupuesto= data.resultadoAdicional.presupuesto;
+        await startMovimientoAgregar(`Aprobo el Presupuesto de: ${formatCurrency(presupuesto)} en la obra: ${obra.num_obra}`)
         dispatch(getPresupuesto(presupuesto))
         dispatch(setPresupuestoExito())
 
@@ -142,6 +151,7 @@ export const useObraStore = () => {
       await startObtenerConceptos(concepto.partida_idpartida)
       await startObtenerPartidas(idobra)
 
+
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
         throw new Error(messageError);
@@ -186,6 +196,7 @@ export const useObraStore = () => {
  const starteliminarObra=async(idobra)=>{
     try {
         await simoApi.delete(`/obra/deleteobra/${idobra}`)
+        await startMovimientoAgregar(`Elimino la obra: ${obra.num_obra} que habia sido inicializada`)
         startModalPresuValue(false)
         dispatch(resetValues())
         dispatch(resetIngresarObra())
@@ -209,7 +220,8 @@ export const useObraStore = () => {
  }
  const startActualizarNumApro=async(idobra,num_aproba,idPresupuesto)=>{
     try {
-       await simoApi.put('/obra/updatenumaproba',{idobra,num_aproba} )
+       const{data}=await simoApi.put('/obra/updatenumaproba',{idobra,num_aproba} )
+       await startMovimientoAgregar(`Agrego el numero de aprobacion ${num_aproba.codigo} en la obra: ${data.num_obra}`)
        await startObtenerObrasPresu(idPresupuesto,'')
        startAprobaModalValue(false)
     } catch (error) {

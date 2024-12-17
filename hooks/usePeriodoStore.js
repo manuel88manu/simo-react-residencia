@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
 import { getPeriodo, getPeriodoVigenteTrue, getSinVigencia, setBorrarFaltante, setFaltante, setPresuEstatal, setpresuFaismun, setpresuFederal, setpresuFortamun, setpresuOdirectas} from "../store/periody/periodoSlice"
+import { useAuthStore } from "./useAuthStore"
+import { getCurrentYear } from "../helpers"
 
 export const usePeriodoStore=()=>{
 const {periodo,vigente,presuEstatal,presuFaismun,presuFortamun,presuOdirectas,presuFederal,faltante}=useSelector(state=>state.periodo)
 const dispatch=useDispatch()
+const {startMovimientoAgregar}=useAuthStore()
 
 const startPeriodoVigen=async()=>{
     try {
@@ -21,10 +24,11 @@ const startPeriodoVigen=async()=>{
 
 const startIgresarPeriodo=async(presupuestos)=>{
     try {
-        
+        const año=getCurrentYear()
         const {data}=await simoApi.post("/periody/newper",{presupuestos})
         dispatch(getPeriodo(data.periodo))
         await startObtenerPeriodos(data.periodo.idperiodo)
+        await startMovimientoAgregar(`Ingreso los presupuestos para el año ${año}`)
 
     } catch (error) {
         dispatch(getSinVigencia())

@@ -3,31 +3,53 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import React, { useEffect, useState } from 'react'
 import { opcionesPrograma } from '../../../helpers';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import EditIcon from "@mui/icons-material/Edit";
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
+import PlagiarismIcon from '@mui/icons-material/Plagiarism';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { useObraStore } from '../../../hooks/useObraStore';
 import Swal from 'sweetalert2';
-import { useViewStore } from '../../../hooks';
+import { useAuthStore, useViewStore } from '../../../hooks';
 
 export const ContenidoHistorico = () => {
 
   const [selectedYear, setSelectedYear] = useState(null);
+
+  //===============Movimientos=========================
+  const [correo, setCorreo] = useState('');
+  const [selectedAño, setSelectedAño] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  
   const [tipo, setTipo] = useState('');
   const [numobra, setnumobra] = useState('');
   const [programa, setPrograma] = useState('');
   const [programaInputValue, setProgramaInputValue] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
   const {busqueda,startBuscarObras,startLimpiarBusqueda}=useObraStore()
+  const {movimientos,startObtenerMovimientos,startLimpiarMovimientos}=useAuthStore()
   const{ stateViewUser}=useViewStore()
 
   const handleYearChange = (newValue) => {
     setSelectedYear(newValue);
   };
 
+  const handleAñoChange = (newValue) => {
+    setSelectedAño(newValue);
+  };
+
+  const handleDateChange = (newValue) => {
+    setSelectedDate(newValue);
+  };
+  
+
   const handleChangeNumobra=(event)=>{
     setnumobra(event.target.value)
   }
+
+  const handleChangeCorreo=(event)=>{
+    setCorreo(event.target.value)
+  }
+
   const handleChange = (event, newValue) => {
     if (newValue) {
       setPrograma(newValue.value); // Asegúrate de guardar el valor adecuado
@@ -41,7 +63,7 @@ export const ContenidoHistorico = () => {
     setTipo(event.target.value);  // Correcto: Accede a event.target.value
   };
 
-
+ 
   const handleRowClick = (row) => {
     setSelectedRow(row);
     
@@ -72,8 +94,35 @@ export const ContenidoHistorico = () => {
     startLimpiarBusqueda()
   }
 
+
+  //------------------Movimientos--------------------
+
+  const buscarMovimientos=async()=>{
+    try {
+      const año = selectedAño ? selectedAño.year() : null; 
+      const dia= selectedDate ? selectedDate.format('YYYY-MM-DD') : null;
+      await startObtenerMovimientos(dia,año,correo.trim())
+   
+
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Hubo un problema al agregar los presupuestos",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+    });
+    }
+  }
+
+  const limpiarMovimientos=()=>{
+    setCorreo('')
+    setSelectedAño(null)
+    setSelectedDate(null)
+    startLimpiarMovimientos()
+  }
   useEffect(() => {
     startLimpiarBusqueda()
+    startLimpiarMovimientos()
   }, [stateViewUser])
   
   return (
@@ -152,7 +201,7 @@ export const ContenidoHistorico = () => {
               </Box>
                 <Box>
                 <IconButton onClick={limpiarCampos}>
-                <CancelPresentationIcon sx={{ color: 'red', fontSize: 50 }} />
+                <SettingsBackupRestoreIcon sx={{ color: 'red', fontSize: 50 }} />
               </IconButton>
                 </Box>
               
@@ -160,7 +209,7 @@ export const ContenidoHistorico = () => {
           </Grid>
           <Grid container justifyContent="center" alignItems="center" sx={{ mt: 2 }}>
             <Grid item>
-            <TableContainer component={Paper} style={{ height: '310px', overflowY: 'auto', width: "690px" }}>
+            <TableContainer component={Paper} style={{ height: '310px', overflowY: 'auto', width: "680px" }}>
             <Table stickyHeader>
           <TableHead>
             <TableRow
@@ -214,13 +263,93 @@ export const ContenidoHistorico = () => {
           </Grid>
         </Grid>
         <Grid item xs={6}>
-          <TextField
+        <Grid container justifyContent="center" alignItems="center" sx={{ marginBottom: 1 }}>
+            <Grid item>
+              <Typography variant='h5' sx={{ fontWeight: 'bold' }}>Movimientos de Usuarios</Typography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} sx={{ marginBottom: '11px' }}>
+            <Grid item xs={4}>
+            <TextField
             fullWidth
-            label="Numero de Obra"
-            name="num_obra"
+            label="Correo de usuario"
+            name="correo"
             variant="outlined"
+            value={correo}
+            onChange={handleChangeCorreo}
             sx={{ backgroundColor: "#fff" }}
           />
+            </Grid>
+            
+            <Grid item xs={4}>
+            <DesktopDatePicker
+                views={["year"]}
+                label="Seleccionar Año"
+                value={selectedAño}
+                onChange={handleAñoChange}
+                inputFormat="yyyy"
+                TextFieldComponent={(params) => <TextField {...params} />}
+              />
+            </Grid>
+            <Grid item xs={4}>
+            <DesktopDatePicker
+              label="Seleccionar Fecha"
+              inputFormat="dd/MM/yyyy"  // Formato de fecha (día/mes/año)
+              value={selectedDate}      // Valor de la fecha seleccionada
+              onChange={handleDateChange} // Función que se llama al cambiar la fecha
+              TextFieldComponent={(params) => <TextField {...params} />}
+            />
+            </Grid>
+          </Grid>
+          <Grid container spacing={5} justifyContent="center" alignItems="center" sx={{ marginBottom: '16px' }}>
+            <Grid item>
+              <Box>
+                <IconButton onClick={buscarMovimientos}>
+                  <PlagiarismIcon sx={{ color: 'green', fontSize: 50 }}/>
+                </IconButton>
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box>
+                <IconButton onClick={limpiarMovimientos}>
+                  <RotateLeftIcon sx={{ color: 'red', fontSize: 50 }}/>
+                </IconButton>
+              </Box>
+            </Grid>
+          </Grid>
+
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item>
+            <TableContainer component={Paper} style={{ height: '310px', overflowY: 'auto', width: "650px" }}>
+            <Table stickyHeader>
+          <TableHead>
+            <TableRow
+              sx={{
+                backgroundColor: "#1976d2", // Color de fondo azul para el encabezado
+                "& th": {
+                  color: "black", // Aseguramos que el texto sea blanco
+                  fontWeight: "bold",
+                },
+              }}
+            > 
+              <TableCell>Correo</TableCell>
+              <TableCell>Accion</TableCell>
+              <TableCell>fecha</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {movimientos.map((movi) => (
+              <TableRow>
+                <TableCell>{movi.correo}</TableCell>
+                <TableCell>{movi.accion}</TableCell>
+                <TableCell>{new Date(movi.fecha).toLocaleString()}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </Grid>
+            </Grid>
         </Grid>
       </Grid>
     </Box>

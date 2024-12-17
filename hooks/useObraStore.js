@@ -92,7 +92,7 @@ export const useObraStore = () => {
     try {
         const {data}= await simoApi.put(`/obra/updatapresu/${idobra}`)
         const presupuesto= data.resultadoAdicional.presupuesto;
-        await startMovimientoAgregar(`Aprobo el Presupuesto de: ${formatCurrency(presupuesto)} en la obra: ${obra.num_obra}`)
+        await startMovimientoAgregar(`Agrego el Presupuesto de: ${formatCurrency(presupuesto)} para la obra: ${obra.num_obra}`)
         dispatch(getPresupuesto(presupuesto))
         dispatch(setPresupuestoExito())
 
@@ -243,6 +243,7 @@ export const useObraStore = () => {
  const startLimpiarBusqueda=()=>{
     dispatch(setLimpiarBusqueda())
  }
+
 return{
     //propuedades
     obra,

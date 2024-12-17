@@ -6,6 +6,7 @@ export const authSlice = createSlice({
         status: 'checking',// ''authenticated' , 'not-authenticated',
         user:{},
         usuarios:[],
+        movimientos:[],
         errorMessage:undefined,
         ingresoExito:false,
         usuarioEditable:{
@@ -54,6 +55,12 @@ export const authSlice = createSlice({
             state.usuarioEditable.celular=payload.celular;
             state.usuarioEditable.rol=payload.rol;
             state.usuarioEditable.idusuario=payload.idusuario;
+        },
+        setAgregarMoviemientos:(state,{payload})=>{
+            state.movimientos=payload
+        },
+        setLimpiarMovimiento:(state)=>{
+            state.movimientos=[]
         }
     }
 });
@@ -69,6 +76,8 @@ export const {
     setMessageError,
     setUsuarios,
     setUserExito,
-    setUserEdit 
+    setUserEdit,
+    setAgregarMoviemientos,
+    setLimpiarMovimiento 
 
 } = authSlice.actions;

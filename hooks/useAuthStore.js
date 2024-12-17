@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
-import { clearErrorMessage, onChecking, onLogin, onLogout, setMessageError, setUserEdit, setUserExito, setUsuarios } from "../store/auth/authSlice"
+import { clearErrorMessage, onChecking, onLogin, onLogout, setAgregarMoviemientos, setLimpiarMovimiento, setMessageError, setUserEdit, setUserExito, setUsuarios } from "../store/auth/authSlice"
 import { onModalUser } from "../store/views/viewSlice"
 
 export const useAuthStore=()=>{
-    const {status,user,errorMessage,usuarios,ingresoExito,usuarioEditable}=useSelector(state=>state.auth)
+    const {status,user,errorMessage,usuarios,ingresoExito,usuarioEditable,movimientos}=useSelector(state=>state.auth)
     const dispatch= useDispatch()
 
     const startLogin=async({correo,contraseña})=>{
@@ -105,6 +105,20 @@ export const useAuthStore=()=>{
             throw new Error(messageError);
         }
     }
+
+    const startObtenerMovimientos=async(dia,año,correo)=>{
+        try {
+            const {data}=await simoApi.get(`/auth/obtenermovi`,{params:{dia,año,correo}})
+            dispatch(setAgregarMoviemientos(data.movimientos))
+        } catch (error) {
+            const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
+        }
+    }
+
+    const startLimpiarMovimientos=()=>{
+        dispatch(setLimpiarMovimiento())
+    }
     return{
         //Propiedades
             status,
@@ -113,6 +127,7 @@ export const useAuthStore=()=>{
             usuarios,
             ingresoExito,
             usuarioEditable,
+            movimientos,
         //metodos
             startLogin,
             startRegister,
@@ -121,7 +136,9 @@ export const useAuthStore=()=>{
             starUsuarios,
             startUsuarioEdit,
             startActulizarUsuario,
-            startMovimientoAgregar
+            startMovimientoAgregar,
+            startObtenerMovimientos,
+            startLimpiarMovimientos
 
     }
 }

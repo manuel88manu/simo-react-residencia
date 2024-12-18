@@ -45,7 +45,7 @@ export const AgregarNumAprobaModal = ({ idobra=0,idPresupuesto=0,num_obra=''}) =
         text:  `Deseas Agregar Este Oficio de Aprobacion para el Numero De Obra " ${num_obra} "`,
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, eliminar concepto",
+        confirmButtonText: "Sí, Agregar Oficio",
         cancelButtonText: "No, cancelar",
     });
     if (result.isConfirmed) {

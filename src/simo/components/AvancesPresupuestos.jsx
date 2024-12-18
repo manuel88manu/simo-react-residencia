@@ -18,6 +18,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { usePeriodoStore, useViewStore } from "../../../hooks";
 import { useObraStore } from "../../../hooks/useObraStore";
 import { AgregarNumAprobaModal } from "./AgregarNumAprobaModal";
+import { evaluarFechaProdim } from "../../../helpers";
 
 export const AvancesPresupuestos = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -112,7 +113,10 @@ export const AvancesPresupuestos = () => {
                       Presupuesto Restante:
                     </strong>
                     <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
-                      {` $${faltante.monto_prodim_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      { evaluarFechaProdim()?
+                      ` $${faltante.monto_prodim_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`
+                      :'$0'
+                      }
                     </strong>
                     <br />
                   </>
@@ -121,7 +125,7 @@ export const AvancesPresupuestos = () => {
               {faltante?.monto_indirectos && (
                 <>
                   <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
-                    FAISMUN
+                    INDIRECTOS
                   </strong>
                   <br />
                   <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#089004' }}>

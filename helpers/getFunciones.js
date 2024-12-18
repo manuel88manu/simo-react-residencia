@@ -96,3 +96,18 @@ export const getCurrentYear = () => {
   const now = new Date(); // Obtiene la fecha y hora actual
   return now.getFullYear(); // Extrae solo el año
 };
+
+export const evaluarFechaProdim=()=>{
+  //const fechaHoy = new Date('2024-06-30T00:00:00Z'); 
+  const fechaHoy = new Date();
+  const añoActual = fechaHoy.getUTCFullYear(); 
+
+  //Fecha para faismun, prodim y otros
+  const fechaLimitProdim = new Date(Date.UTC(añoActual, 5, 30)); // 30 de junio del año actual en UTC
+  fechaLimitProdim.setUTCHours(23, 59, 59, 999);
+  if(fechaHoy<=fechaLimitProdim){
+      return true
+  }else{
+    return false
+  }
+}

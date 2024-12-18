@@ -111,3 +111,29 @@ export const evaluarFechaProdim=()=>{
     return false
   }
 }
+
+export const expfuncion=()=>{
+  return  {
+    acta_apoyo_inv: '',
+    ced_regi_obra: '',
+    explo_insu: '',
+    cro_micro: '',
+    res_eje_pro: '',
+    val_dic_fac: '',
+    num_gene_obra: '',
+    dic_imp_amb: '',
+    memo_des: '',
+    planeria: '',
+    acta_dona_prop: '',
+    memo_cal: '',
+    esp_tec: '',
+    cal_fis_finan: '',
+    cro_macro: '',
+    acta_acep_bene: '',
+    soli_obra_bene: '',
+    gas_indir: '',
+    fotografias_est: '',
+    presu_obra: '',
+    tar_pre_uni: ''
+}
+}

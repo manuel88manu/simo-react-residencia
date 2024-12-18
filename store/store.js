@@ -3,6 +3,7 @@ import { authSlice } from './auth/authSlice'
 import { viewsSlice } from './views/viewSlice'
 import { periodoSlice } from './periody/periodoSlice'
 import { obraSlice } from './obra/obraSlice'
+import { expediSlice } from './expediente/expediSlice'
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         views:viewsSlice.reducer,
         periodo:periodoSlice.reducer,
         obra:obraSlice.reducer,
+        expedi:expediSlice.reducer
 
     },
     middleware: (getDefaultMiddleware)=>getDefaultMiddleware({

@@ -4,6 +4,7 @@ import { simoApi } from '../api'
 import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito,setObrasBusqueda, setLimpiarBusqueda } from '../store/obra/obraSlice'
 import { useAuthStore } from './useAuthStore'
 import { formatCurrency } from '../helpers'
+import { useExpediStore } from './useExpediStore'
 
 export const useObraStore = () => {
 
@@ -24,6 +25,8 @@ export const useObraStore = () => {
 
     const {startMovimientoAgregar}=useAuthStore()
 
+    const {startAgregarExpe}=useExpediStore()
+
    const dispatch=useDispatch()
 
    const startAgregarObra=async({Presupuesto_idPresupuesto,obra,dictamen})=>{
@@ -33,6 +36,7 @@ export const useObraStore = () => {
         dispatch(setObra(data.obra))
         dispatch(setDictamen(data.dictamen))
         dispatch(setObraExito())
+        await startAgregarExpe(data.obra.idobra)
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';

@@ -1,12 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setExpediente } from '../store/expediente/expediSlice'
+import { setExpediente, setValueExpModal } from '../store/expediente/expediSlice'
 import { simoApi } from '../api'
 import { expfuncion } from '../helpers'
 
 export const useExpediStore = () => {
 
-    const {expediente}=useSelector(state=>state.expedi) 
+    const {expediente,expediModal}=useSelector(state=>state.expedi) 
     
     const dispatch=useDispatch()
 
@@ -20,13 +20,17 @@ export const useExpediStore = () => {
             throw new Error(messageError);
         }
     }
-
+    const starExpeModalValue=(value)=>{
+        dispatch(setValueExpModal(value))
+    }
   return {
     //Propiedades
      expediente,
+     expediModal,
 
     //Metodos
-    startAgregarExpe
+    startAgregarExpe,
+    starExpeModalValue
 
 
   }

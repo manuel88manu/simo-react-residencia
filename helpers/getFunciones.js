@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 
+
 export const convertirFechasADate = (obj) => {
     return {
       ...obj,
@@ -136,4 +137,12 @@ export const expfuncion=()=>{
     presu_obra: '',
     tar_pre_uni: ''
 }
+}
+
+export const estiloGrid1=()=>{
+  return { width: '320px', height: '62px', ml: '1px',mb:'1px', display: "flex",alignItems: "center",gap: 2, }
+}
+
+export const valueColorExp=()=>{
+  
 }

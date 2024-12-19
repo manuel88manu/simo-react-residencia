@@ -26,14 +26,21 @@ export const expediSlice = createSlice({
             presu_obra: '',
             tar_pre_uni: ''
         },
+        expediModal:false,
     },
     reducers: {
        setExpediente:(state,{payload})=>{
         state.expediente=payload
+       },
+       setValueExpModal:(state,{payload})=>{
+        state.expediModal=payload
        }
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { setExpediente } = expediSlice.actions;
+export const { setExpediente,
+            setValueExpModal,
+            
+ } = expediSlice.actions;

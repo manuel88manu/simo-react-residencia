@@ -20,6 +20,8 @@
 import { useObraStore } from "../../../hooks/useObraStore";
 import Swal from "sweetalert2";
 import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
+import { useExpediStore } from "../../../hooks/useExpediStore";
+import { ExpedienteModal } from "./ExpedienteModal";
 
 
     export const ObrasAcciones = () => {
@@ -38,6 +40,8 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         startFinalizarObra,
         modalPresupuesto
     }=useObraStore();    
+
+    const {expediModal,starExpeModalValue}= useExpediStore()
 
 
     //-------------------Solo para simular la validacion de botones----------------------
@@ -117,7 +121,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 
     const agregarExpediente = () => {
         
-        startAgregarExpediente()
+        starExpeModalValue(true)
     };
 
     const generarDictamen = () => {
@@ -562,6 +566,7 @@ import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
         
 
          <AgregarPresupuestoModal/>
+         <ExpedienteModal/>
            
         </Box>
     );

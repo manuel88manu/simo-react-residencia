@@ -1,12 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setExpediente, setValueExpModal } from '../store/expediente/expediSlice'
+import { setCedulaRegistro, setExpediente, setValueCedulaModal, setValueExpModal } from '../store/expediente/expediSlice'
 import { simoApi } from '../api'
 import { expfuncion } from '../helpers'
 
 export const useExpediStore = () => {
 
-    const {expediente,expediModal}=useSelector(state=>state.expedi) 
+    const {expediente,expediModal,cedulaModal}=useSelector(state=>state.expedi) 
     
     const dispatch=useDispatch()
 
@@ -23,14 +23,24 @@ export const useExpediStore = () => {
     const starExpeModalValue=(value)=>{
         dispatch(setValueExpModal(value))
     }
+    const startCedulaModalValue=(value)=>{
+        dispatch(setValueCedulaModal(value))
+    }
+    
+    const startAgregarCedula=(cedula)=>{
+        dispatch(setCedulaRegistro(cedula))
+    }
   return {
     //Propiedades
      expediente,
      expediModal,
+     cedulaModal,
 
     //Metodos
     startAgregarExpe,
-    starExpeModalValue
+    starExpeModalValue,
+    startCedulaModalValue,
+    startAgregarCedula
 
 
   }

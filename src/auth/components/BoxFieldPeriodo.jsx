@@ -133,7 +133,7 @@ export const BoxFieldPeriodo = () => {
               onChange={handleChange}
               variant="outlined"
               size="small"
-              inputProps={{ style: { height: 30 } }} // Menos alto
+              slotProps={{ style: { height: 30 } }} // Menos alto
             />
           </Grid>
         ))}

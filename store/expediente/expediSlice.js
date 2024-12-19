@@ -27,6 +27,8 @@ export const expediSlice = createSlice({
             tar_pre_uni: ''
         },
         expediModal:false,
+        cedulaModal:false,
+        cedulaRegistro:{},
     },
     reducers: {
        setExpediente:(state,{payload})=>{
@@ -34,6 +36,12 @@ export const expediSlice = createSlice({
        },
        setValueExpModal:(state,{payload})=>{
         state.expediModal=payload
+       },
+       setValueCedulaModal:(state,{payload})=>{
+        state.cedulaModal=payload
+       },
+       setCedulaRegistro:(state,{payload})=>{
+        state.cedulaRegistro=payload
        }
     }
 });
@@ -42,5 +50,7 @@ export const expediSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setExpediente,
             setValueExpModal,
-            
+            setValueCedulaModal,
+            setCedulaRegistro
+
  } = expediSlice.actions;

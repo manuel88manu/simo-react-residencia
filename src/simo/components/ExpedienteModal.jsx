@@ -6,6 +6,7 @@ import { estiloGrid1 } from '../../../helpers';
 import SaveIcon from '@mui/icons-material/Save';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import { CedulaModal } from './CedulaModal';
 
 
 const customStyles = {
@@ -28,7 +29,11 @@ const customStyles = {
 
 export const ExpedienteModal = () => {
 
-    const {expediModal,starExpeModalValue,expediente}= useExpediStore()
+    const {expediModal,starExpeModalValue,expediente,startCedulaModalValue,cedulaModal}= useExpediStore()
+
+    const crearCedula =()=>{
+        startCedulaModalValue(true)
+    }
 
     const oncloseModal = () => {
         starExpeModalValue(false);
@@ -55,7 +60,7 @@ export const ExpedienteModal = () => {
 
             <Grid item style={{ backgroundColor:expediente.ced_regi_obra===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Cedula de Registro de Obra</Typography>
-                <IconButton>
+                <IconButton onClick={crearCedula}>
                    <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
                 <IconButton>
@@ -223,6 +228,7 @@ export const ExpedienteModal = () => {
             </IconButton>
         </Box>
      </Grid>
+     <CedulaModal/>
   </ReactModal>
   )
 }

@@ -5,6 +5,7 @@ import { useExpediStore } from '../../../hooks/useExpediStore';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import { set } from 'date-fns/fp';
 import Swal from 'sweetalert2';
+import { useObraStore } from '../../../hooks/useObraStore';
 
 const customStyles = {
     content: {
@@ -28,6 +29,8 @@ const customStyles = {
   export const CedulaModal = () => {
     const {startCedulaModalValue,cedulaModal,startAgregarCedula}= useExpediStore()
 
+    const {obra,dictamen}=useObraStore()
+
     const [Cedula, setCedula] = useState({
                 latitud:'',
                 longitud:'',
@@ -41,6 +44,13 @@ const customStyles = {
 
     const oncloseModal = () => {
         startCedulaModalValue(false);
+         setCedula({
+                latitud:'',
+                longitud:'',
+                localidad:'',
+                tipo:'',
+                descrip:''
+    })
         setTimeout(() => {
           const openButton = document.querySelector('[data-testid="open-modal-button"]');
           if (openButton) {
@@ -49,16 +59,37 @@ const customStyles = {
         }, 200);
       };
 
-      const generarCedula=()=>{
-        if(localidad==='' || latitud==='' || longitud==='' || tipo==='' || descrip==='' ){
+      const generarCedula=async()=>{
+        try {
+        const regexDMS = /^\d{1,2}°\d{1,2}'\d{1,2}(?:\.\d+)?"[NSWE]$/;
+
+            if (
+                localidad === '' ||
+                latitud === '' ||
+                longitud === '' ||
+                tipo === '' ||
+                descrip === '' ||
+                !regexDMS.test(latitud.trim()) || // Verifica que la latitud tenga el formato correcto
+                !regexDMS.test(longitud.trim())   // Verifica que la longitud tenga el formato correcto
+            ) {
             return Swal.fire({
                 title: "Incompleto",
-                text:"Todos los campos debe ser llenados",
+                text:"Error: Algunos campos están vacíos o las coordenadas no tienen el formato correcto.",
                 icon: "error",
                 confirmButtonText: "Aceptar",
             });
         }
-        startAgregarCedula(Cedula)
+
+        await startAgregarCedula(Cedula,obra,dictamen)
+
+        } catch (error) {
+           Swal.fire({
+            title: "¡Operación exitosa!",
+            text: "El Registro de La Obra a sido finalizada",
+            icon: "success",
+            confirmButtonText: "Aceptar",
+        })
+        }
       }
     return (
         <ReactModal

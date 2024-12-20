@@ -27,9 +27,34 @@ export const useExpediStore = () => {
         dispatch(setValueCedulaModal(value))
     }
     
-    const startAgregarCedula=(cedula)=>{
-        dispatch(setCedulaRegistro(cedula))
+    const startAgregarCedula=async(Cedula,obra,dictamen)=>{
+     try {
+          const response =await simoApi.post('/excel/cedula',{obra,dictamen,Cedula}, { responseType: 'blob' })
+          if (response.status === 200) {
+            // Crea un Blob a partir de los datos recibidos (en este caso, el archivo Excel)
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            // Crea una URL temporal para el Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Crea un elemento <a> para simular el clic y descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download =  `Cedula de Registro-${obra.num_obra}.xlsx`;  // Puedes personalizar el nombre del archivo
+            a.click();  // Simula el clic para iniciar la descarga
+
+            // Limpia la URL temporal
+            window.URL.revokeObjectURL(url);
+        } else {
+            console.error('Error descargando el archivo.');
+        }
+
+  
+    } catch (error) {
+       const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
     }
+  }
   return {
     //Propiedades
      expediente,

@@ -7,6 +7,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import { CedulaModal } from './CedulaModal';
+import { SolicitudRegModal } from './SolicitudRegModal';
 
 
 const customStyles = {
@@ -29,10 +30,14 @@ const customStyles = {
 
 export const ExpedienteModal = () => {
 
-    const {expediModal,starExpeModalValue,expediente,startCedulaModalValue,cedulaModal}= useExpediStore()
+    const {expediModal,starExpeModalValue,expediente,startCedulaModalValue,cedulaModal,startRegistroModalValue}= useExpediStore()
 
     const crearCedula =()=>{
         startCedulaModalValue(true)
+    }
+    
+    const crearSolicitud=()=>{
+        startRegistroModalValue(true)
     }
 
     const oncloseModal = () => {
@@ -70,7 +75,7 @@ export const ExpedienteModal = () => {
 
             <Grid item style={{ backgroundColor:expediente.soli_obra_bene===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Solicitud de Obras de Beneficiados</Typography>
-            <IconButton>
+            <IconButton onClick={crearSolicitud}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
                 <IconButton>
@@ -229,6 +234,7 @@ export const ExpedienteModal = () => {
         </Box>
      </Grid>
      <CedulaModal/>
+      <SolicitudRegModal/>
   </ReactModal>
   )
 }

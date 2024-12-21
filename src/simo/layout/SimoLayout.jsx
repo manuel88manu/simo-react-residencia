@@ -10,46 +10,69 @@ export const SimoLayout = ({children}) => {
 
   const {presuFaismun,vigente}=usePeriodoStore()
 
-  useEffect(() => {
-    // const fechaHoy = new Date('2024-06-20T00:00:00Z'); //Prueba
-    const fechaHoy = new Date();
-    const añoActual = fechaHoy.getUTCFullYear(); 
-    
-     //Fecha para faismun, prodim y otros
-     const fechaLimitFaismun = new Date(Date.UTC(añoActual, 10, 20)); //30 de noviembre del año actual
-     const fechaLimitProdim = new Date(Date.UTC(añoActual, 5, 20)); // 30 de junio del año actual en UTC
-     const fechaLimitOtros = new Date(Date.UTC(añoActual,11, 20)); // 30 de junio del año actual en UTC
+ useEffect(() => { 
+    // Crear la fecha de hoy en la zona horaria local
+    const fechaHoy = new Date(); // Fecha en la zona horaria local
+    const añoActual = fechaHoy.getFullYear(); // Utiliza getFullYear() en vez de getUTCFullYear()
 
-     if(fechaHoy.getTime() === fechaLimitProdim.getTime() && presuFaismun.prodim===1){
+    // Normalizar la fecha de hoy (solo día, mes y año)
+    const normalizarFecha = (fecha) => {
+        return {
+            year: fecha.getFullYear(), // Usa getFullYear() para la fecha local
+            month: fecha.getMonth(), // Usa getMonth() para la fecha local
+            day: fecha.getDate() // Usa getDate() para la fecha local
+        };
+    };
+
+    const fechaHoyNormalizada = normalizarFecha(fechaHoy);
+    
+    // Fechas límite normalizadas (solo día, mes y año)
+    const fechaLimitFaismun = normalizarFecha(new Date(añoActual, 10, 20)); // 20 de noviembre
+    const fechaLimitProdim = normalizarFecha(new Date(añoActual, 5, 20));  // 20 de junio
+    const fechaLimitOtros = normalizarFecha(new Date(añoActual, 11, 20));  // 20 de diciembre
+
+    // Comparar las fechas solo por día, mes y año
+    if (
+        fechaHoyNormalizada.year === fechaLimitProdim.year &&
+        fechaHoyNormalizada.month === fechaLimitProdim.month &&
+        fechaHoyNormalizada.day === fechaLimitProdim.day &&
+        presuFaismun.prodim === 1
+    ) {
       Swal.fire({
         title: `Fecha Limite para PRODIM 30 de junio ${añoActual}`,
-        text: "Tienes 10 dias para hacer uso del presupuesto PRODIM",
+        text: "Tienes 10 días para hacer uso del presupuesto PRODIM",
         icon: "error",
         confirmButtonText: "Aceptar",
-    });
-     }
+      });
+    }
 
-     if(fechaHoy.getTime() === fechaLimitFaismun.getTime()){
+    if (
+        fechaHoyNormalizada.year === fechaLimitFaismun.year &&
+        fechaHoyNormalizada.month === fechaLimitFaismun.month &&
+        fechaHoyNormalizada.day === fechaLimitFaismun.day
+    ) {
       Swal.fire({
         title: `Fecha Limite para FAISMUN 30 de Noviembre ${añoActual}`,
-        text: "Tienes 10 dias para hacer uso del presupuesto FAISMUN",
+        text: "Tienes 10 días para hacer uso del presupuesto FAISMUN",
         icon: "error",
         confirmButtonText: "Aceptar",
-    });
-     }
+      });
+    }
 
-     if(fechaHoy.getTime() === fechaLimitOtros.getTime()){
+    if (
+        fechaHoyNormalizada.year === fechaLimitOtros.year &&
+        fechaHoyNormalizada.month === fechaLimitOtros.month &&
+        fechaHoyNormalizada.day === fechaLimitOtros.day
+    ) {
       Swal.fire({
         title: `Fecha Limite del Periodo 30 de Diciembre ${añoActual}`,
-        text: "Tienes 10 dias para hacer uso del presupuesto restante",
+        text: "Tienes 10 días para hacer uso del presupuesto restante",
         icon: "error",
         confirmButtonText: "Aceptar",
-    });
-     }
+      });
+    }
 
-
-  }, [vigente])
-
+}, [vigente]);
 
   return (
     

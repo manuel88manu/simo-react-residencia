@@ -1,13 +1,13 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCedulaRegistro, setExpediente, setValueCedulaModal, setValueExpModal, setValueRegisModal } from '../store/expediente/expediSlice'
+import { setCedulaRegistro, setExpediente, setValueCedulaModal, setValueComunidadModal, setValueExpModal, setValueFactibiModal, setValueInovaModal, setValueRegisModal } from '../store/expediente/expediSlice'
 import { simoApi } from '../api'
 import { expfuncion } from '../helpers'
 import { useAuthStore } from './useAuthStore'
 
 export const useExpediStore = () => {
 
-    const {expediente,expediModal,cedulaModal,registModal}=useSelector(state=>state.expedi) 
+    const {expediente,expediModal,cedulaModal,registModal,comunidadModal,factibiModal,inovacionModal}=useSelector(state=>state.expedi) 
     
     const dispatch=useDispatch()
 
@@ -31,6 +31,15 @@ export const useExpediStore = () => {
     }
   const startRegistroModalValue=(value)=>{
         dispatch(setValueRegisModal(value))
+    }
+   const startComunuModalValue=(value)=>{
+        dispatch(setValueComunidadModal(value))
+    }
+  const startFactibiModalValue=(value)=>{
+        dispatch(setValueFactibiModal(value))
+    }
+   const startInovaModalValue=(value)=>{
+        dispatch(setValueInovaModal(value))
     }
     
     const startAgregarCedula=async(Cedula,obra,dictamen)=>{
@@ -92,12 +101,104 @@ const startGenerarSolicitud=async(obra,registro)=>{
             throw new Error(messageError);
     }
   }
+
+
+const startGenerarComunidad=async(obra,comunidad)=>{
+     try {
+          const response =await simoApi.post('/excel/comunidad',{obra,comunidad}, { responseType: 'blob' })
+          if (response.status === 200) {
+            // Crea un Blob a partir de los datos recibidos (en este caso, el archivo Excel)
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            // Crea una URL temporal para el Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Crea un elemento <a> para simular el clic y descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download =  `Acta de aceptacion de la Comunidad-${obra.num_obra}.xlsx`;  // Puedes personalizar el nombre del archivo
+            a.click();  // Simula el clic para iniciar la descarga
+
+            // Limpia la URL temporal
+            window.URL.revokeObjectURL(url);
+        } else {
+            console.error('Error descargando el archivo.');
+        }
+        await startMovimientoAgregar(`Genero Acta de Aceptacion de la Comunidad para la obra: ${obra.num_obra}`)
+
+    } catch (error) {
+       const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
+    }
+  }
+
+const startGenerarFactibi=async(obra,validacion)=>{
+     try {
+          const response =await simoApi.post('/excel/factibi',{obra,validacion}, { responseType: 'blob' })
+          if (response.status === 200) {
+            // Crea un Blob a partir de los datos recibidos (en este caso, el archivo Excel)
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            // Crea una URL temporal para el Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Crea un elemento <a> para simular el clic y descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download =  `Validacion De Factibilidad-${obra.num_obra}.xlsx`;  // Puedes personalizar el nombre del archivo
+            a.click();  // Simula el clic para iniciar la descarga
+
+            // Limpia la URL temporal
+            window.URL.revokeObjectURL(url);
+        } else {
+            console.error('Error descargando el archivo.');
+        }
+        await startMovimientoAgregar(`Genero Validacion de Factibilidad para la obra: ${obra.num_obra}`)
+
+    } catch (error) {
+       const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
+    }
+  }
+
+const startGenerarInversion=async(obra,apoyo)=>{
+     try {
+          const response =await simoApi.post('/excel/inversion',{obra,apoyo}, { responseType: 'blob' })
+          if (response.status === 200) {
+            // Crea un Blob a partir de los datos recibidos (en este caso, el archivo Excel)
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            // Crea una URL temporal para el Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Crea un elemento <a> para simular el clic y descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download =  `Acta de Apoyo a la Inversion-${obra.num_obra}.xlsx`;  // Puedes personalizar el nombre del archivo
+            a.click();  // Simula el clic para iniciar la descarga
+
+            // Limpia la URL temporal
+            window.URL.revokeObjectURL(url);
+        } else {
+            console.error('Error descargando el archivo.');
+        }
+        await startMovimientoAgregar(`Genero Validacion de Factibilidad para la obra: ${obra.num_obra}`)
+
+    } catch (error) {
+       const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
+    }
+  }
+
   return {
     //Propiedades
      expediente,
      expediModal,
      cedulaModal,
      registModal,
+     comunidadModal,
+     factibiModal,
+     inovacionModal,
 
     //Metodos
     startAgregarExpe,
@@ -105,9 +206,13 @@ const startGenerarSolicitud=async(obra,registro)=>{
     startCedulaModalValue,
     startAgregarCedula,
     startRegistroModalValue,
-    startGenerarSolicitud
-
-
+    startGenerarSolicitud,
+    startComunuModalValue,
+    startGenerarComunidad,
+    startFactibiModalValue,
+    startGenerarFactibi,
+    startInovaModalValue,
+    startGenerarInversion
   }
 
   

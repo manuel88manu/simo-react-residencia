@@ -29,6 +29,9 @@ export const expediSlice = createSlice({
         expediModal:false,
         cedulaModal:false,
         registModal:false,
+        comunidadModal:false,
+        factibiModal:false,
+        inovacionModal:false,
         cedulaRegistro:{},
     },
     reducers: {
@@ -46,7 +49,16 @@ export const expediSlice = createSlice({
        },
        setValueRegisModal:(state,{payload})=>{
          state.registModal=payload    
-        }
+        },
+       setValueComunidadModal:(state,{payload})=>{
+         state.comunidadModal=payload   
+        },
+        setValueFactibiModal:(state,{payload})=>{
+         state.factibiModal=payload   
+        },
+        setValueInovaModal:(state,{payload})=>{
+         state.inovacionModal=payload   
+        },
     }
 });
 
@@ -56,6 +68,9 @@ export const { setExpediente,
             setValueExpModal,
             setValueCedulaModal,
             setCedulaRegistro,
-            setValueRegisModal
+            setValueRegisModal,
+            setValueComunidadModal,
+            setValueFactibiModal,
+            setValueInovaModal
 
  } = expediSlice.actions;

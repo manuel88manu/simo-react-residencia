@@ -8,6 +8,9 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import { CedulaModal } from './CedulaModal';
 import { SolicitudRegModal } from './SolicitudRegModal';
+import { AceptaComuniModal } from './AceptaComuniModal';
+import { FactibilidadModal } from './FactibilidadModal';
+import { InovacionModal } from './InovacionModal';
 
 
 const customStyles = {
@@ -30,7 +33,16 @@ const customStyles = {
 
 export const ExpedienteModal = () => {
 
-    const {expediModal,starExpeModalValue,expediente,startCedulaModalValue,cedulaModal,startRegistroModalValue}= useExpediStore()
+    const {expediModal,
+            starExpeModalValue,
+            expediente,
+            startCedulaModalValue,
+            cedulaModal,
+            startRegistroModalValue,
+            startComunuModalValue,
+            startFactibiModalValue,
+            startInovaModalValue,
+            }= useExpediStore()
 
     const crearCedula =()=>{
         startCedulaModalValue(true)
@@ -38,6 +50,18 @@ export const ExpedienteModal = () => {
     
     const crearSolicitud=()=>{
         startRegistroModalValue(true)
+    }
+    const crearAcepComunidad=()=>{
+        startComunuModalValue(true)
+    }
+
+    const crearFactibilidad=()=>{
+        startFactibiModalValue(true)
+    }
+
+    const crearInovacion=()=>{
+    startInovaModalValue(true)
+
     }
 
     const oncloseModal = () => {
@@ -85,7 +109,7 @@ export const ExpedienteModal = () => {
 
             <Grid item style={{ backgroundColor:expediente.acta_acep_bene===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Acta de Aceptacion de la Com. Beneficiada</Typography>
-            <IconButton>
+            <IconButton onClick={crearAcepComunidad}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
                 <IconButton>
@@ -95,7 +119,7 @@ export const ExpedienteModal = () => {
 
             <Grid item style={{ backgroundColor:expediente.val_dic_fac===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Validacion o Dictamen de Factibilidad</Typography>
-            <IconButton>
+            <IconButton onClick={crearFactibilidad}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
                 <IconButton>
@@ -114,7 +138,10 @@ export const ExpedienteModal = () => {
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.acta_apoyo_inv===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
-            <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Acta de Apoyo a la inovacion</Typography>
+            <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Acta de Apoyo a la Inversión</Typography>
+            <IconButton onClick={crearInovacion}>
+                 <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
+            </IconButton>
             <IconButton>
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
@@ -233,8 +260,11 @@ export const ExpedienteModal = () => {
             </IconButton>
         </Box>
      </Grid>
-     <CedulaModal/>
+      <CedulaModal/>
       <SolicitudRegModal/>
+      <AceptaComuniModal/>
+      <FactibilidadModal/>  
+      <InovacionModal/>
   </ReactModal>
   )
 }

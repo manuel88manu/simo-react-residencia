@@ -32,6 +32,7 @@ export const expediSlice = createSlice({
         comunidadModal:false,
         factibiModal:false,
         inovacionModal:false,
+        calendarModal:false,
         cedulaRegistro:{},
     },
     reducers: {
@@ -59,6 +60,9 @@ export const expediSlice = createSlice({
         setValueInovaModal:(state,{payload})=>{
          state.inovacionModal=payload   
         },
+         setValueCalendarModal:(state,{payload})=>{
+         state.calendarModal=payload   
+        },
     }
 });
 
@@ -71,6 +75,7 @@ export const { setExpediente,
             setValueRegisModal,
             setValueComunidadModal,
             setValueFactibiModal,
-            setValueInovaModal
+            setValueInovaModal,
+            setValueCalendarModal
 
  } = expediSlice.actions;

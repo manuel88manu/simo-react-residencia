@@ -11,6 +11,7 @@ import { SolicitudRegModal } from './SolicitudRegModal';
 import { AceptaComuniModal } from './AceptaComuniModal';
 import { FactibilidadModal } from './FactibilidadModal';
 import { InovacionModal } from './InovacionModal';
+import { CalendarioModal } from './CalendarioModal';
 
 
 const customStyles = {
@@ -42,6 +43,7 @@ export const ExpedienteModal = () => {
             startComunuModalValue,
             startFactibiModalValue,
             startInovaModalValue,
+            startCalendarModalValue
             }= useExpediStore()
 
     const crearCedula =()=>{
@@ -62,6 +64,10 @@ export const ExpedienteModal = () => {
     const crearInovacion=()=>{
     startInovaModalValue(true)
 
+    }
+
+    const crearCalendario=()=>{
+    startCalendarModalValue(true)
     }
 
     const oncloseModal = () => {
@@ -129,7 +135,7 @@ export const ExpedienteModal = () => {
 
             <Grid item style={{ backgroundColor:expediente.cal_fis_finan===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Calendarizacion Fisica Financiera</Typography>
-            <IconButton>
+            <IconButton onClick={crearCalendario}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
                 <IconButton>
@@ -265,6 +271,7 @@ export const ExpedienteModal = () => {
       <AceptaComuniModal/>
       <FactibilidadModal/>  
       <InovacionModal/>
+      <CalendarioModal/>
   </ReactModal>
   )
 }

@@ -1,13 +1,20 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCedulaRegistro, setExpediente, setValueCedulaModal, setValueComunidadModal, setValueExpModal, setValueFactibiModal, setValueInovaModal, setValueRegisModal } from '../store/expediente/expediSlice'
+import { setCedulaRegistro, setExpediente, setValueCalendarModal, setValueCedulaModal, setValueComunidadModal, setValueExpModal, setValueFactibiModal, setValueInovaModal, setValueRegisModal } from '../store/expediente/expediSlice'
 import { simoApi } from '../api'
 import { expfuncion } from '../helpers'
 import { useAuthStore } from './useAuthStore'
 
 export const useExpediStore = () => {
 
-    const {expediente,expediModal,cedulaModal,registModal,comunidadModal,factibiModal,inovacionModal}=useSelector(state=>state.expedi) 
+    const {expediente,
+           expediModal,
+           cedulaModal,
+           registModal,
+           comunidadModal,
+           factibiModal,
+           inovacionModal,
+           calendarModal}=useSelector(state=>state.expedi) 
     
     const dispatch=useDispatch()
 
@@ -41,7 +48,9 @@ export const useExpediStore = () => {
    const startInovaModalValue=(value)=>{
         dispatch(setValueInovaModal(value))
     }
-    
+      const startCalendarModalValue=(value)=>{
+        dispatch(setValueCalendarModal(value))
+    }
     const startAgregarCedula=async(Cedula,obra,dictamen)=>{
      try {
           const response =await simoApi.post('/excel/cedula',{obra,dictamen,Cedula}, { responseType: 'blob' })
@@ -182,7 +191,7 @@ const startGenerarInversion=async(obra,apoyo)=>{
         } else {
             console.error('Error descargando el archivo.');
         }
-        await startMovimientoAgregar(`Genero Validacion de Factibilidad para la obra: ${obra.num_obra}`)
+        await startMovimientoAgregar(`Genero Acta de Apoyo a la Inversion para la obra: ${obra.num_obra}`)
 
     } catch (error) {
        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
@@ -199,6 +208,7 @@ const startGenerarInversion=async(obra,apoyo)=>{
      comunidadModal,
      factibiModal,
      inovacionModal,
+     calendarModal,
 
     //Metodos
     startAgregarExpe,
@@ -212,7 +222,8 @@ const startGenerarInversion=async(obra,apoyo)=>{
     startFactibiModalValue,
     startGenerarFactibi,
     startInovaModalValue,
-    startGenerarInversion
+    startGenerarInversion,
+    startCalendarModalValue
   }
 
   

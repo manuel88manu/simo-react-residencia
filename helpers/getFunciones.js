@@ -143,6 +143,10 @@ export const estiloGrid1=()=>{
   return { width: '320px', height: '62px', ml: '1px',mb:'1px', display: "flex",alignItems: "center",gap: 2, }
 }
 
+export const estiloCalendar=()=>{
+  return { width: '150px', height: '62px', ml: '1px',mb:'1px', display: "flex",alignItems: "center",gap: 2, }
+}
+
 export const valueColorExp=()=>{
   
 }

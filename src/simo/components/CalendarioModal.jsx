@@ -25,7 +25,8 @@ ReactModal.setAppElement('#root');
 
 export const CalendarioModal = () => {
 
-const {calendarModal,startCalendarModalValue}=useExpediStore()
+const {calendarModal,startCalendarModalValue,startGenerarCalendario}=useExpediStore()
+
 const [info, setinfo] = useState({
      localidad:'',
      nombre:'',
@@ -34,7 +35,7 @@ const [info, setinfo] = useState({
 
 const {localidad,nombre,cargo}=info
 
-const {obra,dictamen}=useObraStore()
+const {obra,dictamen,partidas}=useObraStore()
 const [meses, setmeses] = useState({
     enero: 0, febrero: 0, marzo: 0, abril: 0, mayo: 0, junio: 0,
     julio: 0, agosto: 0, septiembre: 0, octubre: 0, noviembre: 0, diciembre: 0,
@@ -151,7 +152,7 @@ return Swal.fire({
 }
 
 //Llamar la funcion que ejecuta el enpoint
-console.log('informacion',info)
+startGenerarCalendario(obra,dictamen,meses,partidas,info)
 
 }
 

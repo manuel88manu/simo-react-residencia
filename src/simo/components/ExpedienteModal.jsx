@@ -1,5 +1,5 @@
 import { Box, Grid, IconButton, Typography } from '@mui/material';
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import ReactModal from 'react-modal';
 import { useExpediStore } from '../../../hooks/useExpediStore';
 import { estiloGrid1 } from '../../../helpers';
@@ -12,6 +12,8 @@ import { AceptaComuniModal } from './AceptaComuniModal';
 import { FactibilidadModal } from './FactibilidadModal';
 import { InovacionModal } from './InovacionModal';
 import { CalendarioModal } from './CalendarioModal';
+import { useObraStore } from '../../../hooks/useObraStore';
+import Swal from 'sweetalert2';
 
 
 const customStyles = {
@@ -43,8 +45,17 @@ export const ExpedienteModal = () => {
             startComunuModalValue,
             startFactibiModalValue,
             startInovaModalValue,
-            startCalendarModalValue
+            startCalendarModalValue,
+            startGuardarFtp
             }= useExpediStore()
+
+
+    const {obra,startFinalizarExpediente}=useObraStore()
+
+
+    const fileInputRef=useRef()
+
+    const [extraParam, setExtraParam] = useState(null);
 
     const crearCedula =()=>{
         startCedulaModalValue(true)
@@ -70,6 +81,27 @@ export const ExpedienteModal = () => {
     startCalendarModalValue(true)
     }
 
+    const finExpediente=async()=>{
+     const result =await Swal.fire({
+            title: "¿Finalizar el Expediente?",
+            text: `Deseas Finalizar el registro del expediente, no se modificara despues en esta ventana`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Finalizar Registro",
+            cancelButtonText: "Seguir Modificando Expediente",
+        });
+        
+        if (result.isConfirmed) {
+           startFinalizarExpediente()
+           starExpeModalValue(false);
+               
+ 
+      }else{
+       return
+    }
+
+   }
+     
     const oncloseModal = () => {
         starExpeModalValue(false);
         setTimeout(() => {
@@ -79,6 +111,23 @@ export const ExpedienteModal = () => {
           }
         }, 200);
       };
+
+   const  onFileInputChange=({target})=>{
+    if(target.files[0]===0) return
+    
+    console.log('Subiendo archivos:', target.files[0]);
+    console.log('Parámetro adicional:', extraParam);
+    //realizar metodo para guardar en el ftp y base de datos el enlace
+    startGuardarFtp(obra,extraParam,target.files[0])    
+
+    }
+
+     const onButtonClick = (param) => {
+        setExtraParam(param); // Configura el parámetro adicional en el estado
+        fileInputRef.current.click(); // Dispara el clic en el input
+    };
+
+
   return (
     <ReactModal
     isOpen={expediModal}
@@ -89,6 +138,13 @@ export const ExpedienteModal = () => {
     closeTimeoutMS={200}
   >
      <Grid container spacing={2} justifyContent="center">
+
+<input
+type='file'
+onChange={onFileInputChange}
+style={{display:'none'}}
+ref={fileInputRef}
+/>
         <Typography variant='h5' sx={{marginTop:'10px',fontWeight: 'bold' }}>AGREGAR EXPEDIENTE</Typography>
         <Grid item xs={12}>
            <Grid container spacing={1} justifyContent="center">
@@ -98,7 +154,10 @@ export const ExpedienteModal = () => {
                 <IconButton onClick={crearCedula}>
                    <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
-                <IconButton>
+
+                <IconButton
+                  onClick={()=>onButtonClick('ced_regi_obra')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
@@ -108,7 +167,9 @@ export const ExpedienteModal = () => {
             <IconButton onClick={crearSolicitud}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('soli_obra_bene')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>   
             </Grid>
@@ -118,7 +179,9 @@ export const ExpedienteModal = () => {
             <IconButton onClick={crearAcepComunidad}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('acta_acep_bene')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
@@ -128,7 +191,9 @@ export const ExpedienteModal = () => {
             <IconButton onClick={crearFactibilidad}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('val_dic_fac')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
@@ -138,7 +203,9 @@ export const ExpedienteModal = () => {
             <IconButton onClick={crearCalendario}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('cal_fis_finan')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
@@ -148,112 +215,144 @@ export const ExpedienteModal = () => {
             <IconButton onClick={crearInovacion}>
                  <PostAddIcon sx={{color:'white',fontSize:'36px'}}/>
             </IconButton>
-            <IconButton>
+            <IconButton
+                  onClick={()=>onButtonClick('acta_apoyo_inv')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.acta_dona_prop===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Acta de Donacion o Propiedad de Terreno</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('acta_dona_prop')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.cro_macro===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Croquis de Macrolocalizacion</Typography>
-                 <IconButton>
+                 <IconButton
+                  onClick={()=>onButtonClick('cro_macro')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.cro_micro===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Croquis de Microlocalizacion</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('cro_micro')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.dic_imp_amb===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Dictemen sobre Impacto Ambiental</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('dic_imp_amb')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.esp_tec===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Especificaiones Tecnicas</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('esp_tec')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.explo_insu===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Explosion de Insumos</Typography>
-            <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('explo_insu')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.fotografias_est===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Fotografias del Estado Actual</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('fotografias_est')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>  
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.gas_indir===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Gastos Indirectos</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('gas_indir')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.memo_cal===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
                 <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Memoria de Calculo</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('memo_cal')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.memo_des===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Memoria de Descriptiva</Typography>
-            <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('memo_des')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.num_gene_obra===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Numeros Generadores de Obra</Typography>
-            <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('num_gene_obra')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.planeria===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Planeria</Typography>
-            <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('planeria')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.presu_obra===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Presupuesto de Obra</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('presu_obra')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
              
             <Grid item style={{ backgroundColor:expediente.res_eje_pro===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Resumen Ejecutivo del Proyecto</Typography>
-               <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('res_eje_pro')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
 
             <Grid item style={{ backgroundColor:expediente.tar_pre_uni===''? '#fc0303':'#07ad0f'}} sx={estiloGrid1()}>
             <Typography  sx={{ color: 'white', fontWeight: 'bold' }}>Tarjetas de Precios Unitarios</Typography>
-                <IconButton>
+                <IconButton
+                  onClick={()=>onButtonClick('tar_pre_uni')}    
+                 >
                    <FolderCopyIcon sx={{color:'white',fontSize:'36px'}}/>
                 </IconButton>
             </Grid>
@@ -261,7 +360,7 @@ export const ExpedienteModal = () => {
            </Grid>
         </Grid>
         <Box>
-            <IconButton>
+            <IconButton onClick={finExpediente}>
                 <SaveIcon sx={{color:'green',fontSize:'50px'}}/>
             </IconButton>
         </Box>

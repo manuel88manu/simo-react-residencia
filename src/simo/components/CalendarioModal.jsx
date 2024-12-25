@@ -98,15 +98,6 @@ const validarMeses = (meses) => {
 };
 
 const validarNoString = (meses) => {
-
-  if(localidad==='' || nombre==='' || cargo===''){
-    return Swal.fire({
-                title: "Informacion incompleta",
-                text:"Error: Campos localidad, responsable o cargo no estan vacios",
-                icon: "error",
-                confirmButtonText: "Aceptar",
-            });
-}
   
   // Verificar si todos los valores son números
   const todosSonNumeros = Object.values(meses).every(valor => !isNaN(Number(valor)));
@@ -116,39 +107,52 @@ const validarNoString = (meses) => {
 
 const generarCalendario=()=>{
 
+if(localidad==='' || nombre==='' || cargo===''){
+     Swal.fire({
+                title: "Informacion incompleta",
+                text:"Error: Campos localidad, responsable o cargo no estan vacios",
+                icon: "error",
+                confirmButtonText: "Aceptar",
+            });
+return ;
+}
+
 const validarStri=validarNoString(meses)
 
 if(validarStri===false){
-return Swal.fire({
+Swal.fire({
                 title: "Valor no valido",
                 text:"Error: Los Porcentajes deben ser numeros, no poner el % o caracteres",
                 icon: "error",
                 confirmButtonText: "Aceptar",
             });
+return;
 
 }
 
 const validaceros=validarMeses(meses)
 
 if(validaceros===false){
-return Swal.fire({
+ Swal.fire({
                 title: "Porcentajes Hay Ceros",
                 text:"Error: Los porcentajes deben ser mayor que 0",
                 icon: "error",
                 confirmButtonText: "Aceptar",
             });
+return;
 }
 
 
 const suma=sumarYRedondear(meses)
 
 if(suma!=100){
-return Swal.fire({
+ Swal.fire({
                 title: "Porcentajes no Concuerdan",
                 text:"Error: La suma de cada porcentaje por mes debe de dar 100%",
                 icon: "error",
                 confirmButtonText: "Aceptar",
             });
+return;
 }
 
 //Llamar la funcion que ejecuta el enpoint

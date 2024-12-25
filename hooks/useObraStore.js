@@ -40,7 +40,6 @@ export const useObraStore = () => {
         
     } catch (error) {
         const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        console.log(messageError)
         throw new Error(messageError);
     }
 
@@ -113,7 +112,7 @@ export const useObraStore = () => {
     }
    }
 
-   const startAgregarExpediente=async()=>{
+   const startFinalizarExpediente=async()=>{
     try {
         
         dispatch(setExpedienteExitoso())
@@ -272,7 +271,7 @@ return{
     startObtenerConceptos,
     startAgregarConceptos,
     startValidarPresupuesto,
-    startAgregarExpediente,
+    startFinalizarExpediente,
     startGenerarDictamen,
     startFinalizarObra,
     startActualizarConcepto,

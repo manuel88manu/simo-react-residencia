@@ -228,6 +228,25 @@ const startGenerarCalendario=async(obra,dictamen,meses,partidas,info)=>{
     }
   }
 
+const startGuardarFtp=async(obra,prop,file)=>{
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("num_obra", obra.num_obra);
+ try {
+
+     const {data} =await simoApi.post('/ftp/upload',formData)
+ 
+     const url=data.url
+     const {data:data1}=await simoApi.post('/ftp/enlace',{obra,prop,url})
+    
+     dispatch(setExpediente(data1.expediente))
+  
+ } catch (error) {
+   const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+    throw new Error(messageError);
+ }
+}
+
   return {
     //Propiedades
      expediente,
@@ -253,7 +272,8 @@ const startGenerarCalendario=async(obra,dictamen,meses,partidas,info)=>{
     startInovaModalValue,
     startGenerarInversion,
     startCalendarModalValue,
-    startGenerarCalendario
+    startGenerarCalendario,
+    startGuardarFtp
   }
 
   

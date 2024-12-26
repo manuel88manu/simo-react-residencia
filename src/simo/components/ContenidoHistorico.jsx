@@ -10,6 +10,8 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { useObraStore } from '../../../hooks/useObraStore';
 import Swal from 'sweetalert2';
 import { useAuthStore, useViewStore } from '../../../hooks';
+import { useExpediStore } from '../../../hooks/useExpediStore';
+import { TablaExpeModal } from './TablaExpeModal';
 
 export const ContenidoHistorico = () => {
 
@@ -25,8 +27,9 @@ export const ContenidoHistorico = () => {
   const [programa, setPrograma] = useState('');
   const [programaInputValue, setProgramaInputValue] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
-  const {busqueda,startBuscarObras,startLimpiarBusqueda}=useObraStore()
+  const {busqueda,startBuscarObras,startLimpiarBusqueda,startObtenerInfo,startResetBox}=useObraStore()
   const {movimientos,startObtenerMovimientos,startLimpiarMovimientos}=useAuthStore()
+  const {startTablaExpModalValue}=useExpediStore()
   const{ stateViewUser}=useViewStore()
 
   const handleYearChange = (newValue) => {
@@ -66,8 +69,16 @@ export const ContenidoHistorico = () => {
  
   const handleRowClick = (row) => {
     setSelectedRow(row);
+    startObtenerInfo(row.idobra)
+    startResetBox()
     
   };
+
+  const mostrarTabla=()=>{
+  startTablaExpModalValue(true)
+
+  }
+
 
   const opcionesProgramasSeleccionadas = opcionesPrograma.evaluar;
 
@@ -248,7 +259,7 @@ export const ContenidoHistorico = () => {
                   ))}</TableCell>
                 {selectedRow?.idobra===obra.idobra && (
                   <TableCell>
-                    <IconButton color="secondary">
+                    <IconButton onClick={mostrarTabla} color="secondary">
                       <InsertDriveFileIcon />
                     </IconButton>
                   </TableCell>
@@ -338,8 +349,8 @@ export const ContenidoHistorico = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {movimientos.map((movi) => (
-              <TableRow>
+            {movimientos.map((movi,index) => (
+                <TableRow  key={`${movi.accion}-${index}`}>
                 <TableCell>{movi.correo}</TableCell>
                 <TableCell>{movi.accion}</TableCell>
                 <TableCell>{new Date(movi.fecha).toLocaleString()}</TableCell>
@@ -352,6 +363,7 @@ export const ContenidoHistorico = () => {
             </Grid>
         </Grid>
       </Grid>
+      <TablaExpeModal/>
     </Box>
   );
 };

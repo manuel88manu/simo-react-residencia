@@ -38,7 +38,7 @@ import { ExpedienteModal } from "./ExpedienteModal";
         startAgregarExpediente,
         startGenerarDictamen,
         startFinalizarObra,
-        modalPresupuesto
+        modalPresupuesto,
     }=useObraStore();    
 
     const {expediModal,starExpeModalValue}= useExpediStore()
@@ -163,7 +163,7 @@ import { ExpedienteModal } from "./ExpedienteModal";
      if(PresupuestoObra.idobra!=null){
         const num_obra=PresupuestoObra.num_obra;
         const nombre= PresupuestoObra.nombre;
-        showAlert(nombre,num_obra)
+        /*showAlert(nombre,num_obra)*/  
      }
      
     }, [])
@@ -403,7 +403,7 @@ import { ExpedienteModal } from "./ExpedienteModal";
                 disabled
                 size="small"
                 name="presupuesto"
-                value={formatCurrency(PresupuestoObra.presupuesto)} 
+                value={(valueObraAgregar.notvisible)?formatCurrency(PresupuestoObra.presupuesto):'$0.00'} 
                 sx={{ backgroundColor: "#fff" }}
             />
             </Grid>

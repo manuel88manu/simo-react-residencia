@@ -19,6 +19,8 @@ import { usePeriodoStore, useViewStore } from "../../../hooks";
 import { useObraStore } from "../../../hooks/useObraStore";
 import { AgregarNumAprobaModal } from "./AgregarNumAprobaModal";
 import { evaluarFechaProdim } from "../../../helpers";
+import { TablaExpeModal } from "./TablaExpeModal";
+import { useExpediStore } from "../../../hooks/useExpediStore";
 
 export const AvancesPresupuestos = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -34,7 +36,9 @@ export const AvancesPresupuestos = () => {
     startObtenerFaltante
   } = usePeriodoStore();
 
-  const {obras,startObtenerObrasPresu,startAprobaModalValue}=useObraStore()
+  const {obras,startObtenerObrasPresu,startAprobaModalValue,startObtenerInfo,startResetBox}=useObraStore()
+
+  const {startTablaExpModalValue}=useExpediStore()
 
   const [presupuestoActivo, setPresupuestoActivo] = useState({});
 
@@ -49,12 +53,19 @@ export const AvancesPresupuestos = () => {
 
   const handleRowClick = (row) => {
     setSelectedRow(row);
+    startObtenerInfo(row.idobra)
+    startResetBox()
     
   };
 
   const handleEditObra=(obra)=>{
     setidobra(obra.idobra)
     startAprobaModalValue(true)
+  }
+
+  const mostrarTabla=()=>{
+  startTablaExpModalValue(true)
+
   }
 
   const renderContent=()=>{
@@ -347,7 +358,7 @@ export const AvancesPresupuestos = () => {
                     <IconButton onClick={() => handleEditObra(obra)} color="primary">
                       <EditIcon />
                     </IconButton>
-                    <IconButton color="secondary">
+                    <IconButton onClick={mostrarTabla} color="secondary">
                       <InsertDriveFileIcon />
                     </IconButton>
                   </TableCell>
@@ -365,6 +376,7 @@ export const AvancesPresupuestos = () => {
     idPresupuesto={presupuestoActivo?.idPresupuesto || 0} 
     num_obra={selectedRow?.num_obra || 'ValorPredeterminado'} 
 />
+<TablaExpeModal/>
     </Grid>
   );
 };

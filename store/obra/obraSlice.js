@@ -171,6 +171,11 @@ export const obraSlice = createSlice({
         },
         setLimpiarBusqueda:(state)=>{
             state.busqueda=[]
+        },
+        setInfoObra:(state,{payload})=>{
+            state.obra=payload.obra
+            state.dictamen=payload.dictamen
+            state.partidas=payload.partidas
         }
     }
 });
@@ -192,6 +197,7 @@ export const { setObra,
                setObrasPresu,
                setModalAproba,
                setObrasBusqueda,
-               setLimpiarBusqueda
+               setLimpiarBusqueda,
+               setInfoObra
             } = obraSlice.actions;
             

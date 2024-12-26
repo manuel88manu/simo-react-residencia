@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCedulaRegistro, setExpediente, setValueCalendarModal, setValueCedulaModal, setValueComunidadModal, setValueExpModal, setValueFactibiModal, setValueInovaModal, setValueRegisModal } from '../store/expediente/expediSlice'
+import { setCedulaRegistro, setExpediente, setValueCalendarModal, setValueCedulaModal, setValueComunidadModal, setValueExpModal, setValueFactibiModal, setValueInovaModal, setValueRegisModal, setValueTablaExpModal } from '../store/expediente/expediSlice'
 import { simoApi } from '../api'
 import { expfuncion } from '../helpers'
 import { useAuthStore } from './useAuthStore'
@@ -14,6 +14,7 @@ export const useExpediStore = () => {
            comunidadModal,
            factibiModal,
            inovacionModal,
+           tableExpeModal,
            calendarModal}=useSelector(state=>state.expedi) 
     
     const dispatch=useDispatch()
@@ -51,6 +52,11 @@ export const useExpediStore = () => {
       const startCalendarModalValue=(value)=>{
         dispatch(setValueCalendarModal(value))
     }
+
+    const startTablaExpModalValue=(value)=>{
+    dispatch(setValueTablaExpModal(value))
+    }
+
     const startAgregarCedula=async(Cedula,obra,dictamen)=>{
      try {
           const response =await simoApi.post('/excel/cedula',{obra,dictamen,Cedula}, { responseType: 'blob' })
@@ -238,7 +244,9 @@ const startGuardarFtp=async(obra,prop,file)=>{
  
      const url=data.url
      const {data:data1}=await simoApi.post('/ftp/enlace',{obra,prop,url})
-    
+
+     await startMovimientoAgregar(`Subio archivo de ${file.name}  para la obra: ${obra.num_obra}`)
+   
      dispatch(setExpediente(data1.expediente))
   
  } catch (error) {
@@ -257,6 +265,7 @@ const startGuardarFtp=async(obra,prop,file)=>{
      factibiModal,
      inovacionModal,
      calendarModal,
+     tableExpeModal,
 
     //Metodos
     startAgregarExpe,
@@ -273,7 +282,8 @@ const startGuardarFtp=async(obra,prop,file)=>{
     startGenerarInversion,
     startCalendarModalValue,
     startGenerarCalendario,
-    startGuardarFtp
+    startGuardarFtp,
+    startTablaExpModalValue
   }
 
   

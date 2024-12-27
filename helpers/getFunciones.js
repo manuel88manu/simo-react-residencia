@@ -150,3 +150,20 @@ export const estiloCalendar=()=>{
 export const valueColorExp=()=>{
   
 }
+
+export const getFileNameFromUrl = (url) => {
+  return url.substring(url.lastIndexOf('/') + 1);
+};
+
+export const replaceUrl = (input) => {
+  return input.replace(/\//g, '_');
+};
+
+export const evaluarExpe = (obj) => {
+  for (const key in obj) {
+    if (obj[key] !== '') {
+      return false; // Devuelve true si encuentra al menos un atributo no vacío
+    }
+  }
+  return true; // Devuelve false si todos los atributos son cadenas vacías
+};

@@ -69,7 +69,7 @@ overlayClassName="modal-fondo"
 closeTimeoutMS={200}
 >
 <Grid container  spacing={2} justifyContent="center" >
-<Typography variant='h5' sx={{marginTop:'10px',fontWeight: 'bold' }}>Crear Acta de Apoyo a la Inovacion</Typography>
+<Typography variant='h5' sx={{marginTop:'10px',fontWeight: 'bold' }}>Crear Acta de Apoyo a la Inversion</Typography>
 <Typography variant='h6' sx={{marginTop:'20px', }}>ATENTAMENTE</Typography>
 <TextField
     fullWidth

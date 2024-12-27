@@ -5,6 +5,8 @@ import { Box, Button, Grid, IconButton, Table, TableBody, TableCell, TableContai
 import DownloadIcon from '@mui/icons-material/Download';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { useObraStore } from '../../../hooks/useObraStore';
+import { evaluarExpe, getFileNameFromUrl, replaceUrl } from '../../../helpers';
 
 const customStyles = {
     content: {
@@ -25,16 +27,20 @@ ReactModal.setAppElement('#root');
 
 export const TablaExpeModal = () => {
 
-const {tableExpeModal,startTablaExpModalValue}=useExpediStore()
+const {tableExpeModal,startTablaExpModalValue,startDescargarCarpeta}=useExpediStore()
 
-const {expediente}=useExpediStore()
+const {expediente,startDescargarArchivo}=useExpediStore()
 
- const [selectedRow, setSelectedRow] = useState(null);
+const {obra}=useObraStore()
+
+const [selectedRow, setSelectedRow] = useState(null);
+
+const [url, seturl] = useState('')
 
   // Función para manejar el click en la fila
   const handleRowClick = (index) => {
     setSelectedRow(index);
-    console.log(expediente[Object.keys(expediente)[index]]);  // Imprime el objeto de la fila seleccionada en consola
+    seturl(expediente[Object.keys(expediente)[index]])
   };
 
 
@@ -62,6 +68,17 @@ const keyToName = {
     tar_pre_uni: 'Tarjetas de Precios Unitarios',
   };
 
+const descargarAchivo=()=>{
+
+startDescargarArchivo(url)
+
+}
+
+const descargarCapeta=()=>{
+
+startDescargarCarpeta(replaceUrl(obra.num_obra),`/${replaceUrl(obra.num_obra)}/`)
+
+}
 
 
 const oncloseModal = () => {
@@ -98,66 +115,65 @@ const oncloseModal = () => {
 </Grid>
 
 <Grid item xs={6}  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-<Typography variant='h6' sx={{marginTop:'1px'}}>Descargar Expediente Completo</Typography>
-<IconButton>
-<DownloadForOfflineIcon sx={{color:'green',fontSize:'38px'}}/>
-</IconButton>
+<Typography variant='h6' sx={{marginTop:'1px'}}>Descargar Documentos</Typography>
+<IconButton onClick={descargarCapeta} disabled={evaluarExpe(expediente)}>
+<DownloadForOfflineIcon sx={{ color: evaluarExpe(expediente) ? "gray" : "green", fontSize: "38px" }} /></IconButton>
 </Grid>
 
 </Grid>
 </Grid>
 
-<TableContainer  style={{ height: '368px', overflowY: 'auto', width: "880px" }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell>Expediente Técnico</TableCell>
-              <TableCell>SI</TableCell>
-              <TableCell>NO</TableCell>
-              <TableCell>N/A</TableCell>
-              <TableCell>Observaciones</TableCell>
-              <TableCell>Descargar</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* Generación de las filas con 21 atributos fijos */}
-            {Object.keys(expediente).map((key, index) => (
-              <TableRow
-                key={index}
-                hover
-                onClick={() => handleRowClick(index)}
-                selected={selectedRow === index} // Marca la fila seleccionada
-              >
-                {/* Muestra el nombre largo de cada atributo */}
-                <TableCell>{keyToName[key] || key}</TableCell> 
+<TableContainer style={{ height: '368px', overflowY: 'auto', width: "880px" }}>
+  <Table stickyHeader>
+    <TableHead>
+      <TableRow>
+        <TableCell>Expediente Técnico</TableCell>
+        <TableCell>SI</TableCell>
+        <TableCell>NO</TableCell>
+        <TableCell>N/A</TableCell>
+        <TableCell>Observaciones</TableCell>
+        <TableCell>Descargar</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {/* Generación de las filas con 21 atributos fijos */}
+      {Object.keys(expediente).map((key, index) => (
+        <TableRow
+          key={index}
+          hover
+          onClick={() => handleRowClick(index)}
+          selected={selectedRow === index} // Marca la fila seleccionada
+        >
+          {/* Muestra el nombre largo de cada atributo */}
+          <TableCell>{keyToName[key] || key}</TableCell>
 
-                {/* Muestra "X" en SI o NO dependiendo si el valor está vacío */}
-                <TableCell>{expediente[key] !== '' ? 'X' : ''}</TableCell>
-                <TableCell>{expediente[key] === '' ? 'X' : ''}</TableCell>
-                
-                {/* La columna N/A, puedes añadir lógica si es necesario */}
-                <TableCell></TableCell>
+          {/* Muestra "X" en SI o NO dependiendo si el valor está vacío */}
+          <TableCell>{expediente[key] !== '' ? 'X' : ''}</TableCell>
+          <TableCell>{expediente[key] === '' ? 'X' : ''}</TableCell>
 
-                {/* Observaciones */}
-                <TableCell>
-                  <Typography>
-                   {expediente[key] ? '' : key==='memo_cal' ||key==='acta_dona_prop'?'Condicionado':''}    
-                 </Typography>
-                </TableCell>
+          {/* La columna N/A, puedes añadir lógica si es necesario */}
+          <TableCell></TableCell>
 
-                {/* Columna para "Descargar" solo si hay un enlace */}
-                <TableCell>
-                  {expediente[key] && expediente[key] !== '' ? (
-                    <IconButton>
-                    <CloudDownloadIcon sx={{color:'green',fontSize:'36px'}}/>
-                    </IconButton>
-                  ) : null}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          {/* Observaciones */}
+          <TableCell>
+            <Typography>
+              {expediente[key] ? '' : key === 'memo_cal' || key === 'acta_dona_prop' ? 'Condicionado' : ''}
+            </Typography>
+          </TableCell>
+
+          {/* Columna para "Descargar" solo si hay un enlace y la fila está seleccionada */}
+          <TableCell>
+            {selectedRow === index && expediente[key] && expediente[key] !== '' ? (
+              <IconButton onClick={descargarAchivo}>
+                <CloudDownloadIcon sx={{ color: 'green', fontSize: '36px' }} />
+              </IconButton>
+            ) : null}
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
 </Grid>
 </ReactModal>
 

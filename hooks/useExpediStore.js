@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCedulaRegistro, setExpediente, setValueCalendarModal, setValueCedulaModal, setValueComunidadModal, setValueExpModal, setValueFactibiModal, setValueInovaModal, setValueRegisModal, setValueTablaExpModal } from '../store/expediente/expediSlice'
 import { simoApi } from '../api'
-import { expfuncion } from '../helpers'
+import { expfuncion, getFileNameFromUrl } from '../helpers'
 import { useAuthStore } from './useAuthStore'
 
 export const useExpediStore = () => {
@@ -255,6 +255,73 @@ const startGuardarFtp=async(obra,prop,file)=>{
  }
 }
 
+const startDescargarArchivo = async (url) => {
+  try {
+    const response = await simoApi.get('/ftp/downenlace', { params: { url }, responseType: 'blob' });
+    const fileName = getFileNameFromUrl(url);
+
+    if (response.status === 200 && response.data.size > 0) {
+      // Verifica el tipo de archivo recibido
+      console.log('Tipo de archivo recibido:', response.headers['content-type']);
+      
+      // Crea un Blob a partir de los datos recibidos
+      const blob = new Blob([response.data], { type: 'application/octet-stream' });  // Usa 'application/octet-stream' para tipo genérico
+
+      // Crea una URL temporal para el Blob
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      // Crea un elemento <a> para simular el clic y descargar el archivo
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = fileName;  // Usa el nombre del archivo extraído
+      a.click();  // Simula el clic para iniciar la descarga
+
+      // Limpia la URL temporal
+      window.URL.revokeObjectURL(downloadUrl);
+    } else {
+      console.error('Error descargando el archivo o archivo vacío.');
+    }
+  } catch (error) {
+    console.error(error);
+    const messageError = error.response?.data?.msg || 'Ha ocurrido un error al descargar el archivo';
+    throw new Error(messageError);
+  }
+};
+
+
+const startDescargarCarpeta = async (num_obra,folderUrl) => {
+  try {
+    const response = await simoApi.get('/ftp/downcarpeta', {
+      params: { url: folderUrl },
+      responseType: 'blob', // Asegúrate de recibir datos binarios
+    });
+
+    if (response.status === 200) {
+      // Crea un Blob a partir de los datos recibidos
+      const blob = new Blob([response.data], { type: 'application/zip' });
+
+      // Crea una URL temporal para el Blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Crea un elemento <a> para simular el clic y descargar el archivo
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Documentos_${num_obra}.zip`; // Nombre del archivo ZIP descargado
+      document.body.appendChild(a); // Necesario para Firefox
+      a.click(); // Simula el clic para iniciar la descarga
+      document.body.removeChild(a); // Limpia el DOM
+
+      // Limpia la URL temporal
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error al descargar el archivo ZIP: Respuesta del servidor no es 200.');
+    }
+  } catch (error) {
+    console.error('Error al descargar el archivo ZIP:', error);
+    alert('Hubo un problema al descargar la carpeta.');
+  }
+};
+
   return {
     //Propiedades
      expediente,
@@ -283,7 +350,9 @@ const startGuardarFtp=async(obra,prop,file)=>{
     startCalendarModalValue,
     startGenerarCalendario,
     startGuardarFtp,
-    startTablaExpModalValue
+    startTablaExpModalValue,
+    startDescargarArchivo,
+    startDescargarCarpeta
   }
 
   

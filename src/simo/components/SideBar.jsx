@@ -6,10 +6,12 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import IconButtonWithLabel from './IconButtonWithLabel';
-import { useViewStore } from '../../../hooks';
+import { useAuthStore, useViewStore } from '../../../hooks';
+import { AlertaRol } from '../../../helpers';
 
 export const SideBar = () => {
   const { selectViewSimo } = useViewStore();
+  const {user}=useAuthStore()
 
   return (
     <Box
@@ -42,22 +44,22 @@ export const SideBar = () => {
           <IconButtonWithLabel
             Icon={AddCircleOutlineIcon}
             label="Agregar Obra"
-            onClick={() => selectViewSimo("Agregar Obra")} // Llamada modificada
+            onClick={() =>{user.rol!='viewer'?selectViewSimo("Agregar Obra"):AlertaRol("Agregar Obra",'Administrador y Moderador')}} // Llamada modificada
           />
           <IconButtonWithLabel
             Icon={PendingActionsIcon}
             label="Gestión de Avance"
-            onClick={() => selectViewSimo("Gestión de Avance")} // Llamada modificada
+            onClick={() =>{selectViewSimo("Gestión de Avance")}} // Llamada modificada
           />
           <IconButtonWithLabel
             Icon={CalendarMonthIcon}
             label="Histórico"
-            onClick={() => selectViewSimo("Histórico")} // Llamada modificada
+            onClick={() =>{user.rol!='editor'?selectViewSimo("Histórico"):AlertaRol("Histórico",'Visitante y Administrador')}} // Llamada modificada
           />
           <IconButtonWithLabel
             Icon={PersonAddIcon}
             label="Gestión de Usuario"
-            onClick={() => selectViewSimo("Gestión de Usuario")} // Llamada modificada
+            onClick={() =>{user.rol==='admin'?selectViewSimo("Gestión de Usuario"):AlertaRol("Gestión de Usuario",'Administrador')}} // Llamada modificada
           />
           <IconButtonWithLabel
             Icon={PriceChangeIcon}

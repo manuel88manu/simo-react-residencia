@@ -2,10 +2,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { simoApi } from "../api"
 import { clearErrorMessage, onChecking, onLogin, onLogout, setAgregarMoviemientos, setLimpiarMovimiento, setMessageError, setUserEdit, setUserExito, setUsuarios } from "../store/auth/authSlice"
 import { onModalUser } from "../store/views/viewSlice"
+import { useViewStore } from "./useViewsStore"
 
 export const useAuthStore=()=>{
     const {status,user,errorMessage,usuarios,ingresoExito,usuarioEditable,movimientos}=useSelector(state=>state.auth)
     const dispatch= useDispatch()
+    const {selectViewSimo}=useViewStore()
 
     const startLogin=async({correo,contraseña})=>{
         dispatch(onChecking())
@@ -13,7 +15,7 @@ export const useAuthStore=()=>{
             const {data}= await simoApi.post('/auth',{correo,contraseña})
             localStorage.setItem('token',data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
-            dispatch(onLogin({name:data.name, uid:data.uid,correo:correo}))
+            dispatch(onLogin({name:data.name, uid:data.uid,correo:correo,rol:data.rol}))
 
         } catch (error) {
             dispatch(onLogout(error.response.data?.msg || ''))
@@ -62,6 +64,7 @@ export const useAuthStore=()=>{
     const startLogout=async()=>{
         localStorage.clear()
         dispatch(onLogout())
+        selectViewSimo("inicio")
     }
 
     const starUsuarios=async()=>{

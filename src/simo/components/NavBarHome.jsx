@@ -20,11 +20,16 @@ export const NavBarHome = () => {
              spacing={0}
              direction="row"
              alignItems="center"
-             justifyContent="space-between" 
+             justifyContent="center" 
+             sx={{ position: 'relative', height: '100%' }}
          >
 
-        <Grid item>
-           <Typography variant='h4' sx={{ml:2}} >{user.name}</Typography>
+        <Grid item sx={{
+        position: 'absolute',
+        left: 0,
+        ml: 2,
+      }}>
+           <Typography variant='h4' sx={{ml:2}} >{String(user?.name || '').toUpperCase()}</Typography>
         </Grid>    
 
     <Grid 
@@ -32,14 +37,18 @@ export const NavBarHome = () => {
         sx={{ 
             display: 'flex', 
             alignItems: 'center', // Alinea verticalmente
-            flexDirection: 'row'  // Organiza en una fila
+            justifyContent: 'center'  // Organiza en una fila
         }}
         >
         <Img src={logoImplan} alt='Logo de Implan' />
         <Typography variant='h2' sx={{ fontWeight: 'bold' }}>SIMO</Typography>
         </Grid>
 
-    <Grid item>
+    <Grid item sx={{
+        position: 'absolute',
+        right: 0,
+        mr: 2,
+      }}>
         <IconButton 
             sx={{ 
             color: 'black', // Cambia el color del ícono a negro

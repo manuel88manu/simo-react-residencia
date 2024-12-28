@@ -39,6 +39,7 @@ import { ExpedienteModal } from "./ExpedienteModal";
         startGenerarDictamen,
         startFinalizarObra,
         modalPresupuesto,
+        startResetBox
     }=useObraStore();    
 
     const {expediModal,starExpeModalValue}= useExpediStore()
@@ -160,12 +161,15 @@ import { ExpedienteModal } from "./ExpedienteModal";
 
 
     useEffect(() => {
-     if(PresupuestoObra.idobra!=null){
+     if(PresupuestoObra.idobra!=null && valueObraAgregar.notvisible ===true){
         const num_obra=PresupuestoObra.num_obra;
         const nombre= PresupuestoObra.nombre;
-        /*showAlert(nombre,num_obra)*/  
-     }
-     
+        showAlert(nombre,num_obra) 
+     }  
+
+    if(valueObraAgregar.notvisible ===false){
+    startResetBox()          
+    }   
     }, [])
   
     return (

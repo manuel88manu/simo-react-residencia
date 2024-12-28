@@ -9,12 +9,13 @@ import {
   Box,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import { usePeriodoStore, useViewStore } from "../../../hooks";
+import { useAuthStore, usePeriodoStore, useViewStore } from "../../../hooks";
 import Swal from "sweetalert2";
-import { formatValue } from "../../../helpers";
+import { AlertaRol, formatValue } from "../../../helpers";
 
 export const BoxFieldPeriodo = () => {
    const {startIgresarPeriodo,startObtenerPeriodos,periodo}= usePeriodoStore()
+   const {user}=useAuthStore()
    const {selectViewSimo}=useViewStore()
    const [budgets, setBudgets] = useState({
     estatal: "",
@@ -58,7 +59,9 @@ export const BoxFieldPeriodo = () => {
     });
 
     if (result.isConfirmed) {
+      if(user.rol==='admin'){
         try {
+
             const presupuestos = [
                 { tipo: 'estatal', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.estatal).toFixed(2), monto_rest: 0 },
                 { tipo: 'faismun', prodim: budgets.proDim, indirectos: budgets.indirectos, monto_inici: parseFloat(budgets.faismun).toFixed(2), monto_rest: 0 },
@@ -86,7 +89,9 @@ export const BoxFieldPeriodo = () => {
             });
         }
 
-
+      }else{
+        AlertaRol("Agregar Presupuestos Anuales",'Administrador')
+      }
     }else {
         await Swal.fire({
             title: "Operación cancelada",

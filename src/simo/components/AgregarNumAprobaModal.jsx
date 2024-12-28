@@ -6,12 +6,14 @@ import { Box, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import React, { useEffect, useState } from 'react';
 import { useObraStore } from '../../../hooks/useObraStore';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import dayjs from 'dayjs';
+import { useViewStore } from '../../../hooks';
 
 const customStyles = {
   content: {
-    width: '30vw',
-    height: '70vh',
+    width: '26vw',
+    height: '55vh',
     maxWidth: '70vw',
     maxHeight: '84vh',
     borderRadius: '10px',
@@ -26,7 +28,9 @@ const customStyles = {
 ReactModal.setAppElement('#root');
 
 export const AgregarNumAprobaModal = ({ idobra=0,idPresupuesto=0,num_obra=''}) => {
-  const { modalAprobacion, startAprobaModalValue,startActualizarNumApro } = useObraStore();
+
+   const { selectViewSimo } = useViewStore();
+  const { modalAprobacion, startAprobaModalValue,startActualizarNumApro,startIncioEditarObra } = useObraStore();
   const [codigo, setcodigo] = useState('');
   const [Fecha, setFecha] = useState(dayjs(new Date()));
 
@@ -138,6 +142,20 @@ export const AgregarNumAprobaModal = ({ idobra=0,idPresupuesto=0,num_obra=''}) =
             </IconButton>
           </Box>
         </Grid>
+
+      <Grid item>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+          Editar Obra Seleccionda
+          </Typography>
+          <IconButton onClick={() =>{selectViewSimo("Editar Obra");startAprobaModalValue(false);startIncioEditarObra()}}  sx={{ marginLeft: '100px' }}>
+          <BorderColorIcon
+            sx={{
+                  fontSize: 45,  // Cambiar el tamaño del ícono
+                  color: 'green', // Cambiar color a verde
+                }}
+          />
+          </IconButton>  
+      </Grid>
       </Grid>
     </ReactModal>
   );

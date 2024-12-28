@@ -79,6 +79,10 @@ export const obraSlice = createSlice({
 
             state.valueFinalizar.termino=false
         },
+        setEditarInicio:(state)=>{
+            state.valuePresupuestoAgregar.notvisible=false
+            state.valueFinalizar.termino=false
+        },
         setPresupuestoExito:(state)=>{
         state.valuePresupuestoAgregar.icono=true
         state.valuePresupuestoAgregar.notvisible=true
@@ -198,6 +202,7 @@ export const { setObra,
                setModalAproba,
                setObrasBusqueda,
                setLimpiarBusqueda,
-               setInfoObra
+               setInfoObra,
+               setEditarInicio
             } = obraSlice.actions;
             

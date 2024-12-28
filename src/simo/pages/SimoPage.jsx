@@ -12,6 +12,11 @@ import { AgregarObraView } from '../views/AgregarObraView'
 import { ObrasAcciones } from '../components/ObrasAcciones'
 import { HistoricoView } from '../views/HistoricoView'
 import { ContenidoHistorico } from '../components/ContenidoHistorico'
+import { EditarPresupuesto } from '../views/EditarPresupuesto'
+import { TablaPresupuesto } from '../components/TablaPresupuesto'
+import { EditarObraView } from '../views/EditarObraView'
+import { InfoObraEditar } from '../components/InfoObraEditar'
+import { InicioView } from '../views/InicioView'
 
 export const SimoPage = () => {
   const { stateViewSimo,stateViewUser } = useViewStore()
@@ -46,9 +51,7 @@ export const SimoPage = () => {
                
         </GestioUsersView>
       ) : stateViewSimo === 'inicio' ? (
-        <div>
-          <Typography variant="h4">Bienvenido a la Página de Inicio</Typography>
-        </div>
+        <InicioView/>
       ) : stateViewSimo === 'Gestión de Avance' ? (
         <GestionAvanceView>
           {
@@ -66,12 +69,17 @@ export const SimoPage = () => {
         <HistoricoView>
           {<ContenidoHistorico/>}
         </HistoricoView>
-      ) : stateViewSimo === 'perfil' ? (
+      ) : stateViewSimo === 'Editar Presupuesto' ? (
         // Si el estado es 'perfil', mostrar vista de perfil
-        <div>
-          <Typography variant="h4">Mi Perfil</Typography>
-        </div>
-      ) : (
+        <EditarPresupuesto>
+          {<TablaPresupuesto/>}
+        </EditarPresupuesto>
+      ) : stateViewSimo === 'Editar Obra' ? (
+        // Si el estado es 'perfil', mostrar vista de perfil
+        <EditarObraView>
+        {<InfoObraEditar/>}
+        </EditarObraView>
+      ): (
         // Si el estado no coincide con ninguno de los anteriores, mostrar un mensaje por defecto
         <Typography variant="h6">Vista desconocida</Typography>
       ))}

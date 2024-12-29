@@ -22,6 +22,7 @@ import Swal from "sweetalert2";
 import { AgregarPresupuestoModal } from "./AgregarPresupuestoModal";
 import { useExpediStore } from "../../../hooks/useExpediStore";
 import { ExpedienteModal } from "./ExpedienteModal";
+import { DictamenModal } from "./DictamenModal";
 
 
     export const ObrasAcciones = () => {
@@ -39,7 +40,8 @@ import { ExpedienteModal } from "./ExpedienteModal";
         startGenerarDictamen,
         startFinalizarObra,
         modalPresupuesto,
-        startResetBox
+        startResetBox,
+        startDictamenValue
     }=useObraStore();    
 
     const {expediModal,starExpeModalValue}= useExpediStore()
@@ -126,7 +128,7 @@ import { ExpedienteModal } from "./ExpedienteModal";
     };
 
     const generarDictamen = () => {
-        startGenerarDictamen()
+       startDictamenValue(true)
     };
 
     const finalizarProceso = () => {
@@ -571,6 +573,7 @@ import { ExpedienteModal } from "./ExpedienteModal";
 
          <AgregarPresupuestoModal/>
          <ExpedienteModal/>
+         <DictamenModal/>
            
         </Box>
     );

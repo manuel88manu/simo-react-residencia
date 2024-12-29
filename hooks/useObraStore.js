@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
-import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito,setObrasBusqueda, setLimpiarBusqueda, setInfoObra, setEditarInicio } from '../store/obra/obraSlice'
+import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito,setObrasBusqueda, setLimpiarBusqueda, setInfoObra, setEditarInicio, setModalDictamen } from '../store/obra/obraSlice'
 import { useAuthStore } from './useAuthStore'
 import { formatCurrency } from '../helpers'
 import { useExpediStore } from './useExpediStore'
@@ -21,7 +21,8 @@ export const useObraStore = () => {
     partidas,
     conceptos,
     modalAprobacion,
-    busqueda
+    busqueda,
+    modalDictamen
     }=useSelector(state=>state.obra)
 
     const {startMovimientoAgregar}=useAuthStore()
@@ -57,6 +58,10 @@ export const useObraStore = () => {
    const startAprobaModalValue=(payload)=>{
     dispatch(setModalAproba(payload))
    }
+
+    const startDictamenValue=(payload)=>{
+    dispatch(setModalDictamen(payload))    
+    }
    const  startObtenerPartidas=async(idobra)=>{
     const { data } = await simoApi.get(`/obra/addpartidas`, { params: { idobra } });
     const partidas=data.partidas;
@@ -301,6 +306,7 @@ return{
     conceptos,
     modalAprobacion,
     busqueda,
+    modalDictamen,
 
     //METODOS
     startAgregarObra,
@@ -325,7 +331,8 @@ return{
     startLimpiarBusqueda,
     startObtenerInfo,
     startResetBox,
-    startIncioEditarObra
+    startIncioEditarObra,
+    startDictamenValue
     
     
 

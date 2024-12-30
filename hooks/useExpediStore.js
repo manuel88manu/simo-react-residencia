@@ -4,6 +4,7 @@ import { setCedulaRegistro, setExpediente, setValueCalendarModal, setValueCedula
 import { simoApi } from '../api'
 import { expfuncion, getFileNameFromUrl } from '../helpers'
 import { useAuthStore } from './useAuthStore'
+import { setDictamen, setDictamenExitoso } from '../store/obra/obraSlice'
 
 export const useExpediStore = () => {
 
@@ -234,6 +235,37 @@ const startGenerarCalendario=async(obra,dictamen,meses,partidas,info)=>{
     }
   }
 
+
+const startGenerarDictamen=async(obra,tipo,dictamen,partidas,infoexp,expediente)=>{
+     try {
+          const response =await simoApi.post('/excel/dictamen',{obra,tipo,dictamen,partidas,infoexp,expediente}, { responseType: 'blob' })
+          if (response.status === 200) {
+            // Crea un Blob a partir de los datos recibidos (en este caso, el archivo Excel)
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            // Crea una URL temporal para el Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Crea un elemento <a> para simular el clic y descargar el archivo
+            const a = document.createElement('a');
+            a.href = url;
+            a.download =  `Dictamen-${obra.num_obra}.xlsx`;  // Puedes personalizar el nombre del archivo
+            a.click();  // Simula el clic para iniciar la descarga
+
+            // Limpia la URL temporal
+            window.URL.revokeObjectURL(url);
+        } else {
+            console.error('Error descargando el archivo.');
+        }
+        await startMovimientoAgregar(`Genero Dictamen para la obra: ${obra.num_obra}`)
+
+    } catch (error) {
+       const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+            throw new Error(messageError);
+    }
+  }
+
+
 const startGuardarFtp=async(obra,prop,file)=>{
     const formData = new FormData();
     formData.append("file", file);
@@ -246,8 +278,13 @@ const startGuardarFtp=async(obra,prop,file)=>{
      const {data:data1}=await simoApi.post('/ftp/enlace',{obra,prop,url})
 
      await startMovimientoAgregar(`Subio archivo de ${file.name}  para la obra: ${obra.num_obra}`)
-   
-     dispatch(setExpediente(data1.expediente))
+     
+     if(prop!='arc_dictamen'){
+       dispatch(setExpediente(data1.resultado.expediente))
+    }else{
+      dispatch(setDictamen(data1.resultado.dictamen))
+
+    }
   
  } catch (error) {
    const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
@@ -322,6 +359,11 @@ const startDescargarCarpeta = async (num_obra,folderUrl) => {
   }
 };
 
+const startFinalizarDictamen = () => {
+dispatch(setDictamenExitoso())
+
+}
+
   return {
     //Propiedades
      expediente,
@@ -352,7 +394,9 @@ const startDescargarCarpeta = async (num_obra,folderUrl) => {
     startGuardarFtp,
     startTablaExpModalValue,
     startDescargarArchivo,
-    startDescargarCarpeta
+    startDescargarCarpeta,
+    startGenerarDictamen,
+    startFinalizarDictamen
   }
 
   

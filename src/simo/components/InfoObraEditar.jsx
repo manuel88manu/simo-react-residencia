@@ -8,6 +8,7 @@ import { ExpedienteModal } from './ExpedienteModal';
 import { useExpediStore } from '../../../hooks/useExpediStore';
 import { useViewStore } from '../../../hooks';
 import Swal from 'sweetalert2';
+import { DictamenModal } from './DictamenModal';
 
 export const InfoObraEditar = () => {
 
@@ -24,6 +25,7 @@ export const InfoObraEditar = () => {
         startGenerarDictamen,
         startFinalizarObra,
         modalPresupuesto,
+        startDictamenValue
     }=useObraStore();   
 
 
@@ -43,7 +45,7 @@ const{starExpeModalValue}=useExpediStore()
     };
 
     const generarDictamen = () => {
-        startGenerarDictamen()
+       startDictamenValue(true)
     };
 
     const finalizarProceso = () => {
@@ -200,6 +202,7 @@ return (
 
 <AgregarPresupuestoModal/>
 <ExpedienteModal/>
+<DictamenModal/>
 
 </Grid>
 

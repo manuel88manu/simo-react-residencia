@@ -31,7 +31,7 @@ const {tableExpeModal,startTablaExpModalValue,startDescargarCarpeta}=useExpediSt
 
 const {expediente,startDescargarArchivo}=useExpediStore()
 
-const {obra}=useObraStore()
+const {obra,dictamen}=useObraStore()
 
 const [selectedRow, setSelectedRow] = useState(null);
 
@@ -74,6 +74,12 @@ startDescargarArchivo(url)
 
 }
 
+const descargarDictamen=()=>{
+
+startDescargarArchivo(dictamen.arc_dictamen)
+
+}
+
 const descargarCapeta=()=>{
 
 startDescargarCarpeta(replaceUrl(obra.num_obra),`/${replaceUrl(obra.num_obra)}/`)
@@ -109,8 +115,8 @@ const oncloseModal = () => {
 
 <Grid item xs={6}  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 <Typography variant='h6' sx={{marginTop:'1px'}}>Descargar Dictamen</Typography>
-<IconButton>
-<DownloadIcon sx={{color:'green',fontSize:'38px'}}/>
+<IconButton onClick={descargarDictamen} disabled={dictamen.arc_dictamen===''}>
+<DownloadIcon sx={{color: dictamen.arc_dictamen==='' ? "gray" : "green",fontSize:'38px'}}/>
 </IconButton>
 </Grid>
 

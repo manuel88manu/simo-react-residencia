@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import ReactModal from 'react-modal';
 import { useObraStore } from '../../../hooks/useObraStore';
 import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
@@ -26,8 +26,8 @@ ReactModal.setAppElement('#root');
 
 export const DictamenModal = () => {
 
-const {modalDictamen,startDictamenValue,obra,dictamen,partidas}=useObraStore()
-const {expediente}= useExpediStore()
+const {modalDictamen,startDictamenValue,obra,dictamen,partidas,startObtenerTipo}=useObraStore()
+const {expediente,startGenerarDictamen,startGuardarFtp,startFinalizarDictamen}= useExpediStore()
 
 const [infoexp, setinfoexp] = useState({
                             nombre:'',
@@ -37,6 +37,25 @@ const [infoexp, setinfoexp] = useState({
 
 const {nombre,resultado,observa}=infoexp
 
+//-----------------------------------------------------------------
+   const fileInputRef=useRef()
+   const [extraParam, setExtraParam] = useState(null);
+
+    const  onFileInputChange=({target})=>{
+    if(target.files[0]===0) return
+    
+    console.log('Subiendo archivos:', target.files[0]);
+    console.log('Parámetro adicional:', extraParam);
+    //realizar metodo para guardar en el ftp y base de datos el enlace
+    startGuardarFtp(obra,extraParam,target.files[0])    
+
+    }
+
+    const onButtonClick = (param) => {
+    setExtraParam(param); // Configura el parámetro adicional en el estado
+    fileInputRef.current.click(); // Dispara el clic en el input
+    };
+//-----------------------------------------------------------------
 
 const validarExpediente = (obj) => {
   return Object.entries(obj).every(([key, value]) => {
@@ -77,9 +96,15 @@ return Swal.fire({
             });
 
 }
+ 
+const tipo=startObtenerTipo(obra.idobra)
+
+startGenerarDictamen(obra,tipo,dictamen,partidas,infoexp,expediente)
 
 
 }
+
+
 const oncloseModal = () => {
 startDictamenValue(false);
 setTimeout(() => {
@@ -99,6 +124,12 @@ if (openButton) {
     overlayClassName="modal-fondo"
     closeTimeoutMS={200}
   >
+<input
+type='file'
+onChange={onFileInputChange}
+style={{display:'none'}}
+ref={fileInputRef}
+/>
 <Grid container spacing={2} justifyContent="center">
 <Grid item xs={12}>
 <Grid container spacing={2} justifyContent="center" >
@@ -182,14 +213,14 @@ mt: '20px',
 <Typography variant="h5" sx={{ fontWeight: 'bold', mt: '10px' }}>
 Guardar Dictamen
 </Typography>
-<IconButton>
-<DriveFolderUploadIcon sx={{ color: 'green', fontSize: '50px' }} />
+<IconButton onClick={()=>onButtonClick('arc_dictamen')}>
+<DriveFolderUploadIcon sx={{ color: dictamen.arc_dictamen!=''? 'green' : 'red', fontSize: '50px' }} />
 </IconButton>
 
 <Typography variant="h5" sx={{ fontWeight: 'bold', mt: '70px' }}>
 Finalizar Proceso
 </Typography>
-<IconButton>
+<IconButton onClick={()=>{startFinalizarDictamen();startDictamenValue(false)}}>
 <CheckCircleOutlineIcon sx={{ color: 'green', fontSize: '50px' }} />
 </IconButton>
 

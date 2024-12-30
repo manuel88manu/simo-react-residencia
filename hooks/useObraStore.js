@@ -136,18 +136,6 @@ export const useObraStore = () => {
 
    }
 
-   
-   const startGenerarDictamen=async()=>{
-    try {
-
-        dispatch(setDictamenExitoso())
-        
-    } catch (error) {
-        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
-        throw new Error(messageError);
-    }
-   }
-
    const startFinalizarObra=async()=>{
     try {
         
@@ -291,6 +279,19 @@ dispatch(setExpediente(expediente))
 }
 }
 
+const startObtenerTipo=async(idobra)=>{
+try {
+
+    const {data}=await simoApi.get(`/obra/tipopresu`,{params:{idobra}})
+     return data.tipo;
+
+} catch (error) {
+    const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+    throw new Error(messageError);
+}
+}
+
+
 return{
     //propuedades
     obra,
@@ -317,7 +318,6 @@ return{
     startAgregarConceptos,
     startValidarPresupuesto,
     startFinalizarExpediente,
-    startGenerarDictamen,
     startFinalizarObra,
     startActualizarConcepto,
     startActualizarPartida,
@@ -332,7 +332,8 @@ return{
     startObtenerInfo,
     startResetBox,
     startIncioEditarObra,
-    startDictamenValue
+    startDictamenValue,
+    startObtenerTipo
     
     
 

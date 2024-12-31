@@ -328,7 +328,7 @@ export const AvancesPresupuestos = () => {
                 },
               }}
             > 
-              <TableCell sx={{ width: '100px', fontWeight: 'bold' }}>Num. de Obra</TableCell>
+              <TableCell sx={{ width: '120px', fontWeight: 'bold' }}>Num. de Obra</TableCell>
               <TableCell>Nombre De Obra</TableCell>
               <TableCell>Monto Ejercido</TableCell>
               <TableCell>Metas</TableCell>

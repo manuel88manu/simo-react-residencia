@@ -3,8 +3,11 @@ import { usePeriodoStore, useViewStore } from '../../../hooks';
 import { useObraStore } from '../../../hooks/useObraStore';
 import { useExpediStore } from '../../../hooks/useExpediStore';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { AgregarPresupuestoModal } from './AgregarPresupuestoModal';
+import { TablaExpeModal } from './TablaExpeModal';
 
 export const TablaPresupuesto = () => {
 
@@ -19,17 +22,25 @@ const { estadoPresupuesto } = useViewStore();
     faltante,
     startObtenerFaltante
   } = usePeriodoStore();
+const {selectViewSimo,stateViewSimo}=useViewStore()
 
-const {busqueda,partidas,startBuscarObras,startObtenerInfo,startResetBox,startModalPresuValue,modalPresupuesto}=useObraStore()
+const {busqueda,partidas,startBuscarObras,startObtenerInfo,startResetBox,startModalPresuValue,modalPresupuesto,startIncioEditarObra}=useObraStore()
 const {startTablaExpModalValue}=useExpediStore()
 const [idobra, setidobra] = useState(0)
 const [numObra, setNumObra] = useState("");
 
 
-  const handleRowClick = (row) => {
+  const handleRowClick = (row,event) => {
+  if (event.target.tagName !='TD') {
+       console.log('entro button')
+    return;
+     }
+    
+    console.log('entro button')
     setSelectedRow(row);
     startObtenerInfo(row.idobra)
-    startResetBox()
+    startResetBox()  
+  
   };
 
 
@@ -41,6 +52,11 @@ const [numObra, setNumObra] = useState("");
 
   const agregarPresupuesto=()=>{
    startModalPresuValue(true);
+  }
+
+  const mostrarTabla=()=>{
+  startTablaExpModalValue(true)
+
   }
 
  useEffect(() => {
@@ -92,7 +108,7 @@ if (selectedRow !=null) {
       value={numObra} // El valor del TextField será el estado numObra
       onChange={handleChange} // Al escribir en el TextField, actualizamos el estado
     />
-<TableContainer component={Paper} style={{ height: '442px', overflowY: 'auto', width: "990px" }}>
+<TableContainer component={Paper} style={{ height: '442px', overflowY: 'auto', width: "1100px" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow
@@ -108,27 +124,42 @@ if (selectedRow !=null) {
               <TableCell>Nombre De Obra</TableCell>
               <TableCell>Monto Ejercido</TableCell>
               <TableCell sx={{ width: '160px', fontWeight: 'bold' }}>Num. de Aprobacion</TableCell>
-             <TableCell>Editar</TableCell>
+              <TableCell sx={{ width: '80px', fontWeight: 'bold' }}>Mostrar Expediente</TableCell>
+              <TableCell sx={{ width: '80px', fontWeight: 'bold' }}>Editar Presupuesto</TableCell>
+              <TableCell sx={{ width: '80px', fontWeight: 'bold' }}>Modificar Obra</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {busqueda.map((obra) => (
               <TableRow
                 key={obra.idobra}
-                onClick={() => handleRowClick(obra)}
+                onClick={(event) => handleRowClick(obra,event)}
                 selected={selectedRow?.idobra===obra.idobra}
                 style={{ cursor: 'pointer' }}
               >
                 <TableCell>{obra.num_obra}</TableCell>
                 <TableCell>{obra.nombre}</TableCell>
                 <TableCell>{`$${obra.presupuesto.toLocaleString()}`}</TableCell>
-                <TableCell>{obra.num_aproba.split("\n").map((line, index) => (
-                    <div key={index}>{line}</div>
-                  ))}</TableCell>
+                <TableCell>{obra.num_aproba}</TableCell>
+
+               {selectedRow?.idobra===obra.idobra && (
+                  <TableCell>
+                   <IconButton onClick={mostrarTabla}>
+                    <InsertDriveFileIcon  style={{ fontSize: '40px', color: 'green' }}/>
+                    </IconButton>
+                  </TableCell>
+                )}
                 {selectedRow?.idobra===obra.idobra && (
                   <TableCell>
                    <IconButton onClick={agregarPresupuesto}>
-                    <PriceChangeIcon  style={{ fontSize: '48px', color: 'green' }}/>
+                    <PriceChangeIcon  style={{ fontSize: '40px', color: 'green' }}/>
+                    </IconButton>
+                  </TableCell>
+                )}
+                  {selectedRow?.idobra===obra.idobra && (
+                  <TableCell>
+                   <IconButton onClick={(e) =>{ e.stopPropagation();selectViewSimo("Editar Obra");startIncioEditarObra()}}>
+                    <BorderColorIcon  style={{ fontSize: '40px', color: 'green' }}/>
                     </IconButton>
                   </TableCell>
                 )}
@@ -138,6 +169,7 @@ if (selectedRow !=null) {
         </Table>
       </TableContainer>
       <AgregarPresupuestoModal/>
+      <TablaExpeModal/>
 </Grid>
 
   )

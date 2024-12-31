@@ -125,7 +125,10 @@ export const getCurrentYear = () => {
 
 export const evaluarFechaProdim=()=>{
   //const fechaHoy = new Date('2024-06-30T00:00:00Z'); 
-  const fechaHoy = new Date();
+  let fechaHoy = new Date();
+
+  // Ajustar la hora a la zona horaria de México (UTC -6)
+  fechaHoy = new Date(fechaHoy.getTime() - (6 * 60 * 60 * 1000)); // Restar 6 horas a UTC
   const añoActual = fechaHoy.getUTCFullYear(); 
 
   //Fecha para faismun, prodim y otros

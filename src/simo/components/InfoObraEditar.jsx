@@ -67,7 +67,7 @@ return (
     item 
     style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} // Agrega estilos para centrar
   >
-    <Typography variant="h4">{obra.nombre}</Typography>
+    <Typography variant="h4">{String(obra.nombre).toUpperCase()}</Typography>
     <Typography variant="h5">{obra.num_obra}</Typography>
     <Typography variant="h5">{`$${obra.presupuesto.toLocaleString()}`}</Typography>
   </Grid>

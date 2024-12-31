@@ -69,7 +69,7 @@ export const SimoPage = () => {
         <HistoricoView>
           {<ContenidoHistorico/>}
         </HistoricoView>
-      ) : stateViewSimo === 'Editar Presupuesto' ? (
+      ) : stateViewSimo === 'Modificar Obras' ? (
         // Si el estado es 'perfil', mostrar vista de perfil
         <EditarPresupuesto>
           {<TablaPresupuesto/>}

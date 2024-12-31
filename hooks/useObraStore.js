@@ -48,6 +48,7 @@ export const useObraStore = () => {
    }
 
    const startIncioEditarObra=()=>{
+   console.log('Ejecutado')
    dispatch(setEditarInicio())
 
    }

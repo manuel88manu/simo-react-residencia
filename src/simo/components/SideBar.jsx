@@ -63,8 +63,8 @@ export const SideBar = () => {
           />
           <IconButtonWithLabel
             Icon={PriceChangeIcon}
-            label="Editar Presupuesto"
-            onClick={() => selectViewSimo("Editar Presupuesto")} // Llamada modificada
+            label="Modificar Obras"
+            onClick={() => selectViewSimo("Modificar Obras")} // Llamada modificada
           />
         </Grid>
       </Drawer>

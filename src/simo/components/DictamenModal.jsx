@@ -69,7 +69,7 @@ const validarExpediente = (obj) => {
 };
 
 
-const generarDictamen=()=>{
+const generarDictamen=async()=>{
 
 
 if (
@@ -97,8 +97,8 @@ return Swal.fire({
 
 }
  
-const tipo=startObtenerTipo(obra.idobra)
-
+const tipo=await startObtenerTipo(obra.idobra)
+console.log('tipo',tipo)
 startGenerarDictamen(obra,tipo,dictamen,partidas,infoexp,expediente)
 
 

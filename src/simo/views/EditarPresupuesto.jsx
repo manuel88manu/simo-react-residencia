@@ -19,7 +19,7 @@ export const EditarPresupuesto = ({children}) => {
         justifyContent: 'center',
         alignItems: 'center'
       }}>
-        <Typography variant='h3' sx={{ fontWeight: 'bold' }}>EDITAR PRESUPUESTO</Typography>
+        <Typography variant='h3' sx={{ fontWeight: 'bold' }}>MODIFICAR OBRAS</Typography>
       </Grid>
 
       <Box

@@ -44,7 +44,6 @@ export const EditarUserView = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>ID Usuario</TableCell>
               <TableCell>Nombre de Usuario</TableCell>
               <TableCell>Correo Electrónico</TableCell>
               <TableCell>Rol</TableCell>
@@ -59,7 +58,6 @@ export const EditarUserView = () => {
                 onClick={() => handleRowClick(user)}
                 style={{ cursor: 'pointer' }}
               >
-                <TableCell>{user.idusuario}</TableCell>
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.correo}</TableCell>
                 <TableCell>{user.rol}</TableCell>

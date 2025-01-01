@@ -14,6 +14,7 @@ import { InovacionModal } from './InovacionModal';
 import { CalendarioModal } from './CalendarioModal';
 import { useObraStore } from '../../../hooks/useObraStore';
 import Swal from 'sweetalert2';
+import { useAuthStore } from '../../../hooks';
 
 
 const customStyles = {
@@ -46,11 +47,14 @@ export const ExpedienteModal = () => {
             startFactibiModalValue,
             startInovaModalValue,
             startCalendarModalValue,
-            startGuardarFtp
+            startGuardarFtp,
+            startFinalizarDictamen
             }= useExpediStore()
 
 
     const {obra,startFinalizarExpediente}=useObraStore()
+
+    const {user}=useAuthStore()
 
 
     const fileInputRef=useRef()
@@ -93,6 +97,9 @@ export const ExpedienteModal = () => {
         
         if (result.isConfirmed) {
            startFinalizarExpediente()
+          if(user.rol!='admin'){
+            startFinalizarDictamen()
+           }
            starExpeModalValue(false);
                
  

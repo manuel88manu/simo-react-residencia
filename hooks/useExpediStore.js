@@ -270,6 +270,7 @@ const startGuardarFtp=async(obra,prop,file)=>{
     const formData = new FormData();
     formData.append("file", file);
     formData.append("num_obra", obra.num_obra);
+    formData.append("unique_id", prop);
  try {
 
      const {data} =await simoApi.post('/ftp/upload',formData)
@@ -296,6 +297,8 @@ const startDescargarArchivo = async (url) => {
   try {
     const response = await simoApi.get('/ftp/downenlace', { params: { url }, responseType: 'blob' });
     const fileName = getFileNameFromUrl(url);
+    console.log('URL',url)
+    console.log('Nombre Archivo',fileName)
 
     if (response.status === 200 && response.data.size > 0) {
       // Verifica el tipo de archivo recibido

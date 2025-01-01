@@ -15,7 +15,7 @@
     import { DatePicker } from "@mui/x-date-pickers";
     import CheckCircleIcon from "@mui/icons-material/CheckCircle";
     import CancelIcon from "@mui/icons-material/Cancel";
-    import { useForm, usePeriodoStore, useViewStore } from "../../../hooks";
+    import { useAuthStore, useForm, usePeriodoStore, useViewStore } from "../../../hooks";
     import { convertirFechasADate, dictameInicial, formatCurrency, obrainicio, opciones, opcionesPrograma, opcionesSubprograma, showAlert } from "../../../helpers";
 import { useObraStore } from "../../../hooks/useObraStore";
 import Swal from "sweetalert2";
@@ -45,6 +45,8 @@ import { DictamenModal } from "./DictamenModal";
     }=useObraStore();    
 
     const {expediModal,starExpeModalValue}= useExpediStore()
+
+    const {user}=useAuthStore()
 
 
     //-------------------Solo para simular la validacion de botones----------------------
@@ -422,7 +424,6 @@ import { DictamenModal } from "./DictamenModal";
                 borderRadius: 2,
                 padding: 3,
                 backgroundColor: "#fff",
-                minHeight: "350px"
                 }}
             >
                 <Box
@@ -510,7 +511,8 @@ import { DictamenModal } from "./DictamenModal";
                     }
                 </IconButton>
                 </Box>
-                <Box
+                {
+                  user.rol==='admin' &&(<Box
                 sx={{
                     display: "flex",
                     alignItems: "center",
@@ -537,7 +539,9 @@ import { DictamenModal } from "./DictamenModal";
                         :<CancelIcon fontSize="large" color="error" />
                     }
                 </IconButton>
-                </Box>
+                </Box>)
+                }
+                
                 <Box
                 sx={{
                     display: "flex",

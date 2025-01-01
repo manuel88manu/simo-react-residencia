@@ -136,8 +136,6 @@ const oncloseModal = () => {
         <TableCell>Expediente Técnico</TableCell>
         <TableCell>SI</TableCell>
         <TableCell>NO</TableCell>
-        <TableCell>N/A</TableCell>
-        <TableCell>Observaciones</TableCell>
         <TableCell>Descargar</TableCell>
       </TableRow>
     </TableHead>
@@ -156,16 +154,6 @@ const oncloseModal = () => {
           {/* Muestra "X" en SI o NO dependiendo si el valor está vacío */}
           <TableCell>{expediente[key] !== '' ? 'X' : ''}</TableCell>
           <TableCell>{expediente[key] === '' ? 'X' : ''}</TableCell>
-
-          {/* La columna N/A, puedes añadir lógica si es necesario */}
-          <TableCell></TableCell>
-
-          {/* Observaciones */}
-          <TableCell>
-            <Typography>
-              {expediente[key] ? '' : key === 'memo_cal' || key === 'acta_dona_prop' ? 'Condicionado' : ''}
-            </Typography>
-          </TableCell>
 
           {/* Columna para "Descargar" solo si hay un enlace y la fila está seleccionada */}
           <TableCell>

@@ -180,7 +180,12 @@ export const valueColorExp=()=>{
 }
 
 export const getFileNameFromUrl = (url) => {
-  return url.substring(url.lastIndexOf('/') + 1);
+  const fileNameWithId = url.substring(url.lastIndexOf('/') + 1);
+
+  // Extraer todo lo que está después del #
+  const fileNameWithoutId = fileNameWithId.split('#').pop();
+
+  return fileNameWithoutId;
 };
 
 export const replaceUrl = (input) => {

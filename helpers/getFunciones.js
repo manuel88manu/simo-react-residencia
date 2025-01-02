@@ -200,3 +200,13 @@ export const evaluarExpe = (obj) => {
   }
   return true; // Devuelve false si todos los atributos son cadenas vacías
 };
+
+
+export function formatToFloat(value) {
+    if (typeof value === 'string') {
+        // Eliminar comas y espacios
+        value = value.replace(/[\s,]/g, '');
+    }
+    // Convertir a número flotante y redondear a 2 decimales
+    return parseFloat(value).toFixed(2);
+}

@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import { usePeriodoStore, useViewStore } from "../../../hooks";
+import { useAuthStore, usePeriodoStore, useViewStore } from "../../../hooks";
 import { useObraStore } from "../../../hooks/useObraStore";
 import { AgregarNumAprobaModal } from "./AgregarNumAprobaModal";
-import { evaluarFechaProdim } from "../../../helpers";
+import { AlertaRol, evaluarFechaProdim } from "../../../helpers";
 import { TablaExpeModal } from "./TablaExpeModal";
 import { useExpediStore } from "../../../hooks/useExpediStore";
 
@@ -40,6 +40,8 @@ export const AvancesPresupuestos = () => {
 
   const {startTablaExpModalValue}=useExpediStore()
 
+  const {user}=useAuthStore()  
+
   const [presupuestoActivo, setPresupuestoActivo] = useState({});
 
   const [idobra, setidobra] = useState(0)
@@ -59,6 +61,10 @@ export const AvancesPresupuestos = () => {
   };
 
   const handleEditObra=(obra)=>{
+    if(user.rol==='viewer'){
+      AlertaRol("Editar Num. de Aprobacion y Obra",'Administrador')
+      return;
+     }
     setidobra(obra.idobra)
     startAprobaModalValue(true)
   }

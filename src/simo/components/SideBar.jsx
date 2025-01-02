@@ -49,7 +49,7 @@ export const SideBar = () => {
           <IconButtonWithLabel
             Icon={PendingActionsIcon}
             label="Gestión de Avance"
-            onClick={() =>{selectViewSimo("Gestión de Avance")}} // Llamada modificada
+            onClick={() =>{user.rol!='editor'?selectViewSimo("Gestión de Avance"):AlertaRol("Gestión de Avance",'Administrador y Visitante')}} // Llamada modificada
           />
           <IconButtonWithLabel
             Icon={CalendarMonthIcon}
@@ -64,7 +64,7 @@ export const SideBar = () => {
           <IconButtonWithLabel
             Icon={PriceChangeIcon}
             label="Modificar Obras"
-            onClick={() => selectViewSimo("Modificar Obras")} // Llamada modificada
+            onClick={() =>{user.rol==='admin'?selectViewSimo("Modificar Obras"):AlertaRol("Modificar Obras",'Administrador')}} // Llamada modificada
           />
         </Grid>
       </Drawer>

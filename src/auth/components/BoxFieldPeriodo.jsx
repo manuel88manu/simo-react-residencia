@@ -11,7 +11,7 @@ import {
 import SaveIcon from "@mui/icons-material/Save";
 import { useAuthStore, usePeriodoStore, useViewStore } from "../../../hooks";
 import Swal from "sweetalert2";
-import { AlertaRol, formatValue } from "../../../helpers";
+import { AlertaRol, formatToFloat, formatValue } from "../../../helpers";
 
 export const BoxFieldPeriodo = () => {
    const {startIgresarPeriodo,startObtenerPeriodos,periodo}= usePeriodoStore()
@@ -46,11 +46,11 @@ export const BoxFieldPeriodo = () => {
     const result = await Swal.fire({
         title: "¿Estás seguro? VERIFICALO",
         html: `
-    <span style="font-size: 20px; font-weight: bold;">FAISMUN: $${formatValue(budgets.faismun)}</span><br>
-    <span style="font-size: 20px; font-weight: bold;">FORTAMUN: $${formatValue(budgets.fortamun)}</span><br>
-    <span style="font-size: 20px; font-weight: bold;">O.Directas: $${formatValue(budgets.directas)}</span><br>
-    <span style="font-size: 20px; font-weight: bold;">Estatal: $${formatValue(budgets.estatal)}</span><br>
-    <span style="font-size: 20px; font-weight: bold;">Federal: $${formatValue(budgets.federal)}</span><br><br>
+    <span style="font-size: 20px; font-weight: bold;">FAISMUN: $${formatValue(formatToFloat(budgets.faismun))}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">FORTAMUN: $${formatValue(formatToFloat(budgets.fortamun))}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">O.Directas: $${formatValue(formatToFloat(budgets.directas))}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">Estatal: $${formatValue(formatToFloat(budgets.estatal))}</span><br>
+    <span style="font-size: 20px; font-weight: bold;">Federal: $${formatValue(formatToFloat(budgets.federal))}</span><br><br>
     Una vez ingresado los presupuestos para el presente periodo no se podrá modificar`,
         icon: "warning",
         showCancelButton: true,
@@ -63,11 +63,11 @@ export const BoxFieldPeriodo = () => {
         try {
 
             const presupuestos = [
-                { tipo: 'estatal', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.estatal).toFixed(2), monto_rest: 0 },
-                { tipo: 'faismun', prodim: budgets.proDim, indirectos: budgets.indirectos, monto_inici: parseFloat(budgets.faismun).toFixed(2), monto_rest: 0 },
-                { tipo: 'fortamun', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.fortamun).toFixed(2), monto_rest: 0 },
-                { tipo: 'odirectas', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.directas).toFixed(2), monto_rest: 0 },
-                { tipo: 'federal', prodim: 0, indirectos: 0, monto_inici: parseFloat(budgets.federal).toFixed(2), monto_rest: 0 },
+                { tipo: 'estatal', prodim: 0, indirectos: 0, monto_inici: formatToFloat(budgets.estatal), monto_rest: 0 },
+                { tipo: 'faismun', prodim: budgets.proDim, indirectos: budgets.indirectos, monto_inici:  formatToFloat(budgets.faismun), monto_rest: 0 },
+                { tipo: 'fortamun', prodim: 0, indirectos: 0, monto_inici: formatToFloat(budgets.fortamun), monto_rest: 0 },
+                { tipo: 'odirectas', prodim: 0, indirectos: 0, monto_inici: formatToFloat(budgets.directas), monto_rest: 0 },
+                { tipo: 'federal', prodim: 0, indirectos: 0, monto_inici: formatToFloat(budgets.federal), monto_rest: 0 },
             ]; 
     
          await startIgresarPeriodo(presupuestos)

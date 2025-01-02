@@ -17,17 +17,31 @@ import { TablaPresupuesto } from '../components/TablaPresupuesto'
 import { EditarObraView } from '../views/EditarObraView'
 import { InfoObraEditar } from '../components/InfoObraEditar'
 import { InicioView } from '../views/InicioView'
+import { useObraStore } from '../../../hooks/useObraStore'
+import { useExpediStore } from '../../../hooks/useExpediStore'
 
 export const SimoPage = () => {
-  const { stateViewSimo,stateViewUser } = useViewStore()
-  const {vigente,startPeriodoVigen}=usePeriodoStore()
+const { stateViewSimo,stateViewUser } = useViewStore()
+const {vigente,startPeriodoVigen}=usePeriodoStore()
+const {startAprobaModalValue,startModalPresuValue,startDictamenValue}=useObraStore()
+const {starExpeModalValue,startTablaExpModalValue}=useExpediStore()
+
 
   // Crear una constante para simular que el valor de stateViewUser siempre es 'tablaUsuario'
 
   // Añadido para depuración
-  useEffect(() => {
-    startPeriodoVigen();
-  }, [stateViewSimo,stateViewUser,vigente])
+useEffect(() => {
+startPeriodoVigen();
+
+startAprobaModalValue(false);
+startModalPresuValue(false);
+startDictamenValue(false);
+
+starExpeModalValue(false);
+startTablaExpModalValue(false);
+
+
+}, [stateViewSimo,stateViewUser,vigente])
   
 
   return (

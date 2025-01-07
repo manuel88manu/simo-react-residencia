@@ -109,7 +109,7 @@ const oncloseModal = () => {
     closeTimeoutMS={200}
   >
 <Grid container spacing={2} justifyContent="center">
-<Typography variant='h5' sx={{marginTop:'10px',fontWeight: 'bold' }}>AVANCE Y ESTADO DEL DICTAMEN Y EXPEDIENTE</Typography>
+<Typography variant='h5' sx={{marginTop:'10px',fontWeight: 'bold' }}>GESTIÓN DE DICTAMEN Y EXPEDIENTE</Typography>
 <Grid item  xs={12}>
  <Grid container  spacing={2} justifyContent="center">
 

@@ -96,7 +96,18 @@ import { DictamenModal } from "./DictamenModal";
 
     // Métodos independientes para cada acción
     const agregarObra = async() => {
-        try {
+        
+        const result =await Swal.fire({
+        title: "¿Agregar Obra?",
+        text: `¿Deseas Agregar Esta Obra?, valida que la informacion este correcta, no se podra modificar despues`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Agregar Obra",
+        cancelButtonText: "Modificar Informacion",
+        });
+
+         if (result.isConfirmed) {
+             try {
 
        const dictamen= convertirFechasADate(formState)
 
@@ -116,6 +127,9 @@ import { DictamenModal } from "./DictamenModal";
             confirmButtonText: "Aceptar",
         });
     }
+         }else{
+            return
+            }
     };
 
     const agregarPresupuesto = () => {

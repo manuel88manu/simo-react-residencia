@@ -121,17 +121,17 @@ export const ExpedienteModal = () => {
 
    const  onFileInputChange=({target})=>{
     if(target.files[0]===0) return
-    
     console.log('Subiendo archivos:', target.files[0]);
     console.log('Parámetro adicional:', extraParam);
     //realizar metodo para guardar en el ftp y base de datos el enlace
-    startGuardarFtp(obra,extraParam,target.files[0])    
+    startGuardarFtp(obra,extraParam,target.files[0]) 
+    target.value='';   
 
     }
 
      const onButtonClick = (param) => {
         setExtraParam(param); // Configura el parámetro adicional en el estado
-        fileInputRef.current.click(); // Dispara el clic en el input
+        fileInputRef.current.click(); 
     };
 
 

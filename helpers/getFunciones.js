@@ -210,3 +210,10 @@ export function formatToFloat(value) {
     // Convertir a número flotante y redondear a 2 decimales
     return parseFloat(value).toFixed(2);
 }
+
+export const truncateString = (str, maxLength) => {
+    if (str.length > maxLength) {
+        return str.slice(0, maxLength - 3) + '...'; // Recorta y agrega "..."
+    }
+    return str;
+};

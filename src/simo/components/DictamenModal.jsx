@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactModal from 'react-modal';
 import { useObraStore } from '../../../hooks/useObraStore';
 import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
@@ -48,7 +48,7 @@ const {nombre,resultado,observa}=infoexp
     console.log('Parámetro adicional:', extraParam);
     //realizar metodo para guardar en el ftp y base de datos el enlace
     startGuardarFtp(obra,extraParam,target.files[0])    
-
+    target.value='';
     }
 
     const onButtonClick = (param) => {
@@ -73,9 +73,9 @@ const generarDictamen=async()=>{
 
 
 if (
-  nombre === '' || 
-  resultado === '' || 
-  (resultado != 'positivo' && observa === '')
+  nombre.trim() === '' || 
+  resultado === '' ||
+  (resultado === 'condicionado' && observa.trim() === '')
 ) {
  return Swal.fire({
                 title: "Incompleto",
@@ -115,6 +115,12 @@ if (openButton) {
         }, 200);
        
 };
+
+useEffect(() => {
+ setinfoexp({ ...infoexp, observa: '' });
+}, [resultado])
+
+
   return (
     <ReactModal
     isOpen={modalDictamen}

@@ -9,6 +9,7 @@ import { useExpediStore } from '../../../hooks/useExpediStore';
 import { useViewStore } from '../../../hooks';
 import Swal from 'sweetalert2';
 import { DictamenModal } from './DictamenModal';
+import { truncateString } from '../../../helpers';
 
 export const InfoObraEditar = () => {
 
@@ -67,7 +68,7 @@ return (
     item 
     style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} // Agrega estilos para centrar
   >
-    <Typography variant="h4">{String(obra.nombre).toUpperCase()}</Typography>
+    <Typography variant="h4">{truncateString(String(obra.nombre).toUpperCase(),65)}</Typography>
     <Typography variant="h5">{obra.num_obra}</Typography>
     <Typography variant="h5">{`$${obra.presupuesto.toLocaleString()}`}</Typography>
   </Grid>

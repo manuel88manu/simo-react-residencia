@@ -3,6 +3,7 @@ import { simoApi } from "../api"
 import { clearErrorMessage, onChecking, onLogin, onLogout, setAgregarMoviemientos, setLimpiarMovimiento, setMessageError, setUserEdit, setUserExito, setUsuarios } from "../store/auth/authSlice"
 import { onModalUser } from "../store/views/viewSlice"
 import { useViewStore } from "./useViewsStore"
+import { truncateString } from "../helpers"
 
 export const useAuthStore=()=>{
     const {status,user,errorMessage,usuarios,ingresoExito,usuarioEditable,movimientos}=useSelector(state=>state.auth)

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { simoApi } from '../api'
 import { getConceptos, getPartidas, getPresupuesto, resetIngresarObra, resetValues, setDictamen, setDictamenExitoso, setExpedienteExitoso, setModalAproba, setModalPresupuesto, setObra, setObraExito, setObrasPresu, setPresupuestoExito,setObrasBusqueda, setLimpiarBusqueda, setInfoObra, setEditarInicio, setModalDictamen } from '../store/obra/obraSlice'
 import { useAuthStore } from './useAuthStore'
-import { formatCurrency } from '../helpers'
+import { formatCurrency, truncateString } from '../helpers'
 import { useExpediStore } from './useExpediStore'
 import { setExpediente } from '../store/expediente/expediSlice'
 
@@ -88,11 +88,11 @@ export const useObraStore = () => {
    }
 
    const startAgregarConceptos=async(idpartida,concepto,idobra)=>{
-    try {
+    try {     
         await simoApi.post(`/obra/newconcepto`, {partida_idpartida:idpartida,concepto:concepto});
         await startObtenerConceptos(idpartida)
         await startObtenerPartidas(idobra)
-        await startMovimientoAgregar(`Agrego el concepto: ${concepto.nombre_conc} en la obra: ${obra.num_obra}`)
+        await startMovimientoAgregar(`Agrego el concepto: ${truncateString(concepto.nombre_conc, 70)} en la obra: ${obra.num_obra}`)
 
 
     } catch (error) {

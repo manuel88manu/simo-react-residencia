@@ -29,7 +29,7 @@ export const NavBarHome = () => {
         left: 0,
         ml: 2,
       }}>
-           <Typography variant='h4' sx={{ml:2}} >{String(user?.name || '').toUpperCase()}</Typography>
+           <Typography variant='h5' sx={{ml:2}} >{String(user?.name || '').toUpperCase()}</Typography>
         </Grid>    
 
     <Grid 

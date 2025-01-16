@@ -217,3 +217,12 @@ export const truncateString = (str, maxLength) => {
     }
     return str;
 };
+
+
+export function formatoFix(value) {
+  if (typeof value !== "number" || isNaN(value)) {
+    console.warn("El valor no es un número válido:", value);
+    return "$0.00";
+  }
+  return `$${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+}

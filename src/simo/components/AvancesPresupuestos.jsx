@@ -18,7 +18,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { useAuthStore, usePeriodoStore, useViewStore } from "../../../hooks";
 import { useObraStore } from "../../../hooks/useObraStore";
 import { AgregarNumAprobaModal } from "./AgregarNumAprobaModal";
-import { AlertaRol, evaluarFechaProdim } from "../../../helpers";
+import { AlertaRol, evaluarFechaProdim, formatoFix } from "../../../helpers";
 import { TablaExpeModal } from "./TablaExpeModal";
 import { useExpediStore } from "../../../hooks/useExpediStore";
 
@@ -90,7 +90,7 @@ export const AvancesPresupuestos = () => {
               </strong>
               <br />
               <strong style={{ fontSize: '20px', fontWeight: 'bold',color: '#e24b53' }}>
-              {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+              {formatoFix(faltante?.monto_restante)}
               </strong>
               <br />
                <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
@@ -101,7 +101,7 @@ export const AvancesPresupuestos = () => {
                40% Presupuesto Asignado Minimo: 
               </strong>
               <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
-               {` $${faltante.monto_zap_indirecto.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+               {formatoFix(faltante?.monto_zap_indirecto)}
               </strong>
               <br />
               <strong style={{ fontSize: '16px', fontWeight: 'bold',color: '#d2010d' }}>
@@ -110,7 +110,7 @@ export const AvancesPresupuestos = () => {
               <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
               {faltante.monto_zap_indirecto_falt <= 0
                 ? " $0"
-                : ` $${faltante.monto_zap_indirecto_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                : ` ${formatoFix(faltante?.monto_zap_indirecto_falt)}`}
                </strong>
               <br/>
               {faltante?.monto_prodim && (
@@ -123,7 +123,7 @@ export const AvancesPresupuestos = () => {
                       2% Presupuesto Asignado Máximo:
                     </strong>
                     <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
-                      {` $${faltante.monto_prodim.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      {` ${formatoFix(faltante?.monto_prodim)}`}
                     </strong>
                     <br />
                     <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#d2010d' }}>
@@ -131,7 +131,7 @@ export const AvancesPresupuestos = () => {
                     </strong>
                     <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
                       { evaluarFechaProdim()?
-                      ` $${faltante.monto_prodim_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`
+                      ` ${formatoFix(faltante?.monto_prodim_falt)}`
                       :'$0'
                       }
                     </strong>
@@ -149,14 +149,14 @@ export const AvancesPresupuestos = () => {
                     3% Presupuesto Asignado Máximo:
                   </strong>
                   <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
-                    {` $${faltante.monto_indirectos.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                    {` ${formatoFix(faltante?.monto_indirectos)}`}
                   </strong>
                   <br />
                   <strong style={{ fontSize: '16px', fontWeight: 'bold', color: '#d2010d' }}>
                     Presupuesto Restante:
                   </strong>
                   <strong style={{ fontSize: '17px', fontWeight: 'bold' }}>
-                    {` $${faltante.monto_indirectos_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                    {` ${formatoFix(faltante?.monto_indirectos_falt)}`}
                   </strong>
                 </>
               )}
@@ -180,7 +180,7 @@ export const AvancesPresupuestos = () => {
                       </strong>
                       <br />
                       <strong style={{ fontSize: '20px', fontWeight: 'bold',color: '#e24b53' }}>
-                      {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      {` ${formatoFix(faltante?.monto_restante)}`}
                       </strong>
                       <br />
                       <br />
@@ -193,7 +193,7 @@ export const AvancesPresupuestos = () => {
                       </strong>
                       <br />
                       <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
-                      {` $${faltante.monto_seguridad.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                      {` ${formatoFix(faltante?.monto_seguridad)}`}
                       </strong>
                       <br />
                       <strong style={{ fontSize: '17px', fontWeight: 'bold',color: '#d2010d' }}>
@@ -201,9 +201,9 @@ export const AvancesPresupuestos = () => {
                       </strong>
                       <br />
                       <strong style={{ fontSize: '18px', fontWeight: 'bold' }}>
-                      {faltante.monto_seguridad_falt <= 0
+                      {faltante?.monto_seguridad_falt <= 0
                         ? " $0"
-                        : ` $${faltante.monto_seguridad_falt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                        : ` ${formatoFix(faltante?.monto_seguridad_falt)}`}
                       </strong>
                   </>
                  )
@@ -227,7 +227,7 @@ export const AvancesPresupuestos = () => {
                       </strong>
                     <br />
                     <strong style={{ fontSize: '20px', fontWeight: 'bold',color: '#e24b53' }}>
-                    {` $${faltante.monto_restante.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`}
+                    {` ${formatoFix(faltante?.monto_restante)}`}
                     </strong>
                     <br />
                     </>
@@ -292,9 +292,8 @@ export const AvancesPresupuestos = () => {
           Monto Autorizado Total:{" "}
           <span style={{ fontWeight: "normal" }}>
             {presupuestoActivo.monto_inici
-              ? `$${presupuestoActivo.monto_inici
-                  .toFixed(2)
-                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`
+              ? `${formatoFix(presupuestoActivo?.monto_inici)
+                  }`
               : "$0.00"}
           </span>
         </Typography>

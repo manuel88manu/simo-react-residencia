@@ -86,6 +86,23 @@ const startObtenerFaltante=async(idPresupuesto)=>{
 
 }
 
+
+const startActualiPresu=async(presupuestos,periodo)=>{
+    try {
+        const año=getCurrentYear()
+        await simoApi.put("/periody/actualizapresu",{presupuestos})
+        await startObtenerPeriodos(periodo.idperiodo)
+        await startMovimientoAgregar(`Actualizo los presupuestos para el año ${año}`)
+
+    } catch (error) {
+        const messageError = error.response?.data?.msg || 'Ha ocurrido un error al Ingresar la obra';
+        throw new Error(messageError);
+    }
+
+}
+
+
+
 return{
     //propiedades
     periodo,
@@ -100,7 +117,8 @@ return{
     startPeriodoVigen,
     startIgresarPeriodo,
     startObtenerPeriodos,
-    startObtenerFaltante
+    startObtenerFaltante,
+    startActualiPresu
 }
 
 }

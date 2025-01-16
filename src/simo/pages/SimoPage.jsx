@@ -19,6 +19,8 @@ import { InfoObraEditar } from '../components/InfoObraEditar'
 import { InicioView } from '../views/InicioView'
 import { useObraStore } from '../../../hooks/useObraStore'
 import { useExpediStore } from '../../../hooks/useExpediStore'
+import { ActualizarPresuView } from '../views/ActualizarPresuView'
+import { BoxActualPresu } from '../components/BoxActualPresu'
 
 export const SimoPage = () => {
 const { stateViewSimo,stateViewUser } = useViewStore()
@@ -93,6 +95,12 @@ startTablaExpModalValue(false);
         <EditarObraView>
         {<InfoObraEditar/>}
         </EditarObraView>
+      ): stateViewSimo === 'Editar Presupuesto' ? (
+          <ActualizarPresuView>
+          {
+          <BoxActualPresu/>
+          }
+           </ActualizarPresuView>
       ): (
         // Si el estado no coincide con ninguno de los anteriores, mostrar un mensaje por defecto
         <Typography variant="h6">Vista desconocida</Typography>

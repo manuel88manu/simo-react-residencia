@@ -1,10 +1,13 @@
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, IconButton, Typography } from '@mui/material'
 import React from 'react'
-import { useViewStore } from '../../../hooks'
+import { useAuthStore, useViewStore } from '../../../hooks'
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
+import { AlertaRol } from '../../../helpers';
 
 export const GestionAvanceView = ({children}) => {
 
-  const {selecTipoPeriodo,estadoPresupuesto}=useViewStore()
+  const {selecTipoPeriodo,estadoPresupuesto,selectViewSimo}=useViewStore()
+  const {user}=useAuthStore()
 
   const selectPresupuesto=(tipo)=>{
 
@@ -21,15 +24,25 @@ export const GestionAvanceView = ({children}) => {
   >
   
   <Grid item sx={{
-        background: 'white',
-        width: '100%', 
-        height: '70px', 
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Typography variant='h3' sx={{ fontWeight: 'bold' }}> GESTION DE AVANCE</Typography>
-      </Grid>
+  background: 'white',
+  width: '100%',
+  height: '70px',
+  display: 'flex',
+  justifyContent: 'space-between', // Esto asegura que los elementos se distribuyan
+  alignItems: 'center',
+  paddingLeft: '10px', // Un poco de espacio al lado izquierdo
+  paddingRight: '10px' // Un poco de espacio al lado derecho
+}}>
+
+  <IconButton onClick={() =>{user.rol==='admin'?selectViewSimo("Editar Presupuesto"):AlertaRol("Editar Presupuesto",'Administrador')}}  sx={{ marginRight: 'auto' }}>
+    <PriceChangeIcon sx={{ color: 'green', fontSize: '70px' }} />
+  </IconButton>
+
+  <Typography variant='h3' sx={{ fontWeight: 'bold', flexGrow: 1, textAlign: 'center' }}>
+    GESTION DE AVANCE
+  </Typography>
+
+</Grid>
 
       <Grid
   item

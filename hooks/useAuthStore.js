@@ -11,7 +11,7 @@ export const useAuthStore=()=>{
     const {selectViewSimo}=useViewStore()
 
     const startLogin=async({correo,contraseña})=>{
-        dispatch(onChecking())
+        //dispatch(onChecking())
         try {
             const {data}= await simoApi.post('/auth',{correo,contraseña})
             localStorage.setItem('token',data.token)
